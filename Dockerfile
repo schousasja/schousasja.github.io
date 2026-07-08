@@ -1,0 +1,48 @@
+# ==========================================
+# Multi-Stage Dockerfile for Cloud Run
+# ==========================================
+
+# --- Stage 1: Builder ---
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependency manifests & local overrides
+COPY package.json package-lock.json ./
+COPY dummy-domexception ./dummy-domexception
+
+# Install all dependencies (including devDependencies for compilation)
+RUN npm ci
+
+# Copy the rest of the application source code
+COPY . .
+
+# Run the production build pipeline
+# This builds the React client (via Vite) and bundles server.ts (via esbuild) to dist/
+RUN npm run build
+
+
+# --- Stage 2: Production Runner ---
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+# Cloud Run automatically injects PORT, but we default to 3000
+ENV PORT=3000
+
+# Copy manifests & local overrides
+COPY package.json package-lock.json ./
+COPY dummy-domexception ./dummy-domexception
+
+# Install only production dependencies to keep the image slim and fast
+RUN npm ci --only=production
+
+# Copy built assets from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the Node.js production server
+CMD ["npm", "start"]

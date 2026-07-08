@@ -1,0 +1,222 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'univueconsultants@gmail.com' ||
+        request.auth.token.email == 'schousasja@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // --- Validation Blueprints ---
+    function isValidUser(data) {
+      return data.uid is string && data.uid.size() <= 128 &&
+             data.email is string && data.email.size() <= 256 &&
+             data.displayName is string && data.displayName.size() <= 100 &&
+             data.role in ['client', 'admin'] &&
+             (data.get('photoURL', '') is string && data.get('photoURL', '').size() <= 1024) &&
+             (data.get('company', '') is string && data.get('company', '').size() <= 100) &&
+             (data.get('isSubscribed', false) is bool);
+    }
+
+    function isValidChatMessage(data) {
+      return data.text is string && data.text.size() <= 2000 &&
+             data.senderId is string && data.senderId.size() <= 128 &&
+             data.senderRole in ['client', 'support'] &&
+             data.createdAt == request.time;
+    }
+
+    function isValidNewsletter(data) {
+      return data.subject is string && data.subject.size() <= 200 &&
+             data.content is string && data.content.size() <= 50000 &&
+             data.recipientCount is number &&
+             data.sentBy is string &&
+             data.sentAt == request.time;
+    }
+
+    function isValidProperty(data) {
+      return data.name is string && data.name.size() <= 200 &&
+             data.location is string && data.location.size() <= 200 &&
+             (data.get('cityId', '') is string && data.get('cityId', '').size() <= 128) &&
+             (data.get('type', '') is string && data.get('type', '').size() <= 50) &&
+             data.country in ['UAE', 'India', 'Southeast Asia'] &&
+             data.get('expectedYield', '') is string && data.get('expectedYield', '').size() <= 50 &&
+             data.get('startingPrice', '') is string && data.get('startingPrice', '').size() <= 100 &&
+             data.status is string && data.status.size() <= 50 &&
+             data.image is string && data.image.size() <= 2048 &&
+             data.developer.name is string && data.developer.name.size() <= 200 &&
+             data.developer.credibility is string && data.developer.credibility.size() <= 1000 &&
+             data.highlights is list && data.highlights.size() <= 10 &&
+             data.isAdvisorsChoice is bool;
+    }
+
+    function isValidInsight(data) {
+      return data.title is string && data.title.size() <= 200 &&
+             data.type in ["Article", "Report", "Research", "Interview", "Case Study"] &&
+             data.markets is list &&
+             data.subMarkets is list &&
+             data.description is string && data.description.size() <= 1000 &&
+             data.photoUrl is string && data.photoUrl.size() <= 2048 &&
+             data.content is string && data.content.size() <= 100000 &&
+             data.sections is list && data.sections.size() <= 10 &&
+             data.displayDate is string && data.displayDate.size() <= 100;
+    }
+
+    function isValidMarket(data) {
+      return data.id is string && data.id.size() <= 100 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.slug is string && data.slug.size() <= 100 &&
+             data.order is number;
+    }
+
+    function isValidCity(data) {
+      return data.id is string && data.id.size() <= 100 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.marketId is string && data.marketId.size() <= 100 &&
+             data.country is string && data.country.size() <= 100 &&
+             (data.get('thesis', '') is string && data.get('thesis', '').size() <= 1000) &&
+             (data.get('targetBuyer', '') is string && data.get('targetBuyer', '').size() <= 500) &&
+             (data.get('avgPricing', '') is string && data.get('avgPricing', '').size() <= 200) &&
+             (data.get('rentalYield', '') is string && data.get('rentalYield', '').size() <= 100) &&
+             data.positioning in ["Luxury", "Growth", "Balanced"] &&
+             (data.get('infraGrowth', '') is string && data.get('infraGrowth', '').size() <= 1000) &&
+             (data.get('relevance', '') is string && data.get('relevance', '').size() <= 1000) &&
+             (data.get('image', '') is string && data.get('image', '').size() <= 2048);
+    }
+
+    function isValidSubscriber(data) {
+      return data.email is string && data.email.size() <= 256 &&
+             data.displayName is string && data.displayName.size() <= 100 &&
+             data.photoURL is string && data.photoURL.size() <= 1024 &&
+             data.createdAt == request.time;
+    }
+
+    // --- Collections ---
+
+    match /chats/{userId}/messages/{messageId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && 
+                      isValidChatMessage(incoming()) &&
+                      incoming().senderId == request.auth.uid &&
+                      incoming().senderRole == 'client';
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin(); // Only admins can list all users
+      
+      allow create: if isOwner(userId) && 
+                      isValidUser(incoming()) && 
+                      (
+                        (incoming().role == 'client') ||
+                        (incoming().role == 'admin' && request.auth.token.email == 'univueconsultants@gmail.com')
+                      ) &&
+                      incoming().uid == request.auth.uid &&
+                      incoming().createdAt == request.time;
+      
+      allow update: if isOwner(userId) && 
+                      isValidUser(incoming()) &&
+                      incoming().uid == existing().uid && // Immutable UID
+                      incoming().role == existing().role && // Cannot self-promote
+                      incoming().createdAt == existing().createdAt &&
+                      incoming().updatedAt == request.time &&
+                      incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'company', 'isSubscribed', 'updatedAt']);
+    }
+
+    match /documents/{docId} {
+      allow get: if isSignedIn() && (isOwner(existing().ownerId) || isAdmin());
+      allow list: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin());
+
+      allow create: if isSignedIn() && 
+                      isValidId(docId) &&
+                      incoming().ownerId == request.auth.uid &&
+                      incoming().uploadedAt == request.time;
+
+      allow update: if isAdmin(); // Only admin can update documents (titles, etc)
+      allow delete: if isAdmin() || (isSignedIn() && isOwner(existing().ownerId));
+    }
+
+    match /newsletters/{newsletterId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && isValidNewsletter(incoming());
+    }
+
+    match /insights/{insightId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidInsight(incoming()) && 
+                    incoming().createdAt == request.time;
+      allow update: if isAdmin() && isValidInsight(incoming()) &&
+                    incoming().createdAt == existing().createdAt &&
+                    incoming().updatedAt == request.time;
+      allow delete: if isAdmin();
+    }
+
+    match /properties/{propertyId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidProperty(incoming()) && 
+                    incoming().get('createdAt', request.time) == request.time;
+      allow update: if isAdmin() && isValidProperty(incoming()) &&
+                    incoming().createdAt == existing().createdAt &&
+                    incoming().get('updatedAt', request.time) == request.time;
+      allow delete: if isAdmin();
+    }
+
+    match /markets/{marketId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidMarket(incoming());
+      allow update: if isAdmin() && isValidMarket(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /cities/{cityId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidCity(incoming());
+      allow update: if isAdmin() && isValidCity(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /newsletter_subscribers/{subscriberId} {
+      allow create: if isValidId(subscriberId) && isValidSubscriber(incoming());
+      allow read, delete: if true;
+    }
+
+    match /site_settings/{settingId} {
+      allow read, get, list: if true;
+      allow write, create, update, delete: if isAdmin();
+    }
+
+    // Optional: admins collection for RBAC
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Managed via Firebase Console or special script
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Univue Consultants ApS 2.1",
+  "description": "Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

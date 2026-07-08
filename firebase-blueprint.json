@@ -1,0 +1,208 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Standard user profile information for clients.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The Firebase Auth UID." },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "company": { "type": "string" },
+        "isSubscribed": { "type": "boolean", "description": "Whether the user is subscribed to the newsletter." },
+        "role": { "type": "string", "enum": ["client", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Document": {
+      "title": "Client Document",
+      "description": "Premium reports or documents shared with specific clients.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "type": { "type": "string", "enum": ["PDF", "XLS", "DOC"] },
+        "ownerId": { "type": "string", "description": "UID of the client who owns this document." },
+        "sharedWith": { "type": "array", "items": { "type": "string" } },
+        "uploadedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "url", "ownerId"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "Real-time message in a support chat.",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderRole": { "type": "string", "enum": ["client", "support"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["text", "senderId", "senderRole", "createdAt"]
+    },
+    "Newsletter": {
+      "title": "Newsletter",
+      "description": "A record of a sent mass newsletter.",
+      "type": "object",
+      "properties": {
+        "subject": { "type": "string" },
+        "content": { "type": "string" },
+        "recipientCount": { "type": "number" },
+        "sentBy": { "type": "string" },
+        "sentAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["subject", "content", "sentBy", "sentAt"]
+    },
+    "Property": {
+      "title": "Market Property",
+      "description": "Information about a property in the market catalog.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "cityId": { "type": "string", "description": "Reference to a City document ID." },
+        "type": { "type": "string", "enum": ["Apartment", "Villa", "Townhouse", "Penthouse", "Commercial", "Land"] },
+        "country": { "type": "string", "enum": ["UAE", "India", "Southeast Asia"] },
+        "expectedYield": { "type": "string" },
+        "startingPrice": { "type": "string" },
+        "status": { "type": "string" },
+        "image": { "type": "string" },
+        "developer": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "credibility": { "type": "string" }
+          },
+          "required": ["name", "credibility"]
+        },
+        "highlights": { "type": "array", "items": { "type": "string" } },
+        "isAdvisorsChoice": { "type": "boolean" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "location", "country", "expectedYield", "startingPrice", "status", "image", "developer", "highlights", "isAdvisorsChoice"]
+    },
+    "Insight": {
+      "title": "Market Insight",
+      "description": "An article, report, or research paper posted by the admin.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["Article", "Report", "Research", "Interview", "Case Study"] },
+        "description": { "type": "string", "description": "Brief summary shown on the preview card." },
+        "photoUrl": { "type": "string" },
+        "content": { "type": "string", "description": "The full article content in Markdown." },
+        "markets": { "type": "array", "items": { "type": "string", "enum": ["Global", "UAE", "India", "Southeast Asia", "Emerging Markets"] } },
+        "subMarkets": { "type": "array", "items": { "type": "string" }, "description": "Specific countries or cities within the market focus." },
+        "sections": { "type": "array", "items": { "type": "string" }, "description": "Sections where the insight appears (e.g., Spotlight, New from Univue)." },
+        "displayDate": { "type": "string", "description": "Date string for display (e.g., 'May 2024')." },
+        "authorId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "type", "description", "photoUrl", "content", "sections", "displayDate", "createdAt", "updatedAt"]
+    },
+    "Market": {
+      "title": "Market",
+      "description": "A region or thematic area for investment (e.g., UAE, India).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "name", "slug", "order"]
+    },
+    "City": {
+      "title": "City",
+      "description": "A specific location within a market.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "marketId": { "type": "string" },
+        "country": { "type": "string" },
+        "thesis": { "type": "string" },
+        "targetBuyer": { "type": "string" },
+        "avgPricing": { "type": "string" },
+        "rentalYield": { "type": "string" },
+        "positioning": { "type": "string", "enum": ["Luxury", "Growth", "Balanced"] },
+        "infraGrowth": { "type": "string" },
+        "relevance": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["id", "name", "marketId", "country", "positioning"]
+    },
+    "NewsletterSubscriber": {
+      "title": "Newsletter Subscriber",
+      "description": "A record of a guest email subscribing to the newsletter.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "displayName", "photoURL", "createdAt"]
+    },
+    "SiteSettings": {
+      "title": "Site Settings",
+      "description": "Theme, photographs, and media configurations.",
+      "type": "object",
+      "properties": {
+        "photos": {
+          "type": "object",
+          "description": "Key-value mapping of customizable photograph URLs."
+        }
+      },
+      "required": ["photos"]
+    }
+  },
+  "firestore": {
+    "site_settings/{settingId}": {
+      "schema": "SiteSettings",
+      "description": "Global custom website photographs and layout configurations."
+    },
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Client profile documents."
+    },
+    "newsletters/{newsletterId}": {
+      "schema": "Newsletter",
+      "description": "Log of sent newsletters."
+    },
+    "newsletter_subscribers/{subscriberId}": {
+      "schema": "NewsletterSubscriber",
+      "description": "Email newsletter subscriptions for non-registered users."
+    },
+    "insights/{insightId}": {
+      "schema": "Insight",
+      "description": "Market insights and reports."
+    },
+    "documents/{docId}": {
+      "schema": "Document",
+      "description": "Individual documents or reports."
+    },
+    "chats/{userId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Real-time support chat messages for a specific user."
+    },
+    "properties/{propertyId}": {
+      "schema": "Property",
+      "description": "Managed properties in the market catalog."
+    },
+    "markets/{marketId}": {
+      "schema": "Market",
+      "description": "Thematic investment markets."
+    },
+    "cities/{cityId}": {
+      "schema": "City",
+      "description": "Local city markets within global regions."
+    }
+  }
+}

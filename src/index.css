@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
+
+@theme {
+  --color-brand-blue: #0B1F3A;
+  --color-brand-gold: #C8A96A;
+  --color-brand-gold-light: #DFCDA4;
+  --color-brand-navy-light: #162C4E;
+  --color-brand-ivory: #FDFCF5;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Bodoni Moda", serif;
+
+  /* Golden Ratio (Φ ≈ 1.618) Typography Scale */
+  --font-size-xs: 0.618rem;
+  --font-size-sm: 0.809rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.272rem;
+  --font-size-xl: 1.618rem;
+  --font-size-2xl: 2.058rem;
+  --font-size-3xl: 2.618rem;
+  --font-size-4xl: 3.336rem;
+  --font-size-5xl: 4.236rem;
+  --font-size-6xl: 5.395rem;
+  --font-size-7xl: 6.854rem;
+  --font-size-8xl: 8.711rem;
+  --font-size-9xl: 11.089rem;
+
+  --line-height-normal: 1.618;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-brand-ivory text-brand-blue leading-normal;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-[-0.02em] leading-[1.1] font-normal;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-10 py-4 bg-brand-gold text-brand-blue font-bold uppercase tracking-[0.3em] text-xs rounded-none transition-all duration-500 hover:bg-brand-gold-light hover:shadow-[0_0_30px_rgba(200,169,106,0.2)] active:scale-[0.98] text-center border border-brand-gold;
+  }
+
+  .btn-briefing {
+    @apply px-10 py-4 bg-brand-blue text-brand-ivory font-bold uppercase tracking-[0.3em] text-xs rounded-none transition-all duration-500 hover:bg-brand-gold hover:text-brand-blue active:scale-[0.98] text-center border border-brand-blue hover:border-brand-gold hover:shadow-[0_0_30px_rgba(200,169,106,0.2)];
+  }
+
+  .btn-outline {
+    @apply px-10 py-4 border border-brand-gold/40 text-brand-gold font-bold uppercase tracking-[0.3em] text-xs rounded-none transition-all duration-500 hover:bg-brand-gold hover:text-brand-blue active:scale-[0.98] text-center;
+  }
+
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-6 shadow-xl;
+  }
+
+  .section-padding {
+    @apply py-12 px-6 md:py-20 md:px-12 lg:px-24;
+  }
+
+  .insight-highlight {
+    @apply my-12 p-8 bg-brand-blue text-brand-ivory border-l-4 border-brand-gold relative overflow-hidden;
+  }
+  
+  .insight-highlight::after {
+    content: '';
+    @apply absolute top-0 right-0 w-32 h-32 bg-brand-gold/5 rounded-full -mr-16 -mt-16;
+  }
+
+  .insight-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-12 my-12 items-start;
+  }
+
+  .insight-grid h4 {
+    @apply text-brand-gold text-[10px] uppercase tracking-widest font-bold mb-4 block border-b border-brand-gold/10 pb-2;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* Premium Gradients */
+@keyframes bg-pan-vertical {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 0% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.bg-corporate-gradient {
+  background: linear-gradient(180deg, #060e1a 0%, #162C4E 50%, #060e1a 100%);
+  background-size: 100% 200%;
+}
+
+.animate-gradient-slow {
+  animation: bg-pan-vertical 15s ease-in-out infinite;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #C8A96A 0%, #DFCDA4 100%);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #C8A96A 0%, #DFCDA4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #C8A96A;
+  transform-origin: 0%;
+  z-index: 100;
+}
