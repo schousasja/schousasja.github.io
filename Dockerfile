@@ -3,7 +3,9 @@
 # ==========================================
 
 # --- Stage 1: Builder ---
-FROM node:20-alpine AS builder
+# Using node:20-slim (Debian-based) ensures full glibc compatibility for compiled 
+# binaries like esbuild/vite, avoiding the native issues common in alpine (musl).
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
@@ -11,8 +13,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY dummy-domexception ./dummy-domexception
 
-# Install all dependencies (including devDependencies for compilation)
-RUN npm ci
+# Use npm install instead of npm ci to gracefully resolve platform-specific
+# binaries (such as esbuild and swc) for the container's architecture.
+RUN npm install
 
 # Copy the rest of the application source code
 COPY . .
@@ -23,7 +26,7 @@ RUN npm run build
 
 
 # --- Stage 2: Production Runner ---
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 
 WORKDIR /app
 
@@ -36,7 +39,7 @@ COPY package.json package-lock.json ./
 COPY dummy-domexception ./dummy-domexception
 
 # Install only production dependencies to keep the image slim and fast
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist ./dist
