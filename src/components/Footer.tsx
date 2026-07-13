@@ -1,4 +1,4 @@
-import { Globe2, Users2, Mail, Phone, Linkedin, X, Instagram, Facebook, MessageCircle, Music2 } from 'lucide-react';
+import { Globe2, Users2, Mail, Phone, Linkedin, X, Instagram, Facebook, MessageCircle, Music2, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -100,6 +100,10 @@ export const Footer = () => {
                 <Phone className="w-4 h-4 text-brand-gold group-hover:scale-110 transition-transform" /> 
                 +45 26 37 82 70
               </a>
+            </li>
+            <li className="flex items-start gap-3">
+              <MapPin className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" /> 
+              <span>Amaliegårdvej 1, 8543 Hornslet</span>
             </li>
           </ul>
         </div>
