@@ -103,7 +103,7 @@ export const Footer = () => {
             </li>
             <li className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" /> 
-              <span>Amaliegårdvej 1, 8543 Hornslet</span>
+              <span>Amaliegårdvej 1, 8543 Hornslet, Denmark</span>
             </li>
           </ul>
         </div>
