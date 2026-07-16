@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { properties as mockProperties } from '../constants/properties';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSiteSettings } from '../contexts/SiteSettingsContext';
-import { Globe2, TrendingUp, Building2, MapPin, ArrowRight, ShieldCheck, Tag, Loader2 } from 'lucide-react';
+import { Globe2, Building2, MapPin, ArrowRight, ShieldCheck, Tag, Loader2, Award, Star } from 'lucide-react';
 import { collection, query, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { useMarkets } from '../contexts/MarketContext';
 import { useDocumentMetadata } from '../hooks/useDocumentMetadata';
 import { Search, Filter, ChevronDown, ListFilter, Calendar, Heart } from 'lucide-react';
+import { PropertyImageSlider } from '../components/PropertyImageSlider';
+import { PropertyDetailModal } from '../components/PropertyDetailModal';
 
 export const MarketCatalog = () => {
   const { t } = useLanguage();
@@ -26,6 +27,7 @@ export const MarketCatalog = () => {
 
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProperty, setSelectedProperty] = useState<any | null>(null);
   
   const [favorites, setFavorites] = useState<string[]>(() => {
     const saved = localStorage.getItem('univue_favorites');
@@ -50,7 +52,7 @@ export const MarketCatalog = () => {
   const [activeMarket, setActiveMarket] = useState('all');
   const [activeCity, setActiveCity] = useState('all');
   const [activePropertyType, setActivePropertyType] = useState('all');
-  const [sortOption, setSortOption] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'yield-desc'>('newest');
+  const [sortOption, setSortOption] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc'>('newest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
@@ -68,7 +70,6 @@ export const MarketCatalog = () => {
         ...doc.data(),
         // Parse price for sorting if it's a string like "AED 2.45M" or "$400k"
         numericPrice: parseNumericPrice(doc.data().startingPrice),
-        numericYield: parseFloat(doc.data().expectedYield) || 0,
         createdAt: doc.data().createdAt?.toDate() || new Date()
       }));
       
@@ -112,7 +113,6 @@ export const MarketCatalog = () => {
         case 'oldest': return a.createdAt - b.createdAt;
         case 'price-asc': return a.numericPrice - b.numericPrice;
         case 'price-desc': return b.numericPrice - a.numericPrice;
-        case 'yield-desc': return b.numericYield - a.numericYield;
         default: return 0;
       }
     });
@@ -187,7 +187,6 @@ export const MarketCatalog = () => {
                     <option value="oldest">Oldest Listings</option>
                     <option value="price-asc">Price: Low to High</option>
                     <option value="price-desc">Price: High to Low</option>
-                    <option value="yield-desc">Highest Yield First</option>
                   </select>
                   <ListFilter className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-brand-gold" />
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-300" />
@@ -361,106 +360,101 @@ export const MarketCatalog = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: (i % 3) * 0.1, duration: 0.6 }}
                   viewport={{ once: true }}
-                  className="group flex flex-col h-full bg-white border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:border-brand-gold/20"
+                  onClick={() => setSelectedProperty(prop)}
+                  className="group flex flex-col h-full bg-white border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:border-brand-gold/20 cursor-pointer"
                 >
                   {/* Large Imagery */}
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <img 
-                      src={prop.image} 
-                      alt={prop.name} 
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800';
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/60 via-transparent to-transparent opacity-40"></div>
+                    <PropertyImageSlider images={prop.images} defaultImage={prop.image} alt={prop.name} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/60 via-transparent to-transparent opacity-40 pointer-events-none" />
+                    
+                    {/* Status Badge */}
                     <div className="absolute top-4 left-4 bg-brand-gold/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-brand-blue border border-brand-blue/5 shadow-lg">
                       {prop.status}
                     </div>
-                    {prop.type && (
-                       <div className="absolute top-4 right-4 bg-brand-ivory/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-brand-blue border border-brand-blue/5 shadow-lg">
-                       {prop.type}
-                     </div>
+
+                    {/* Recommendation Badge */}
+                    {prop.recommendationLevel && (
+                      <div className="absolute top-4 right-4 bg-amber-600/95 backdrop-blur-sm px-3 py-1 text-[8px] font-black uppercase tracking-widest text-white shadow-lg">
+                        ★ {prop.recommendationLevel}
+                      </div>
                     )}
+
                     <button 
                       onClick={(e) => toggleFavorite(prop.id, e)}
                       className="absolute top-12 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue z-10"
                     >
                       <Heart className={`w-4 h-4 ${favorites.includes(prop.id) ? 'fill-red-500 text-red-500' : 'text-brand-blue'}`} />
                     </button>
+
+                    {/* Country & City Submarket */}
                     <div className="absolute bottom-4 left-4 bg-brand-blue/80 backdrop-blur-md px-3 py-1 text-[8px] font-bold uppercase tracking-[0.2em] text-brand-ivory border border-white/10">
-                      {prop.country}
+                      {prop.country} {prop.city ? `• ${prop.city}` : ''}
                     </div>
                   </div>
 
                   {/* Content Section */}
-                  <div className="p-8 flex-grow flex flex-col">
-                    <div className="mb-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-2xl font-serif text-brand-blue group-hover:text-brand-gold transition-colors">{prop.name}</h3>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3 h-3 text-brand-gold" />
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-black leading-none">
-                          {prop.location}
+                  <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div>
+                      {/* Developer & Type details */}
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                          {prop.type || 'Property'} {prop.developer?.name ? `by ${prop.developer.name}` : ''}
                         </span>
                       </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                      <div className="bg-gray-50/50 p-4 border border-gray-100 transition-colors group-hover:bg-brand-gold/5">
-                        <div className="flex items-center gap-1.5 text-brand-gold mb-1">
-                          <TrendingUp className="w-3 h-3" />
-                          <span className="text-[9px] font-black tracking-widest uppercase">{t('catalog.yield')}</span>
-                        </div>
-                        <div className="text-xl font-serif text-brand-blue">{prop.expectedYield}</div>
+                      
+                      {/* Property Name */}
+                      <h3 className="text-xl font-serif text-brand-blue group-hover:text-brand-gold transition-colors mb-2 line-clamp-1">
+                        {prop.name}
+                      </h3>
+                      
+                      {/* Location Address */}
+                      <div className="flex items-center gap-1.5 text-gray-400 font-medium text-xs mb-3">
+                        <MapPin className="w-3.5 h-3.5 text-brand-gold shrink-0" />
+                        <span className="truncate">{prop.location}</span>
                       </div>
-                      <div className="bg-gray-50/50 p-4 border border-gray-100 transition-colors group-hover:bg-brand-gold/5">
-                        <div className="flex items-center gap-1.5 text-brand-gold mb-1">
-                          <Tag className="w-3 h-3" />
-                          <span className="text-[9px] font-black tracking-widest uppercase">{t('catalog.starting')}</span>
-                        </div>
-                        <div className="text-sm font-bold text-brand-blue truncate" title={prop.startingPrice}>{prop.startingPrice}</div>
-                      </div>
-                    </div>
 
-                    {/* Developer Credibility */}
-                    {prop.developer && (
-                      <div className="mb-8 p-4 border-l-2 border-brand-gold bg-brand-gold/5">
-                        <div className="flex items-center gap-2 mb-2">
-                          <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />
-                          <span className="text-[9px] font-black uppercase tracking-widest text-brand-blue">
-                            {prop.developer.name}
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-gray-500 italic leading-relaxed antialiased">
-                          "{prop.developer.credibility}"
+                      {/* Description / Statement of the property */}
+                      {prop.description && (
+                        <p className="text-xs text-gray-500 font-light leading-relaxed line-clamp-2 mb-3">
+                          {prop.description}
                         </p>
-                      </div>
-                    )}
+                      )}
 
-                    <div className="space-y-2 mb-10">
-                      {prop.highlights?.slice(0, 3).map((highlight: string, idx: number) => (
-                        <div key={idx} className="flex items-center gap-3">
-                          <div className="w-1 h-1 bg-brand-gold/40 rounded-full" />
-                          <span className="text-[9px] text-brand-blue uppercase tracking-widest font-bold opacity-60 italic">{highlight}</span>
+                      {/* Highlights & Perks (horizontal preview tags) */}
+                      {prop.highlights && prop.highlights.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {prop.highlights.slice(0, 2).map((highlight: string, idx: number) => (
+                            <span key={idx} className="bg-brand-ivory text-brand-blue text-[8px] font-medium uppercase tracking-wider px-2 py-0.5 border border-brand-blue/5">
+                              ✓ {highlight}
+                            </span>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
-                       <div className="flex items-center gap-2 text-[8px] text-gray-400 font-bold uppercase tracking-widest">
-                        <Calendar className="w-3 h-3" />
-                        {prop.createdAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                    {/* Handover & Payment Plan details */}
+                    <div className="pt-4 border-t border-gray-100 flex flex-col gap-2">
+                      <div className="flex justify-between items-center text-[10px] text-gray-500 font-light">
+                        {prop.handoverTime && (
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5 text-brand-gold" />
+                            Handover: <strong className="text-brand-blue font-semibold">{prop.handoverTime}</strong>
+                          </span>
+                        )}
+                        {prop.paymentPlan && (
+                          <span className="text-right truncate max-w-[150px]" title={prop.paymentPlan}>
+                            Plan: <strong className="text-brand-blue font-semibold">{prop.paymentPlan}</strong>
+                          </span>
+                        )}
                       </div>
-                      <button 
-                        onClick={() => navigate('/book')}
-                        className="py-3 px-8 bg-brand-blue text-brand-ivory text-[9px] uppercase tracking-widest font-black flex items-center justify-center gap-2 group-hover:bg-brand-gold group-hover:text-brand-blue transition-all duration-300 shadow-md"
-                      >
-                        {t('catalog.inquire')}
-                        <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                      </button>
+
+                      <div className="flex justify-between items-end mt-1">
+                        <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold">Starts From</span>
+                        <span className="text-lg font-serif font-bold text-brand-blue tracking-tight">
+                          {prop.startingPrice}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -519,6 +513,14 @@ export const MarketCatalog = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Detail Overlay Modal */}
+      {selectedProperty && (
+        <PropertyDetailModal 
+          property={selectedProperty} 
+          onClose={() => setSelectedProperty(null)} 
+        />
+      )}
     </div>
   );
 };

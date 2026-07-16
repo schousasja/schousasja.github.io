@@ -119,10 +119,6 @@ export const Footer = () => {
       
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-xs uppercase tracking-widest text-brand-ivory/30 font-bold border-t border-brand-ivory/5 pt-8">
         <span>&copy; 2026 Univue Consultants ApS. {t('footer.rights')}</span>
-        <div className="flex gap-8">
-           <span>Dubai, UAE</span>
-           <span>Bangalore, IN</span>
-        </div>
       </div>
     </footer>
   );

@@ -35,17 +35,22 @@ interface Developer {
 
 interface PropertyData {
   name: string;
-  location: string;
-  cityId: string;
   type: string;
   country: string;
-  image: string;
-  expectedYield: string;
+  city?: string;
+  cityId: string;
+  location: string;
   startingPrice: string;
-  status: string;
+  image: string;
+  images?: string[];
   developer: Developer;
   highlights: string[];
   isAdvisorsChoice: boolean;
+  description?: string;
+  paymentPlan?: string;
+  recommendationLevel?: string;
+  handoverTime?: string;
+  status: string;
 }
 
 const INITIAL_FORM_STATE: PropertyData = {
@@ -55,7 +60,7 @@ const INITIAL_FORM_STATE: PropertyData = {
   type: 'Apartment',
   country: 'UAE',
   image: '',
-  expectedYield: '',
+  images: [''],
   startingPrice: '',
   status: 'INVESTMENT READY',
   developer: {
@@ -63,7 +68,12 @@ const INITIAL_FORM_STATE: PropertyData = {
     credibility: ''
   },
   highlights: [''],
-  isAdvisorsChoice: false
+  isAdvisorsChoice: false,
+  city: '',
+  description: '',
+  paymentPlan: '',
+  recommendationLevel: '',
+  handoverTime: ''
 };
 
 import { AdminNav } from '../components/AdminNav';
@@ -142,6 +152,29 @@ export const CatalogAdmin = () => {
     }));
   };
 
+  const handleAddImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      images: [...(prev.images || []), '']
+    }));
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: (prev.images || []).filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleImageChange = (index: number, value: string) => {
+    const newImages = [...(formData.images || [])];
+    newImages[index] = value;
+    setFormData(prev => ({
+      ...prev,
+      images: newImages
+    }));
+  };
+
   const handleEdit = (prop: any) => {
     setEditId(prop.id);
     setFormData({
@@ -151,7 +184,7 @@ export const CatalogAdmin = () => {
       type: prop.type || 'Apartment',
       country: prop.country || 'UAE',
       image: prop.image || '',
-      expectedYield: prop.expectedYield || '',
+      images: prop.images && prop.images.length > 0 ? prop.images : [prop.image || ''],
       startingPrice: prop.startingPrice || '',
       status: prop.status || 'INVESTMENT READY',
       developer: {
@@ -159,7 +192,12 @@ export const CatalogAdmin = () => {
         credibility: prop.developer?.credibility || ''
       },
       highlights: prop.highlights && prop.highlights.length > 0 ? prop.highlights : [''],
-      isAdvisorsChoice: prop.isAdvisorsChoice || false
+      isAdvisorsChoice: prop.isAdvisorsChoice || false,
+      city: prop.city || '',
+      description: prop.description || '',
+      paymentPlan: prop.paymentPlan || '',
+      recommendationLevel: prop.recommendationLevel || '',
+      handoverTime: prop.handoverTime || ''
     });
     setActiveTab('add');
     window.scrollTo({ top: 300, behavior: 'smooth' });
@@ -179,8 +217,16 @@ export const CatalogAdmin = () => {
     setStatus(null);
 
     try {
+      const cleanImages = formData.images ? formData.images.filter(img => img.trim() !== '') : [];
+      let mainImage = formData.image;
+      if (!mainImage && cleanImages.length > 0) {
+        mainImage = cleanImages[0];
+      }
+
       const cleanData = {
         ...formData,
+        image: mainImage,
+        images: cleanImages,
         highlights: formData.highlights.filter(h => h.trim() !== ''),
         updatedAt: serverTimestamp(),
         updatedBy: profile.uid
@@ -466,7 +512,7 @@ export const CatalogAdmin = () => {
                         </p>
                       )}
                       <div className="flex justify-between items-center pt-4 border-t border-gray-50">
-                        <div className="text-[10px] uppercase tracking-widest text-gray-400">Yield: <span className="text-brand-gold font-bold">{prop.expectedYield}</span></div>
+                        <div className="text-[10px] uppercase tracking-widest text-gray-400">Type: <span className="text-brand-gold font-bold">{prop.type || 'N/A'}</span></div>
                         <div className="text-[10px] uppercase tracking-widest text-gray-400">Price: <span className="text-brand-blue font-bold">{prop.startingPrice}</span></div>
                       </div>
                     </div>
@@ -532,7 +578,6 @@ export const CatalogAdmin = () => {
                         <div className="flex gap-2">
                           <input 
                             type="text"
-                            required
                             value={formData.type}
                             onChange={e => setFormData({...formData, type: e.target.value})}
                             className="flex-grow bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
@@ -584,7 +629,6 @@ export const CatalogAdmin = () => {
                         <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Sub-Market / City</label>
                         <div className="relative">
                           <select 
-                            required
                             value={formData.cityId}
                             onChange={e => {
                                 const city = cities.find(c => c.id === e.target.value);
@@ -607,12 +651,11 @@ export const CatalogAdmin = () => {
                       <div>
                         <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Detailed Address / Location</label>
                         <input 
-                          type="text"
-                          required
-                          value={formData.location}
-                          onChange={e => setFormData({...formData, location: e.target.value})}
-                          className="w-full bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
-                          placeholder="e.g. Business Bay, Dubai"
+                           type="text"
+                           value={formData.location}
+                           onChange={e => setFormData({...formData, location: e.target.value})}
+                           className="w-full bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
+                           placeholder="e.g. Business Bay, Dubai"
                         />
                       </div>
                     </div>
@@ -624,7 +667,6 @@ export const CatalogAdmin = () => {
                         <div className="flex gap-2">
                           <input 
                             type="text"
-                            required
                             value={formData.status}
                             onChange={e => setFormData({...formData, status: e.target.value})}
                             className="flex-grow bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
@@ -648,23 +690,11 @@ export const CatalogAdmin = () => {
                           </select>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Expected Yield</label>
-                          <input 
-                            type="text"
-                            required
-                            value={formData.expectedYield}
-                            onChange={e => setFormData({...formData, expectedYield: e.target.value})}
-                            className="w-full bg-gray-50 border-none px-4 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
-                            placeholder="e.g. 7.8%"
-                          />
-                        </div>
+                      <div className="grid grid-cols-1 gap-4">
                         <div>
                           <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Starting Price</label>
                           <input 
                             type="text"
-                            required
                             value={formData.startingPrice}
                             onChange={e => setFormData({...formData, startingPrice: e.target.value})}
                             className="w-full bg-gray-50 border-none px-4 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
@@ -677,8 +707,7 @@ export const CatalogAdmin = () => {
                         <div className="flex gap-4">
                           <div className="relative flex-grow">
                             <input 
-                              type="url"
-                              required
+                              type="text"
                               value={formData.image}
                               onChange={e => setFormData({...formData, image: e.target.value})}
                               className="w-full bg-gray-50 border-none px-6 py-4 pl-12 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
@@ -702,6 +731,117 @@ export const CatalogAdmin = () => {
                         </div>
                         <p className="text-[8px] text-gray-400 mt-2 uppercase tracking-widest italic">Use direct image url to represent the property details.</p>
                       </div>
+
+                      {/* Multiple Photos */}
+                      <div className="pt-4 border-t border-gray-100">
+                        <div className="flex justify-between items-center mb-4">
+                          <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400">Additional Photos</label>
+                          <button 
+                            type="button"
+                            onClick={handleAddImage}
+                            className="text-[9px] uppercase tracking-widest font-black text-brand-blue flex items-center gap-1 hover:text-brand-gold transition-colors"
+                          >
+                            <Plus className="w-3 h-3 text-brand-gold" /> Add Photo
+                          </button>
+                        </div>
+                        <div className="space-y-3">
+                          {formData.images?.map((imgUrl, idx) => (
+                            <div key={idx} className="flex gap-3">
+                              <div className="relative flex-grow">
+                                <input 
+                                  type="text"
+                                  value={imgUrl}
+                                  onChange={e => handleImageChange(idx, e.target.value)}
+                                  className="w-full bg-gray-50 border-none px-6 py-4 pl-12 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
+                                  placeholder="https://images.unsplash.com/..."
+                                />
+                                <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                              </div>
+                              {imgUrl && (
+                                <div className="w-12 h-12 border border-gray-100 overflow-hidden shrink-0">
+                                  <img 
+                                    src={imgUrl} 
+                                    alt="Preview" 
+                                    className="w-full h-full object-cover"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1541339902294-12e006a13344?auto=format&fit=crop&q=80&w=200';
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              {formData.images && formData.images.length > 1 && (
+                                <button 
+                                  type="button"
+                                  onClick={() => handleRemoveImage(idx)}
+                                  className="p-3 text-red-300 hover:text-red-500 transition-colors"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Property Specifications & Recommendation */}
+                  <div className="pt-10 border-t border-gray-100">
+                    <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold text-brand-gold mb-8">Property Profile & Recommendation</h4>
+                    
+                    <div className="space-y-8">
+                      {/* Profiles & Badges */}
+                      <div>
+                        <h5 className="text-[9px] uppercase tracking-[0.3em] font-black text-brand-blue mb-4 pb-2 border-b border-gray-100">Profile Details</h5>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          <div>
+                            <label className="text-[8px] uppercase tracking-widest font-bold text-gray-400 mb-2 block">Payment Plan</label>
+                            <input 
+                              type="text"
+                              value={formData.paymentPlan || ''}
+                              onChange={e => setFormData({...formData, paymentPlan: e.target.value})}
+                              className="w-full bg-gray-50 border-none px-4 py-3 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
+                              placeholder="e.g. 60/40 payment plan"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[8px] uppercase tracking-widest font-bold text-gray-400 mb-2 block">Level of Recommendation</label>
+                            <select 
+                              value={formData.recommendationLevel || ''}
+                              onChange={e => setFormData({...formData, recommendationLevel: e.target.value})}
+                              className="w-full bg-gray-50 border-none px-4 py-3 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
+                            >
+                              <option value="">No recommendation badge</option>
+                              <option value="Recommended">Recommended</option>
+                              <option value="Highly Recommended">Highly Recommended</option>
+                              <option value="Strongly Recommended">Strongly Recommended</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-[8px] uppercase tracking-widest font-bold text-gray-400 mb-2 block">Handover Time</label>
+                            <input 
+                              type="text"
+                              value={formData.handoverTime || ''}
+                              onChange={e => setFormData({...formData, handoverTime: e.target.value})}
+                              className="w-full bg-gray-50 border-none px-4 py-3 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
+                              placeholder="e.g. Q4 2026, Immediate"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <div>
+                        <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Short Description / Statement of the Property</label>
+                        <textarea 
+                          rows={3}
+                          value={formData.description || ''}
+                          onChange={e => setFormData({...formData, description: e.target.value})}
+                          className="w-full bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold resize-none"
+                          placeholder="Provide a compelling short statement or description of the property."
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -713,7 +853,6 @@ export const CatalogAdmin = () => {
                         <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Developer Name</label>
                         <input 
                           type="text"
-                          required
                           value={formData.developer.name}
                           onChange={e => setFormData({
                             ...formData, 
@@ -726,7 +865,6 @@ export const CatalogAdmin = () => {
                       <div>
                         <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Credibility Statement</label>
                         <textarea 
-                          required
                           rows={2}
                           value={formData.developer.credibility}
                           onChange={e => setFormData({

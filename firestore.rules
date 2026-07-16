@@ -64,17 +64,33 @@ service cloud.firestore {
 
     function isValidProperty(data) {
       return data.name is string && data.name.size() <= 200 &&
-             data.location is string && data.location.size() <= 200 &&
+             (data.get('location', '') is string && data.get('location', '').size() <= 200) &&
              (data.get('cityId', '') is string && data.get('cityId', '').size() <= 128) &&
              (data.get('type', '') is string && data.get('type', '').size() <= 50) &&
              data.country in ['UAE', 'India', 'Southeast Asia'] &&
-             data.get('expectedYield', '') is string && data.get('expectedYield', '').size() <= 50 &&
-             data.get('startingPrice', '') is string && data.get('startingPrice', '').size() <= 100 &&
-             data.status is string && data.status.size() <= 50 &&
-             data.image is string && data.image.size() <= 2048 &&
-             data.developer.name is string && data.developer.name.size() <= 200 &&
-             data.developer.credibility is string && data.developer.credibility.size() <= 1000 &&
-             data.highlights is list && data.highlights.size() <= 10 &&
+             (data.get('expectedYield', '') is string && data.get('expectedYield', '').size() <= 50) &&
+             (data.get('startingPrice', '') is string && data.get('startingPrice', '').size() <= 100) &&
+             (data.get('status', '') is string && data.get('status', '').size() <= 50) &&
+             (data.get('image', '') is string && data.get('image', '').size() <= 2048) &&
+             (data.get('images', []) is list && data.get('images', []).size() <= 20) &&
+             (data.get(['developer', 'name'], '') is string && data.get(['developer', 'name'], '').size() <= 200) &&
+             (data.get(['developer', 'credibility'], '') is string && data.get(['developer', 'credibility'], '').size() <= 1000) &&
+             (data.get('highlights', []) is list && data.get('highlights', []).size() <= 10) &&
+             (data.get('postalCode', '') is string && data.get('postalCode', '').size() <= 50) &&
+             (data.get('city', '') is string && data.get('city', '').size() <= 100) &&
+             (data.get('rooms', '') is string && data.get('rooms', '').size() <= 50) &&
+             (data.get('area', '') is string && data.get('area', '').size() <= 50) &&
+             (data.get('basementSize', '') is string && data.get('basementSize', '').size() <= 50) &&
+             (data.get('floors', '') is string && data.get('floors', '').size() <= 50) &&
+             (data.get('yearBuilt', '') is string && data.get('yearBuilt', '').size() <= 50) &&
+             (data.get('lotSize', '') is string && data.get('lotSize', '').size() <= 50) &&
+             (data.get('energyRating', '') is string && data.get('energyRating', '').size() <= 50) &&
+             (data.get('daysOnMarket', '') is string && data.get('daysOnMarket', '').size() <= 50) &&
+             (data.get('monthlyExpenses', '') is string && data.get('monthlyExpenses', '').size() <= 50) &&
+             (data.get('downPayment', '') is string && data.get('downPayment', '').size() <= 50) &&
+             (data.get('grossPayment', '') is string && data.get('grossPayment', '').size() <= 50) &&
+             (data.get('netPayment', '') is string && data.get('netPayment', '').size() <= 50) &&
+             (data.get('caseId', '') is string && data.get('caseId', '').size() <= 50) &&
              data.isAdvisorsChoice is bool;
     }
 

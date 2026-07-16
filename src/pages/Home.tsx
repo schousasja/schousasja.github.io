@@ -4,13 +4,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ServiceCard } from '../components/ServiceCard';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSiteSettings } from '../contexts/SiteSettingsContext';
-import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Loader2, Heart } from 'lucide-react';
+import { Loader2, Heart, MapPin, Calendar } from 'lucide-react';
 import { StructuredData } from '../components/StructuredData';
 import { useDocumentMetadata } from '../hooks/useDocumentMetadata';
 // @ts-ignore
 import uaeRegeneratedImage from '../assets/images/regenerated_image_1780661181173.jpg';
+import { PropertyImageSlider } from '../components/PropertyImageSlider';
+import { PropertyDetailModal } from '../components/PropertyDetailModal';
 
 export const Home = () => {
   const { t } = useLanguage();
@@ -65,6 +67,7 @@ export const Home = () => {
   const [hoveredColumn, setHoveredColumn] = React.useState<number | null>(null);
   const [featuredProperties, setFeaturedProperties] = useState<any[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(true);
+  const [selectedProperty, setSelectedProperty] = useState<any | null>(null);
   const { photos } = useSiteSettings();
 
   useEffect(() => {
@@ -91,13 +94,23 @@ export const Home = () => {
           // Map to internal format if needed, but the UI is flexible
           setFeaturedProperties(limited.map((p: any) => ({
             id: p.id,
+            name: p.name,
             title: p.name,
             location: p.location,
-            yield: p.expectedYield,
+            country: p.country,
+            startingPrice: p.startingPrice,
             price: p.startingPrice,
-            rationale: p.highlights?.[0] || "Strategic positioning in a high-growth market with institutional-grade yields.",
-            developer: p.developer?.name,
-            image: p.image
+            developer: p.developer,
+            image: p.image,
+            images: p.images || [],
+            city: p.city,
+            type: p.type,
+            highlights: p.highlights || [],
+            description: p.description,
+            paymentPlan: p.paymentPlan,
+            recommendationLevel: p.recommendationLevel,
+            handoverTime: p.handoverTime,
+            status: p.status
           })));
         } else {
           setFeaturedProperties([]);
@@ -500,11 +513,6 @@ export const Home = () => {
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <h2 className="text-xs font-normal text-brand-gold uppercase tracking-[0.4em] mb-4">{t('home.choice.tag')}</h2>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <h3 className="text-4xl md:text-5xl font-serif font-normal text-brand-blue tracking-tighter max-w-2xl">
-                {t('home.choice.title')}
-              </h3>
-            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -521,70 +529,111 @@ export const Home = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.8 }}
                   viewport={{ once: true }}
-                  className="group flex flex-col h-full bg-white p-6 border border-gray-100 rounded-sm hover:shadow-xl transition-all duration-500"
+                  onClick={() => setSelectedProperty(op)}
+                  className="group flex flex-col h-full bg-white border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:border-brand-gold/20 cursor-pointer"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden mb-6 rounded-sm">
-                    <img 
-                      src={op.image} 
-                      alt={op.title} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1541339902294-12e006a13344?auto=format&fit=crop&q=80&w=800';
-                      }}
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-widest text-brand-blue rounded-full">
-                        {op.location}
-                      </span>
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <PropertyImageSlider images={op.images} defaultImage={op.image} alt={op.title} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/60 via-transparent to-transparent opacity-40 pointer-events-none" />
+                    
+                    {/* Status Badge */}
+                    <div className="absolute top-4 left-4 bg-brand-gold/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-brand-blue border border-brand-blue/5 shadow-lg">
+                      {op.status || 'INVESTMENT READY'}
                     </div>
+
+                    {/* Recommendation Badge */}
+                    {op.recommendationLevel && (
+                      <div className="absolute top-4 right-4 bg-amber-600/95 backdrop-blur-sm px-3 py-1 text-[8px] font-black uppercase tracking-widest text-white shadow-lg">
+                        ★ {op.recommendationLevel}
+                      </div>
+                    )}
+
                     <button 
-                      onClick={(e) => toggleFavorite(op.id, e)}
-                      className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(op.id, e);
+                      }}
+                      className="absolute top-12 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue z-10"
                     >
                       <Heart className={`w-4 h-4 ${favorites.includes(op.id) ? 'fill-red-500 text-red-500' : 'text-brand-blue'}`} />
                     </button>
+
+                    {/* Submarket & Market */}
+                    <div className="absolute bottom-4 left-4 bg-brand-blue/80 backdrop-blur-md px-3 py-1 text-[8px] font-bold uppercase tracking-[0.2em] text-brand-ivory border border-white/10">
+                      {op.country} {op.city ? `• ${op.city}` : ''}
+                    </div>
                   </div>
 
-                  <div className="flex-grow space-y-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <h4 className="text-xl font-normal text-brand-blue leading-tight group-hover:text-brand-gold transition-colors">
+                  {/* Content Section */}
+                  <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div>
+                      {/* Developer & Type */}
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                          {op.type || 'Property'} {op.developer?.name || op.developer ? `by ${op.developer?.name || op.developer}` : ''}
+                        </span>
+                      </div>
+                      
+                      {/* Property Name */}
+                      <h3 className="text-xl font-serif text-brand-blue group-hover:text-brand-gold transition-colors mb-2 line-clamp-1">
                         {op.title}
-                      </h4>
-                      <div className="text-right">
-                        <p className="text-brand-gold font-bold text-sm tracking-tight">{op.yield}</p>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-widest">{op.price}</p>
+                      </h3>
+                      
+                      {/* Location Address */}
+                      <div className="flex items-center gap-1.5 text-gray-400 font-medium text-xs mb-3">
+                        <MapPin className="w-3.5 h-3.5 text-brand-gold shrink-0" />
+                        <span className="truncate">{op.location}</span>
+                      </div>
+
+                      {/* Description / Statement of the property */}
+                      {op.description && (
+                        <p className="text-xs text-gray-500 font-light leading-relaxed line-clamp-2 mb-3">
+                          {op.description}
+                        </p>
+                      )}
+
+                      {/* Highlights & Perks (horizontal tags) */}
+                      {op.highlights && op.highlights.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {op.highlights.slice(0, 2).map((highlight: string, idx: number) => (
+                            <span key={idx} className="bg-brand-ivory text-brand-blue text-[8px] font-medium uppercase tracking-wider px-2 py-0.5 border border-brand-blue/5">
+                              ✓ {highlight}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Handover & Payment Plan details */}
+                    <div className="pt-4 border-t border-gray-100 flex flex-col gap-2">
+                      <div className="flex justify-between items-center text-[10px] text-gray-500 font-light">
+                        {op.handoverTime && (
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5 text-brand-gold" />
+                            Handover: <strong className="text-brand-blue font-semibold">{op.handoverTime}</strong>
+                          </span>
+                        )}
+                        {op.paymentPlan && (
+                          <span className="text-right truncate max-w-[150px]" title={op.paymentPlan}>
+                            Plan: <strong className="text-brand-blue font-semibold">{op.paymentPlan}</strong>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex justify-between items-end mt-1">
+                        <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold">Starts From</span>
+                        <span className="text-lg font-serif font-bold text-brand-blue tracking-tight">
+                          {op.startingPrice || op.price}
+                        </span>
                       </div>
                     </div>
-
-                    <div className="pt-4 border-t border-gray-100">
-                      <p className="text-[10px] font-bold text-brand-blue uppercase tracking-widest mb-2 flex items-center gap-2">
-                        {t('home.choice.rationale')}
-                      </p>
-                      <p className="text-sm text-gray-600 leading-relaxed italic">
-                        "{op.rationale}"
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <div>
-                      <p className="text-[8px] text-gray-400 uppercase tracking-widest mb-1">{t('home.choice.developer')}</p>
-                      <p className="text-[10px] font-bold text-brand-blue uppercase tracking-widest">{op.developer}</p>
-                    </div>
-                    <button 
-                      onClick={() => navigate('/questionnaire')}
-                      className="text-brand-gold hover:text-brand-blue transition-colors group-hover:translate-x-1 duration-300 font-bold uppercase text-[10px] tracking-widest"
-                    >
-                      {t('home.choice.details')}
-                    </button>
                   </div>
                 </motion.div>
               ))
             ) : (
               <div className="col-span-full py-32 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-                  <Loader2 className="w-6 h-6 text-brand-gold/40" />
+                <div className="w-16 h-16 bg-brand-ivory rounded-full flex items-center justify-center mb-6">
+                  <Loader2 className="w-6 h-6 text-brand-gold/40 animate-spin" />
                 </div>
                 <p className="text-lg font-serif text-brand-blue mb-2">{t('home.choice.empty')}</p>
                 <p className="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-bold">{t('home.choice.empty.sub')}</p>
@@ -704,6 +753,14 @@ export const Home = () => {
         <div className="absolute top-1/2 left-0 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute top-1/2 right-0 w-64 h-64 bg-brand-blue/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
       </section>
+
+      {/* Detail Overlay Modal */}
+      {selectedProperty && (
+        <PropertyDetailModal 
+          property={selectedProperty} 
+          onClose={() => setSelectedProperty(null)} 
+        />
+      )}
     </div>
   );
 };

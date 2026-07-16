@@ -71,20 +71,20 @@
         "startingPrice": { "type": "string" },
         "status": { "type": "string" },
         "image": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" }, "description": "Multiple listing photo URLs." },
         "developer": {
           "type": "object",
           "properties": {
             "name": { "type": "string" },
             "credibility": { "type": "string" }
-          },
-          "required": ["name", "credibility"]
+          }
         },
         "highlights": { "type": "array", "items": { "type": "string" } },
         "isAdvisorsChoice": { "type": "boolean" },
         "createdBy": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["name", "location", "country", "expectedYield", "startingPrice", "status", "image", "developer", "highlights", "isAdvisorsChoice"]
+      "required": ["name", "country", "isAdvisorsChoice"]
     },
     "Insight": {
       "title": "Market Insight",
