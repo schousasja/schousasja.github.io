@@ -15,7 +15,7 @@ import { PropertyImageSlider } from '../components/PropertyImageSlider';
 import { PropertyDetailModal } from '../components/PropertyDetailModal';
 
 export const Home = () => {
-  const { t } = useLanguage();
+  const { t, translateCountry, translateCity, translatePropertyField } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -536,15 +536,10 @@ export const Home = () => {
                     <PropertyImageSlider images={op.images} defaultImage={op.image} alt={op.title} />
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/60 via-transparent to-transparent opacity-40 pointer-events-none" />
                     
-                    {/* Status Badge */}
-                    <div className="absolute top-4 left-4 bg-brand-gold/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-brand-blue border border-brand-blue/5 shadow-lg">
-                      {op.status || 'INVESTMENT READY'}
-                    </div>
-
                     {/* Recommendation Badge */}
                     {op.recommendationLevel && (
-                      <div className="absolute top-4 right-4 bg-amber-600/95 backdrop-blur-sm px-3 py-1 text-[8px] font-black uppercase tracking-widest text-white shadow-lg">
-                        ★ {op.recommendationLevel}
+                      <div className="absolute top-4 left-4 bg-brand-gold text-brand-blue backdrop-blur-sm px-3 py-1 text-[8px] font-black uppercase tracking-widest shadow-lg">
+                        ★ {translatePropertyField(op.recommendationLevel)}
                       </div>
                     )}
 
@@ -553,14 +548,14 @@ export const Home = () => {
                         e.stopPropagation();
                         toggleFavorite(op.id, e);
                       }}
-                      className="absolute top-12 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue z-10"
+                      className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue z-10"
                     >
                       <Heart className={`w-4 h-4 ${favorites.includes(op.id) ? 'fill-red-500 text-red-500' : 'text-brand-blue'}`} />
                     </button>
 
                     {/* Submarket & Market */}
                     <div className="absolute bottom-4 left-4 bg-brand-blue/80 backdrop-blur-md px-3 py-1 text-[8px] font-bold uppercase tracking-[0.2em] text-brand-ivory border border-white/10">
-                      {op.country} {op.city ? `• ${op.city}` : ''}
+                      {translateCountry(op.country)} {op.city ? `• ${translateCity(op.city)}` : ''}
                     </div>
                   </div>
 
@@ -570,25 +565,25 @@ export const Home = () => {
                       {/* Developer & Type */}
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
-                          {op.type || 'Property'} {op.developer?.name || op.developer ? `by ${op.developer?.name || op.developer}` : ''}
+                          {translatePropertyField(op.type || 'Property')} {op.developer?.name || op.developer ? `${t('property.by')} ${translatePropertyField(op.developer?.name || op.developer)}` : ''}
                         </span>
                       </div>
                       
                       {/* Property Name */}
                       <h3 className="text-xl font-serif text-brand-blue group-hover:text-brand-gold transition-colors mb-2 line-clamp-1">
-                        {op.title}
+                        {translatePropertyField(op.title || op.name)}
                       </h3>
                       
                       {/* Location Address */}
                       <div className="flex items-center gap-1.5 text-gray-400 font-medium text-xs mb-3">
                         <MapPin className="w-3.5 h-3.5 text-brand-gold shrink-0" />
-                        <span className="truncate">{op.location}</span>
+                        <span className="truncate">{translatePropertyField(op.location)}</span>
                       </div>
 
                       {/* Description / Statement of the property */}
                       {op.description && (
                         <p className="text-xs text-gray-500 font-light leading-relaxed line-clamp-2 mb-3">
-                          {op.description}
+                          {translatePropertyField(op.description)}
                         </p>
                       )}
 
@@ -597,7 +592,7 @@ export const Home = () => {
                         <div className="flex flex-wrap gap-1.5 mt-2">
                           {op.highlights.slice(0, 2).map((highlight: string, idx: number) => (
                             <span key={idx} className="bg-brand-ivory text-brand-blue text-[8px] font-medium uppercase tracking-wider px-2 py-0.5 border border-brand-blue/5">
-                              ✓ {highlight}
+                              ✓ {translatePropertyField(highlight)}
                             </span>
                           ))}
                         </div>
@@ -610,18 +605,18 @@ export const Home = () => {
                         {op.handoverTime && (
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5 text-brand-gold" />
-                            Handover: <strong className="text-brand-blue font-semibold">{op.handoverTime}</strong>
+                            {t('property.handover')}: <strong className="text-brand-blue font-semibold">{translatePropertyField(op.handoverTime)}</strong>
                           </span>
                         )}
                         {op.paymentPlan && (
-                          <span className="text-right truncate max-w-[150px]" title={op.paymentPlan}>
-                            Plan: <strong className="text-brand-blue font-semibold">{op.paymentPlan}</strong>
+                          <span className="text-right truncate max-w-[150px]" title={translatePropertyField(op.paymentPlan)}>
+                            {t('property.plan')}: <strong className="text-brand-blue font-semibold">{translatePropertyField(op.paymentPlan)}</strong>
                           </span>
                         )}
                       </div>
 
                       <div className="flex justify-between items-end mt-1">
-                        <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold">Starts From</span>
+                        <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold">{t('property.starts_from')}</span>
                         <span className="text-lg font-serif font-bold text-brand-blue tracking-tight">
                           {op.startingPrice || op.price}
                         </span>

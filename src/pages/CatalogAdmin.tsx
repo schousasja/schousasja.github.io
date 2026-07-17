@@ -89,6 +89,24 @@ export const CatalogAdmin = () => {
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [formData, setFormData] = useState<PropertyData>(INITIAL_FORM_STATE);
   
+  const handleTypeToggle = (typeToToggle: string) => {
+    const currentTypes = formData.type
+      ? formData.type.split(/[,/•|]+/).map(t => t.trim()).filter(Boolean)
+      : [];
+    
+    let newTypes;
+    if (currentTypes.includes(typeToToggle)) {
+      newTypes = currentTypes.filter(t => t !== typeToToggle);
+    } else {
+      newTypes = [...currentTypes, typeToToggle];
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      type: newTypes.join(', ')
+    }));
+  };
+  
   // Search and Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMarket, setFilterMarket] = useState('all');
@@ -324,20 +342,12 @@ export const CatalogAdmin = () => {
                 Catalog <span className="text-gold-gradient">Inventory</span>.
               </h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-brand-gold/10 backdrop-blur-sm p-4 border border-brand-gold/20">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-brand-gold/10 backdrop-blur-sm p-4 border border-brand-gold/20 min-w-[120px]">
                 <div className="text-[8px] uppercase tracking-widest text-brand-gold/60 mb-1">Total Assets</div>
                 <div className="text-xl font-serif text-brand-ivory">{stats.total}</div>
               </div>
-              <div className="bg-brand-gold/10 backdrop-blur-sm p-4 border border-brand-gold/20">
-                <div className="text-[8px] uppercase tracking-widest text-brand-gold/60 mb-1">Inv Ready</div>
-                <div className="text-xl font-serif text-brand-ivory">{stats.investmentReady}</div>
-              </div>
-              <div className="bg-brand-gold/10 backdrop-blur-sm p-4 border border-brand-gold/20">
-                <div className="text-[8px] uppercase tracking-widest text-brand-gold/60 mb-1">Off-Plan</div>
-                <div className="text-xl font-serif text-brand-ivory">{stats.offPlan}</div>
-              </div>
-              <div className="bg-brand-gold/10 backdrop-blur-sm p-4 border border-brand-gold/20">
+              <div className="bg-brand-gold/10 backdrop-blur-sm p-4 border border-brand-gold/20 min-w-[120px]">
                 <div className="text-[8px] uppercase tracking-widest text-brand-gold/60 mb-1">Featured</div>
                 <div className="text-xl font-serif text-brand-ivory">{stats.advisorsChoice}</div>
               </div>
@@ -495,9 +505,6 @@ export const CatalogAdmin = () => {
                             <ShieldCheck className="w-2 h-2" /> Advisor's Choice
                           </span>
                         )}
-                        <span className="px-2 py-1 bg-white/90 text-brand-blue text-[8px] font-bold uppercase tracking-widest self-start border border-gray-100">
-                          {prop.status}
-                        </span>
                       </div>
                     </div>
                     <div className="p-6">
@@ -574,32 +581,36 @@ export const CatalogAdmin = () => {
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Property Type</label>
-                        <div className="flex gap-2">
-                          <input 
-                            type="text"
-                            value={formData.type}
-                            onChange={e => setFormData({...formData, type: e.target.value})}
-                            className="flex-grow bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
-                            placeholder="e.g. Duplex Penthouse, Villa..."
-                          />
-                          <select 
-                            value={['Apartment', 'Villa', 'Townhouse', 'Penthouse', 'Commercial', 'Land'].includes(formData.type) ? formData.type : ''}
-                            onChange={e => {
-                              if (e.target.value) {
-                                setFormData({...formData, type: e.target.value});
-                              }
-                            }}
-                            className="bg-gray-50 border border-transparent px-4 py-4 text-brand-blue text-[10px] uppercase font-bold tracking-widest focus:ring-1 focus:ring-brand-gold max-w-[125px] hover:border-brand-gold/20 duration-250 cursor-pointer"
-                          >
-                            <option value="">Preset</option>
-                            <option value="Apartment">Apartment</option>
-                            <option value="Villa">Villa</option>
-                            <option value="Townhouse">Townhouse</option>
-                            <option value="Penthouse">Penthouse</option>
-                            <option value="Commercial">Commercial</option>
-                            <option value="Land">Land</option>
-                          </select>
+                        <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block font-sans">Property Type(s)</label>
+                        <input 
+                          type="text"
+                          required
+                          value={formData.type}
+                          onChange={e => setFormData({...formData, type: e.target.value})}
+                          className="w-full bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold font-sans"
+                          placeholder="e.g. Apartment, Penthouse"
+                        />
+                        <div className="flex flex-wrap gap-1.5 mt-2.5">
+                          {['Apartment', 'Villa', 'Townhouse', 'Penthouse', 'Commercial', 'Land'].map(t => {
+                            const currentTypes = formData.type
+                              ? formData.type.split(/[,/•|]+/).map(item => item.trim()).filter(Boolean)
+                              : [];
+                            const isSelected = currentTypes.includes(t);
+                            return (
+                              <button
+                                key={t}
+                                type="button"
+                                onClick={() => handleTypeToggle(t)}
+                                className={`px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-widest border transition-all duration-300 rounded-sm cursor-pointer ${
+                                  isSelected 
+                                    ? 'bg-brand-gold text-brand-blue border-brand-gold shadow-sm font-black' 
+                                    : 'bg-brand-ivory/50 text-brand-blue border-brand-blue/5 hover:border-brand-gold/30'
+                                }`}
+                              >
+                                {t}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                       <div>
@@ -660,36 +671,8 @@ export const CatalogAdmin = () => {
                       </div>
                     </div>
 
-                    {/* Financials & Status */}
+                    {/* Financials */}
                     <div className="space-y-6">
-                      <div>
-                        <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Status Tag</label>
-                        <div className="flex gap-2">
-                          <input 
-                            type="text"
-                            value={formData.status}
-                            onChange={e => setFormData({...formData, status: e.target.value})}
-                            className="flex-grow bg-gray-50 border-none px-6 py-4 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold"
-                            placeholder="e.g. INVESTMENT READY"
-                          />
-                          <select 
-                            value={['INVESTMENT READY', 'OFF-PLAN', 'COMPLETED', 'LIMITED RELEASE', 'HOT OPPORTUNITY'].includes(formData.status) ? formData.status : ''}
-                            onChange={e => {
-                              if (e.target.value) {
-                                setFormData({...formData, status: e.target.value});
-                              }
-                            }}
-                            className="bg-gray-50 border border-transparent px-4 py-4 text-brand-blue text-[10px] uppercase font-bold tracking-widest focus:ring-1 focus:ring-brand-gold max-w-[125px] hover:border-brand-gold/20 duration-250 cursor-pointer"
-                          >
-                            <option value="">Preset</option>
-                            <option value="INVESTMENT READY">INVESTMENT READY</option>
-                            <option value="OFF-PLAN">OFF-PLAN</option>
-                            <option value="COMPLETED">COMPLETED</option>
-                            <option value="LIMITED RELEASE">LIMITED RELEASE</option>
-                            <option value="HOT OPPORTUNITY">HOT OPPORTUNITY</option>
-                          </select>
-                        </div>
-                      </div>
                       <div className="grid grid-cols-1 gap-4">
                         <div>
                           <label className="text-[9px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-2 block">Starting Price</label>

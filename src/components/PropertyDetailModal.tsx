@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, MapPin, Building2, Tag, Calendar, ShieldCheck, Mail, Phone, ChevronRight, CheckCircle2, FileText, Info } from 'lucide-react';
 import { PropertyImageSlider } from './PropertyImageSlider';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface PropertyDetailModalProps {
   property: any;
@@ -9,6 +10,7 @@ interface PropertyDetailModalProps {
 }
 
 export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalProps) => {
+  const { t, translateCountry, translateCity, translatePropertyField, language } = useLanguage();
   const [inquiryName, setInquiryName] = useState('');
   const [inquiryEmail, setInquiryEmail] = useState('');
   const [inquiryPhone, setInquiryPhone] = useState('');
@@ -87,10 +89,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
               {/* Overlaid details */}
               <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                 <span className="px-3 py-1 bg-brand-blue/85 backdrop-blur-md text-brand-gold text-[9px] font-bold uppercase tracking-widest border border-brand-gold/10">
-                  {property.type || 'EXQUISITE ASSET'}
-                </span>
-                <span className="px-3 py-1 bg-white text-brand-blue text-[9px] font-bold uppercase tracking-widest border border-gray-100">
-                  {property.status || 'INVESTMENT READY'}
+                  {translatePropertyField(property.type) || 'EXQUISITE ASSET'}
                 </span>
               </div>
             </div>
@@ -99,11 +98,11 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
             <div className="p-6 md:p-8 space-y-6">
               {property.developer?.name && (
                 <div className="border-b border-gray-200 pb-6">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-black mb-2">Architect & Developer</p>
-                  <h4 className="text-xl font-serif text-brand-blue font-semibold mb-2">{property.developer.name}</h4>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-black mb-2">{t('property.architect_developer')}</p>
+                  <h4 className="text-xl font-serif text-brand-blue font-semibold mb-2">{translatePropertyField(property.developer.name)}</h4>
                   {property.developer.credibility && (
                     <p className="text-xs text-gray-500 font-light leading-relaxed italic">
-                      "{property.developer.credibility}"
+                      "{translatePropertyField(property.developer.credibility)}"
                     </p>
                   )}
                 </div>
@@ -112,12 +111,12 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
               {/* Extra Highlights & Perks */}
               {property.highlights && property.highlights.length > 0 && (
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-black mb-3">Asset Highlights & Perks</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-black mb-3">{t('property.asset_highlights')}</p>
                   <ul className="space-y-2.5">
                     {property.highlights.map((highlight: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-2.5 text-xs text-gray-600 font-sans">
                         <CheckCircle2 className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
-                        <span className="font-light">{highlight}</span>
+                        <span className="font-light">{translatePropertyField(highlight)}</span>
                       </li>
                     ))}
                   </ul>
@@ -133,46 +132,46 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold">
-                    {property.country} {property.city ? `• ${property.city}` : ''}
+                    {translateCountry(property.country)} {property.city ? `• ${translateCity(property.city)}` : ''}
                   </span>
                   
                   {/* Level of Recommendation Badge */}
                   {property.recommendationLevel && (
                     <span className={`px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest border rounded-sm ${getRecBadgeStyles(property.recommendationLevel)}`}>
-                      ★ {property.recommendationLevel}
+                      ★ {translatePropertyField(property.recommendationLevel)}
                     </span>
                   )}
                 </div>
                 
                 <h3 className="text-2xl md:text-3xl font-serif text-brand-blue tracking-tight leading-tight">
-                  {property.name}
+                  {translatePropertyField(property.name)}
                 </h3>
 
                 <p className="flex items-center gap-1.5 text-gray-400 text-xs font-medium mt-2">
                   <MapPin className="w-3.5 h-3.5 text-brand-gold shrink-0" />
-                  <span>{property.location}</span>
+                  <span>{translatePropertyField(property.location)}</span>
                 </p>
               </div>
 
               {/* Pricing, Payment Plan, Handover Time Grid */}
               <div className="grid grid-cols-2 gap-4 bg-brand-ivory p-4 border border-brand-blue/5 rounded-sm">
                 <div>
-                  <p className="text-[8px] uppercase tracking-wider text-gray-400 font-bold mb-0.5">Starting Price</p>
+                  <p className="text-[8px] uppercase tracking-wider text-gray-400 font-bold mb-0.5">{t('property.starting_price')}</p>
                   <p className="text-base font-bold text-brand-blue tracking-tight">{property.startingPrice}</p>
                 </div>
                 {property.handoverTime && (
                   <div>
-                    <p className="text-[8px] uppercase tracking-wider text-gray-400 font-bold mb-0.5">Handover Time</p>
+                    <p className="text-[8px] uppercase tracking-wider text-gray-400 font-bold mb-0.5">{t('property.handover_time')}</p>
                     <p className="text-xs font-semibold text-brand-blue flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 text-brand-gold" />
-                      {property.handoverTime}
+                      {translatePropertyField(property.handoverTime)}
                     </p>
                   </div>
                 )}
                 {property.paymentPlan && (
                   <div className="col-span-2 pt-2 border-t border-brand-blue/5 mt-1">
-                    <p className="text-[8px] uppercase tracking-wider text-gray-400 font-bold mb-0.5">Flexible Payment Plan</p>
-                    <p className="text-xs font-medium text-brand-blue">{property.paymentPlan}</p>
+                    <p className="text-[8px] uppercase tracking-wider text-gray-400 font-bold mb-0.5">{t('property.flexible_plan')}</p>
+                    <p className="text-xs font-medium text-brand-blue">{translatePropertyField(property.paymentPlan)}</p>
                   </div>
                 )}
               </div>
@@ -180,9 +179,9 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
               {/* Short Statement / Description */}
               {property.description && (
                 <div className="border-t border-gray-100 pt-6">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-black mb-2">Statement of the Property</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-black mb-2">{t('property.statement')}</p>
                   <p className="text-xs text-gray-600 font-light leading-relaxed antialiased">
-                    {property.description}
+                    {translatePropertyField(property.description)}
                   </p>
                 </div>
               )}
@@ -192,7 +191,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
             <div className="border-t border-gray-100 pt-6">
               <h4 className="text-xs font-serif text-brand-blue font-bold tracking-tight mb-4 flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-gold" />
-                <span>Private Consultation & Inquiry</span>
+                <span>{t('property.private_consultation')}</span>
               </h4>
 
               {submitted ? (
@@ -202,9 +201,11 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
                   className="bg-green-50 border border-green-100 p-6 text-center"
                 >
                   <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <p className="text-xs font-bold text-brand-blue mb-1">Inquiry Transmitted Successfully</p>
+                  <p className="text-xs font-bold text-brand-blue mb-1">{t('property.inquiry_success')}</p>
                   <p className="text-[10px] text-gray-500 leading-relaxed font-light">
-                    An executive advisor specializing in the {property.country} market will reach out to you within 24 hours.
+                    {language === 'da' 
+                      ? `En rådgiver med speciale i ${translateCountry(property.country)}-markedet vil kontakte dig inden for 24 timer.`
+                      : `An executive advisor specializing in the ${translateCountry(property.country)} market will reach out to you within 24 hours.`}
                   </p>
                 </motion.div>
               ) : (
@@ -213,7 +214,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
                     <input 
                       type="text" 
                       required
-                      placeholder="Your Name"
+                      placeholder={t('property.your_name')}
                       value={inquiryName}
                       onChange={e => setInquiryName(e.target.value)}
                       className="w-full bg-gray-50 border border-transparent px-4 py-3 text-xs text-brand-blue placeholder:text-gray-400 focus:bg-white focus:border-brand-gold outline-none rounded-sm transition-all"
@@ -221,7 +222,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
                     <input 
                       type="email" 
                       required
-                      placeholder="Your Email"
+                      placeholder={t('property.your_email')}
                       value={inquiryEmail}
                       onChange={e => setInquiryEmail(e.target.value)}
                       className="w-full bg-gray-50 border border-transparent px-4 py-3 text-xs text-brand-blue placeholder:text-gray-400 focus:bg-white focus:border-brand-gold outline-none rounded-sm transition-all"
@@ -229,7 +230,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
                   </div>
                   <input 
                     type="tel" 
-                    placeholder="Phone Number (Optional)"
+                    placeholder={t('property.phone')}
                     value={inquiryPhone}
                     onChange={e => setInquiryPhone(e.target.value)}
                     className="w-full bg-gray-50 border border-transparent px-4 py-3 text-xs text-brand-blue placeholder:text-gray-400 focus:bg-white focus:border-brand-gold outline-none rounded-sm transition-all"
@@ -237,7 +238,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
                   <textarea 
                     rows={2}
                     required
-                    placeholder="Your message..."
+                    placeholder={t('property.your_message')}
                     value={inquiryMessage}
                     onChange={e => setInquiryMessage(e.target.value)}
                     className="w-full bg-gray-50 border border-transparent px-4 py-3 text-xs text-brand-blue placeholder:text-gray-400 focus:bg-white focus:border-brand-gold outline-none rounded-sm transition-all resize-none"
@@ -247,7 +248,7 @@ export const PropertyDetailModal = ({ property, onClose }: PropertyDetailModalPr
                     disabled={submitting}
                     className="w-full py-3 bg-brand-blue hover:bg-brand-gold text-brand-ivory hover:text-brand-blue text-[9px] uppercase tracking-widest font-black flex items-center justify-center gap-2 duration-300 shadow-md disabled:opacity-50"
                   >
-                    {submitting ? 'Transmitting inquiry...' : 'Inquire via Advisor'}
+                    {submitting ? t('property.transmitting') : t('property.inquire_btn')}
                     <ChevronRight className="w-3 h-3" />
                   </button>
                 </form>

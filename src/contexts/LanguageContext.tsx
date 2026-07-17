@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useRef, ReactNode } from 'react';
 
 type Language = 'en' | 'da';
 
@@ -6,12 +6,41 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  translateCountry: (country: string) => string;
+  translateCity: (city: string) => string;
+  translatePropertyField: (text: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
+    // Country & City Translations
+    'country.uae': 'UAE',
+    'country.india': 'India',
+    'country.denmark': 'Denmark',
+    'city.copenhagen': 'Copenhagen',
+    'city.dubai': 'Dubai',
+    'property.handover': 'Handover',
+    'property.plan': 'Payment Plan',
+    'property.starts_from': 'Starts From',
+    'property.by': 'by',
+    'property.architect_developer': 'Architect & Developer',
+    'property.asset_highlights': 'Asset Highlights & Perks',
+    'property.handover_time': 'Handover Time',
+    'property.flexible_plan': 'Flexible Payment Plan',
+    'property.statement': 'Statement of the Property',
+    'property.private_consultation': 'Private Consultation & Inquiry',
+    'property.inquiry_success': 'Inquiry Transmitted Successfully',
+    'property.inquiry_desc': 'An executive advisor specializing in the {market} market will reach out to you within 24 hours.',
+    'property.your_name': 'Your Name',
+    'property.your_email': 'Your Email',
+    'property.phone': 'Phone Number (Optional)',
+    'property.your_message': 'Your message...',
+    'property.transmitting': 'Transmitting inquiry...',
+    'property.inquire_btn': 'Inquire via Advisor',
+    'property.starting_price': 'Starting Price',
+
     // Nav & Common
     'nav.about': 'ABOUT US',
     'nav.dubai': 'UAE',
@@ -838,9 +867,35 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.india_cs': 'India Markets',
     'footer.se_markets': 'Southeast Asia Markets',
     'footer.compliance_title': 'Independent Compliance',
-    'footer.compliance_desc': 'We provide independent advisory services. All transactions, financing, and legal processes are executed through licensed third-party partners. Univue Consultants ApS is an independent management consultancy and does not provide regulated financial, legal, or tax advice.'
+    'footer.compliance_desc': 'We provide independent advisory services. All transactions, financing, and legal processes are executed through licensed third-party partners. Univue Consultants ApS is an independent management consultancy and does not provide regulated financial, legal, or tax advice.',
+    'footer.address': 'Amaliegårdvej 1, 8543 Hornslet, Denmark'
   },
   da: {
+    // Country & City Translations
+    'country.uae': 'UAE',
+    'country.india': 'Indien',
+    'country.denmark': 'Danmark',
+    'city.copenhagen': 'København',
+    'city.dubai': 'Dubai',
+    'property.handover': 'Overtagelse',
+    'property.plan': 'Betalingsplan',
+    'property.starts_from': 'Starter fra',
+    'property.by': 'af',
+    'property.architect_developer': 'Arkitekt & Udvikler',
+    'property.asset_highlights': 'Aktivets Højdepunkter & Fordele',
+    'property.handover_time': 'Overtagelsestidspunkt',
+    'property.flexible_plan': 'Fleksibel Betalingsplan',
+    'property.statement': 'Ejendommens Beskrivelse',
+    'property.private_consultation': 'Privat Konsultation & Forespørgsel',
+    'property.inquiry_success': 'Forespørgsel sendt med succes',
+    'property.your_name': 'Dit navn',
+    'property.your_email': 'Din e-mail',
+    'property.phone': 'Telefonnummer (valgfrit)',
+    'property.your_message': 'Din besked...',
+    'property.transmitting': 'Sender forespørgsel...',
+    'property.inquire_btn': 'Søg rådgivning',
+    'property.starting_price': 'Startpris',
+
     // Nav & Common
     'nav.about': 'OM OS',
     'nav.dubai': 'UAE',
@@ -1667,19 +1722,214 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.india_cs': 'Indiske markeder',
     'footer.se_markets': 'Sydøstasiatiske Markeder',
     'footer.compliance_title': 'Uafhængig Overholdelse',
-    'footer.compliance_desc': 'Vi yder uafhængig rådgivning. Alle transaktioner, finansiering og juridiske processer udføres gennem licenserede tredjepartspartnere. Univue Consultants ApS er en uafhængig ledelsesrådgivning og yder ikke reguleret finansiel, juridisk eller skattemæssig rådgivning.'
+    'footer.compliance_desc': 'Vi yder uafhængig rådgivning. Alle transaktioner, finansiering og juridiske processer udføres gennem licenserede tredjepartspartnere. Univue Consultants ApS is an independent management consultancy and does not provide regulated financial, legal, or tax advice.',
+    'footer.address': 'Amaliegårdvej 1, 8543 Hornslet, Danmark'
   }
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('en');
+  const [dynamicTranslations, setDynamicTranslations] = useState<Record<string, string>>(() => {
+    try {
+      const saved = localStorage.getItem('univue_dynamic_translations');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const pendingTranslations = useRef<Set<string>>(new Set());
 
   const t = (key: string) => {
     return translations[language][key] || key;
   };
 
+  const translateCountry = (country: string) => {
+    if (!country) return '';
+    const key = `country.${country.toLowerCase().trim()}`;
+    return translations[language][key] || country;
+  };
+
+  const translateCity = (city: string) => {
+    if (!city) return '';
+    const key = `city.${city.toLowerCase().trim()}`;
+    return translations[language][key] || city;
+  };
+
+  const translatePropertyField = (text: string): string => {
+    if (!text || typeof text !== 'string') return text;
+    
+    // Check if it is a comma, slash, or bullet separated list of multiple items
+    if (text.includes(',') || text.includes('/') || text.includes('|') || text.includes('•')) {
+      const separators = /[,/•|]+/;
+      const parts = text.split(separators).map(t => t.trim()).filter(Boolean);
+      return parts.map(p => translatePropertyField(p)).join(' • ');
+    }
+
+    if (language === 'en') return text;
+
+    const dict: Record<string, string> = {
+      // Names / Brands
+      'The Opus Tower': 'The Opus-tårnet',
+      'Emaar Beachfront': 'Emaar Beachfront',
+      'Dubai Marina': 'Dubai Marina',
+      'Business Bay, Dubai': 'Business Bay, Dubai',
+      'Omniyat': 'Omniyat',
+      'Emaar Properties': 'Emaar Properties',
+      'Property': 'Ejendom',
+      'EXQUISITE ASSET': 'EKSKLUSIVT AKTIV',
+      'INVESTMENT READY': 'INVESTERINGSKLAR',
+      'OFF-PLAN': 'OFF-PLAN',
+      'COMPLETED': 'GENNEMFØRT',
+      'LIMITED RELEASE': 'BEGRÆNSET UDGIVELSE',
+      'HOT OPPORTUNITY': 'VARMT TILBUD',
+
+      // Recommendation levels
+      'Strongly Recommended': 'Særdeles Anbefalet',
+      'Highly Recommended': 'Højt Anbefalet',
+      'Recommended': 'Anbefalet',
+      'Under Review': 'Under vurdering',
+
+      // Types
+      'Apartment': 'Lejlighed',
+      'Apartments': 'Lejligheder',
+      'Villa': 'Villa',
+      'Villas': 'Villaer',
+      'Penthouse': 'Penthouse',
+      'Townhouse': 'Rækkehus',
+      'Office': 'Kontor',
+      'Office Space': 'Kontorlokaler',
+      'Retail': 'Detailhandel',
+      'Commercial': 'Erhverv',
+      'Industrial': 'Industriel',
+      'Land': 'Grund',
+
+      // Handover times
+      'Completed': 'Gennemført / Klar',
+      'Immediate': 'Øjeblikkelig',
+      'Ready': 'Klar',
+      'Q1 2024': '1. kvartal 2024',
+      'Q2 2024': '2. kvartal 2024',
+      'Q3 2024': '3. kvartal 2024',
+      'Q4 2024': '4. kvartal 2024',
+      'Q1 2025': '1. kvartal 2025',
+      'Q2 2025': '2. kvartal 2025',
+      'Q3 2025': '3. kvartal 2025',
+      'Q4 2025': '4. kvartal 2025',
+      'Q1 2026': '1. kvartal 2026',
+      'Q2 2026': '2. kvartal 2026',
+      'Q3 2026': '3. kvartal 2026',
+      'Q4 2026': '4. kvartal 2026',
+      'Q1 2027': '1. kvartal 2027',
+      'Q2 2027': '2. kvartal 2027',
+      'Q3 2027': '3. kvartal 2027',
+      'Q4 2027': '4. kvartal 2027',
+
+      // Highlights / Features
+      'Prime Business Hub': 'Førsteklasses forretningshub',
+      'Zaha Hadid Design': 'Zaha Hadid Design',
+      'High Capital Appreciation': 'Høj værditilvækst',
+      'Private Beach Access': 'Privat strandadgang',
+      'Miami-style Living': 'Miami-stil livsstil',
+      'Premium ROI': 'Premium afkast (ROI)',
+      'Luxury Living': 'Luksusliv',
+      'Waterfront Views': 'Udsigt over vandet',
+      'Skyline Views': 'Udsigt over horisonten',
+      'Metro Connectivity': 'Metroforbindelse',
+      'Fully Furnished': 'Fuldt møbleret',
+      'Smart Home Tech': 'Smart Home-teknologi',
+      'High Rental Yield': 'Højt lejeafkast',
+      'Flexible Payment Plan': 'Fleksibel betalingsplan',
+
+      // Descriptions
+      "Designed by Dame Zaha Hadid, The Opus is an iconic landmark in Dubai's prestigious Business Bay.":
+        "Designet af Dame Zaha Hadid, The Opus er et ikonisk vartegn i Dubais prestigefyldte Business Bay.",
+      "Exclusive private island living at the heart of Dubai Harbour with panoramic sea views.":
+        "Eksklusivt privat ø-livsstil i hjertet af Dubai Havn med panoramaudsigt over havet.",
+
+      // Developer credibility
+      "Award-winning developer known for architectural masterpieces.":
+        "Prisvindende udvikler kendt for arkitektoniske mesterværker.",
+      "Largest developer in the region, builder of Burj Khalifa.":
+        "Regionens største udvikler, bygherre af Burj Khalifa.",
+
+      // Payment plans
+      '60/40 Post-handover plan': '60/40 Plan efter overtagelse',
+      '70/30 During construction': '70/30 Under opførelse',
+      '50/50 On Handover': '50/50 Ved overtagelse',
+      'Post-handover payment plan': 'Betalingsplan efter overtagelse',
+      'Attractive 60/40 Plan': 'Attraktiv 60/40 plan',
+      'Easy installments': 'Nemme afdrag',
+    };
+
+    // 1. Direct dictionary match
+    if (dict[text]) {
+      return dict[text];
+    }
+
+    // 2. Dynamic translations lookup (or async fetch if not found)
+    if (dynamicTranslations[text]) {
+      return dynamicTranslations[text];
+    }
+
+    // Trigger async background translation if not already pending and string is not empty or pure digits
+    const cleanedText = text.trim();
+    if (
+      cleanedText.length > 2 &&
+      !pendingTranslations.current.has(text) &&
+      !/^\d+$/.test(cleanedText) &&
+      !/^https?:\/\//.test(cleanedText)
+    ) {
+      pendingTranslations.current.add(text);
+      fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, targetLanguage: 'da' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.text) {
+          setDynamicTranslations(prev => {
+            const updated = { ...prev, [text]: data.text };
+            try {
+              localStorage.setItem('univue_dynamic_translations', JSON.stringify(updated));
+            } catch (e) {
+              console.warn("Storage quota or error saving translation:", e);
+            }
+            return updated;
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Dynamic background translation error:", err);
+      })
+      .finally(() => {
+        pendingTranslations.current.delete(text);
+      });
+    }
+
+    // 3. Fallback to offline regex-based transforms
+    let translated = text;
+    translated = translated.replace(/Q([1-4])\s+(\d{4})/g, '$1. kvartal $2');
+    translated = translated.replace(/(\d+)\/(\d+)\s+Post-handover\s+plan/gi, '$1/$2 Plan efter overtagelse');
+    translated = translated.replace(/(\d+)\/(\d+)\s+During\s+construction/gi, '$1/$2 Under opførelse');
+    translated = translated.replace(/Post-handover/gi, 'Efter overtagelse');
+    translated = translated.replace(/During construction/gi, 'Under opførelse');
+    translated = translated.replace(/On Handover/gi, 'Ved overtagelse');
+
+    translated = translated.replace(/\bAward-winning\b/gi, 'Prisvindende');
+    translated = translated.replace(/\bdeveloper\b/gi, 'udvikler');
+    translated = translated.replace(/\bknown for\b/gi, 'kendt for');
+    translated = translated.replace(/\bZaha Hadid Design\b/gi, 'Zaha Hadid Design');
+    translated = translated.replace(/\bHigh Capital Appreciation\b/gi, 'Høj værditilvækst');
+    translated = translated.replace(/\bPrivate Beach Access\b/gi, 'Privat strandadgang');
+    translated = translated.replace(/\bPremium ROI\b/gi, 'Premium afkast');
+
+    return translated;
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, translateCountry, translateCity, translatePropertyField }}>
       {children}
     </LanguageContext.Provider>
   );

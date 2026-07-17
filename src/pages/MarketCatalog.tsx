@@ -14,7 +14,7 @@ import { PropertyImageSlider } from '../components/PropertyImageSlider';
 import { PropertyDetailModal } from '../components/PropertyDetailModal';
 
 export const MarketCatalog = () => {
-  const { t } = useLanguage();
+  const { t, translateCountry, translateCity, translatePropertyField } = useLanguage();
   const { markets, cities } = useMarkets();
   const { photos } = useSiteSettings();
   const navigate = useNavigate();
@@ -368,28 +368,23 @@ export const MarketCatalog = () => {
                     <PropertyImageSlider images={prop.images} defaultImage={prop.image} alt={prop.name} />
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/60 via-transparent to-transparent opacity-40 pointer-events-none" />
                     
-                    {/* Status Badge */}
-                    <div className="absolute top-4 left-4 bg-brand-gold/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-brand-blue border border-brand-blue/5 shadow-lg">
-                      {prop.status}
-                    </div>
-
                     {/* Recommendation Badge */}
                     {prop.recommendationLevel && (
-                      <div className="absolute top-4 right-4 bg-amber-600/95 backdrop-blur-sm px-3 py-1 text-[8px] font-black uppercase tracking-widest text-white shadow-lg">
-                        ★ {prop.recommendationLevel}
+                      <div className="absolute top-4 left-4 bg-brand-gold text-brand-blue backdrop-blur-sm px-3 py-1 text-[8px] font-black uppercase tracking-widest shadow-lg">
+                        ★ {translatePropertyField(prop.recommendationLevel)}
                       </div>
                     )}
 
                     <button 
                       onClick={(e) => toggleFavorite(prop.id, e)}
-                      className="absolute top-12 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue z-10"
+                      className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform text-brand-blue z-10"
                     >
                       <Heart className={`w-4 h-4 ${favorites.includes(prop.id) ? 'fill-red-500 text-red-500' : 'text-brand-blue'}`} />
                     </button>
 
                     {/* Country & City Submarket */}
                     <div className="absolute bottom-4 left-4 bg-brand-blue/80 backdrop-blur-md px-3 py-1 text-[8px] font-bold uppercase tracking-[0.2em] text-brand-ivory border border-white/10">
-                      {prop.country} {prop.city ? `• ${prop.city}` : ''}
+                      {translateCountry(prop.country)} {prop.city ? `• ${translateCity(prop.city)}` : ''}
                     </div>
                   </div>
 
@@ -399,25 +394,25 @@ export const MarketCatalog = () => {
                       {/* Developer & Type details */}
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
-                          {prop.type || 'Property'} {prop.developer?.name ? `by ${prop.developer.name}` : ''}
+                          {translatePropertyField(prop.type || 'Property')} {prop.developer?.name || prop.developer ? `${t('property.by')} ${translatePropertyField(prop.developer?.name || prop.developer)}` : ''}
                         </span>
                       </div>
                       
                       {/* Property Name */}
                       <h3 className="text-xl font-serif text-brand-blue group-hover:text-brand-gold transition-colors mb-2 line-clamp-1">
-                        {prop.name}
+                        {translatePropertyField(prop.name)}
                       </h3>
                       
                       {/* Location Address */}
                       <div className="flex items-center gap-1.5 text-gray-400 font-medium text-xs mb-3">
                         <MapPin className="w-3.5 h-3.5 text-brand-gold shrink-0" />
-                        <span className="truncate">{prop.location}</span>
+                        <span className="truncate">{translatePropertyField(prop.location)}</span>
                       </div>
 
                       {/* Description / Statement of the property */}
                       {prop.description && (
                         <p className="text-xs text-gray-500 font-light leading-relaxed line-clamp-2 mb-3">
-                          {prop.description}
+                          {translatePropertyField(prop.description)}
                         </p>
                       )}
 
@@ -426,7 +421,7 @@ export const MarketCatalog = () => {
                         <div className="flex flex-wrap gap-1.5 mt-2">
                           {prop.highlights.slice(0, 2).map((highlight: string, idx: number) => (
                             <span key={idx} className="bg-brand-ivory text-brand-blue text-[8px] font-medium uppercase tracking-wider px-2 py-0.5 border border-brand-blue/5">
-                              ✓ {highlight}
+                              ✓ {translatePropertyField(highlight)}
                             </span>
                           ))}
                         </div>
@@ -439,18 +434,18 @@ export const MarketCatalog = () => {
                         {prop.handoverTime && (
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5 text-brand-gold" />
-                            Handover: <strong className="text-brand-blue font-semibold">{prop.handoverTime}</strong>
+                            {t('property.handover')}: <strong className="text-brand-blue font-semibold">{translatePropertyField(prop.handoverTime)}</strong>
                           </span>
                         )}
                         {prop.paymentPlan && (
-                          <span className="text-right truncate max-w-[150px]" title={prop.paymentPlan}>
-                            Plan: <strong className="text-brand-blue font-semibold">{prop.paymentPlan}</strong>
+                          <span className="text-right truncate max-w-[150px]" title={translatePropertyField(prop.paymentPlan)}>
+                            {t('property.plan')}: <strong className="text-brand-blue font-semibold">{translatePropertyField(prop.paymentPlan)}</strong>
                           </span>
                         )}
                       </div>
 
                       <div className="flex justify-between items-end mt-1">
-                        <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold">Starts From</span>
+                        <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold">{t('property.starts_from')}</span>
                         <span className="text-lg font-serif font-bold text-brand-blue tracking-tight">
                           {prop.startingPrice}
                         </span>

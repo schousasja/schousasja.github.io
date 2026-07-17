@@ -10,7 +10,7 @@ import { StructuredData } from '../components/StructuredData';
 const CityMicrosite: React.FC = () => {
   const { cityId } = useParams<{ cityId: string }>();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, language, translateCity } = useLanguage();
   const { cities: allCities, loading } = useMarkets();
   const city = allCities.find(c => c.id === cityId);
 
@@ -18,7 +18,7 @@ const CityMicrosite: React.FC = () => {
   const localizedData = city ? marketTranslations[langKey][city.id] : null;
 
   useDocumentMetadata({
-    title: city ? `${city.name} Market Analysis & Insights` : 'Market Analysis',
+    title: city ? (language === 'da' ? `${translateCity(city.name)} Markedsanalyse & Indsigt` : `${city.name} Market Analysis & Insights`) : (language === 'da' ? 'Markedsanalyse' : 'Market Analysis'),
     description: city ? (localizedData?.desc || city.thesis) : 'Local market insights and strategic real estate/business expansion analysis.',
     keywords: city ? `${city.name} real estate, ${city.name} yield, ${city.name} investment, Univue ${city.name}` : 'market analysis, property investment'
   });

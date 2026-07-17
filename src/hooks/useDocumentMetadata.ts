@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface MetadataProps {
   title?: string;
@@ -15,7 +16,12 @@ export const useDocumentMetadata = ({
   ogType = 'website',
   ogImage = '/og-image.jpg'
 }: MetadataProps) => {
+  const { language } = useLanguage();
+
   useEffect(() => {
+    // 0. Update HTML Lang Attribute for SEO
+    document.documentElement.lang = language || 'en';
+
     // 1. Update Document Title
     const baseTitle = 'Univue Consultants';
     const fullTitle = title 
@@ -69,5 +75,5 @@ export const useDocumentMetadata = ({
       setMetaTag('property', 'og:image', finalImage);
       setMetaTag('property', 'twitter:image', finalImage);
     }
-  }, [title, description, keywords, ogType, ogImage]);
+  }, [title, description, keywords, ogType, ogImage, language]);
 };

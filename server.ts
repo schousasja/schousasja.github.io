@@ -153,6 +153,53 @@ ${text}
     }
   });
 
+  // Translation Endpoint using Gemini AI (translating any custom property descriptions, titles, etc. to Danish)
+  app.post("/api/translate", async (req, res) => {
+    try {
+      const { text, targetLanguage } = req.body;
+      if (!text || !targetLanguage) {
+        return res.status(400).json({ error: "Text and targetLanguage are required." });
+      }
+
+      if (targetLanguage.toLowerCase() === 'en' || targetLanguage.toLowerCase() === 'english') {
+        return res.json({ success: true, text });
+      }
+
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        return res.status(503).json({
+          error: "Translation AI is deactivated. To proceed, append GEMINI_API_KEY under Settings > Secrets."
+        });
+      }
+
+      const ai = new GoogleGenAI({
+        apiKey: apiKey,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          }
+        }
+      });
+
+      console.log(`Translating text to Danish: "${text.substring(0, 50)}..."`);
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: `Translate the following real estate or business consulting advisory text into professional, natural-sounding Danish. Keep any numbers, dates, proper names (like Emaar, Omniyat, Burj Khalifa, Zaha Hadid, Dubai, etc.) intact but translated in context. Do NOT add any extra commentary, notes, or backticks. Just return the translated Danish text.
+
+Text to translate:
+"""
+${text}
+"""`,
+      });
+
+      const translatedText = response.text?.trim() || text;
+      res.json({ success: true, text: translatedText });
+    } catch (error: any) {
+      console.error("Translation API Error:", error);
+      res.status(500).json({ error: error.message || "An unexpected error occurred during translation." });
+    }
+  });
+
   // Newsletter Sending Endpoint
   app.post("/api/admin/send-newsletter", async (req, res) => {
     try {

@@ -7,13 +7,13 @@ import { StructuredData } from '../components/StructuredData';
 import { useDocumentMetadata } from '../hooks/useDocumentMetadata';
 
 export const AboutUs = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const { photos } = useSiteSettings();
 
   useDocumentMetadata({
-    title: `${t('about.title')} | Leadership & Mission`,
-    description: t('about.mission.quote') || 'Learn about Univue Consultants leadership, team, vision, and values in international cross-border advisory.',
+    title: language === 'da' ? `${t('about.title')} | Lederskab & Mission` : `${t('about.title')} | Leadership & Mission`,
+    description: t('about.mission.quote') || (language === 'da' ? 'Lær om Univue Consultants ledelse, team, vision og værdier inden for international tværgående rådgivning.' : 'Learn about Univue Consultants leadership, team, vision, and values in international cross-border advisory.'),
     keywords: 'Univue leadership, Nimmi Schou, Copenhagen cross border consulting, Dubai strategic partner'
   });
 
