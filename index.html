@@ -82,8 +82,27 @@
     <link rel="canonical" href="https://univueconsultants.com/" />
     
     <!-- Browser Tab Favicon & Search Engine Icons -->
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=univue-v3" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=univue-v3" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=univue-v3" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=univue-v3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=univue-v3" />
+    <link rel="shortcut icon" href="/favicon.ico?v=univue-v3" />
+    <link rel="manifest" href="/site.webmanifest?v=univue-v3" />
+    <script>
+      // Force aggressive browser favicon cache refresh
+      (function() {
+        try {
+          const links = document.querySelectorAll("link[rel*='icon']");
+          links.forEach(function(l) {
+            const h = l.getAttribute('href');
+            if (h && !h.includes('?v=')) {
+              l.setAttribute('href', h + '?v=univue-v3');
+            }
+          });
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Preconnect to Font Servers -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

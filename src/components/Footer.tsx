@@ -1,12 +1,17 @@
 import { Globe2, Users2, Mail, Phone, Linkedin, X, Instagram, Facebook, MessageCircle, Music2, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { FooterNewsletter } from './FooterNewsletter';
 
 export const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-brand-blue text-brand-ivory py-12 px-6">
+    <footer className="bg-brand-blue text-brand-ivory py-16 px-6">
+      <div className="max-w-7xl mx-auto">
+        <FooterNewsletter />
+      </div>
+
       <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 border-b border-brand-ivory/10 pb-12 mb-12">
         <div className="md:col-span-2">
           <Link to="/" className="inline-flex items-center mb-6" aria-label="Univue Consultants ApS">

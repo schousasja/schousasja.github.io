@@ -90,7 +90,7 @@ export const Navbar = () => {
               <img 
                 src="/assets/images/logo-white.png" 
                 alt="Univue Consultants ApS" 
-                className={`absolute inset-0 h-full w-auto object-contain transition-opacity duration-300 group-hover:opacity-80 ${
+                className={`absolute top-0 left-0 h-9 sm:h-10 md:h-11 w-auto object-contain transition-opacity duration-300 group-hover:opacity-80 ${
                   isScrolled || isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 }`} 
               />
