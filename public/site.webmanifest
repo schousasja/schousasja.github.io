@@ -1,0 +1,21 @@
+{
+  "name": "Univue Consultants ApS",
+  "short_name": "Univue",
+  "description": "Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1F3A",
+  "theme_color": "#0B1F3A",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
