@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="uGradFull" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0066cc" />
+      <stop offset="40%" stop-color="#0052a3" />
+      <stop offset="100%" stop-color="#0b2545" />
+    </linearGradient>
+    <linearGradient id="globeGradFull" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e88e5" />
+      <stop offset="60%" stop-color="#1565c0" />
+      <stop offset="100%" stop-color="#0d47a1" />
+    </linearGradient>
+    <linearGradient id="vGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00a0ff" />
+      <stop offset="100%" stop-color="#0055c4" />
+    </linearGradient>
+    <filter id="logoShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0b1f3a" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- Clean Background -->
+  <rect width="800" height="800" rx="32" fill="#ffffff"/>
+
+  <!-- Center Emblem -->
+  <g transform="translate(144, 40) scale(1)">
+    <!-- 3D 'U' Monogram -->
+    <path d="M 160 100 
+             L 210 100 
+             L 210 260 
+             C 210 310, 246 345, 256 345 
+             C 266 345, 302 310, 302 260 
+             L 302 100 
+             L 352 100 
+             L 352 260 
+             C 352 345, 298 400, 256 400 
+             C 214 400, 160 345, 160 260 
+             Z" 
+          fill="url(#uGradFull)" 
+          filter="url(#logoShadow)"
+    />
+
+    <!-- Globe Sphere -->
+    <circle cx="256" cy="220" r="74" fill="url(#globeGradFull)"/>
+
+    <!-- Continents -->
+    <path d="M 225 180 Q 235 185 230 205 Q 220 220 235 245 Q 240 260 230 270 Q 220 260 215 240 Q 210 210 225 180 Z" fill="#ffffff" fill-opacity="0.9"/>
+    <path d="M 255 175 Q 275 180 280 200 Q 285 220 275 235 Q 265 245 270 265 Q 260 270 250 255 Q 245 225 255 200 Z" fill="#ffffff" fill-opacity="0.9"/>
+    <path d="M 285 190 Q 305 195 315 215 Q 310 230 295 230 Q 290 210 285 190 Z" fill="#ffffff" fill-opacity="0.9"/>
+
+    <!-- Orbital Swooshes -->
+    <path d="M 195 245 C 205 205, 310 170, 325 210 C 330 225, 300 255, 250 270 C 215 280, 190 265, 195 245 Z" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="14" 
+          stroke-linecap="round"
+          filter="url(#logoShadow)"
+    />
+    <path d="M 290 170 C 335 185, 345 225, 320 265" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="10" 
+          stroke-linecap="round"
+    />
+  </g>
+
+  <!-- Typography: UNIVUE -->
+  <g transform="translate(400, 560)" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+    <text font-size="100" font-weight="900" letter-spacing="8" fill="#0b2545">
+      <tspan x="-260">UNI</tspan>
+      <tspan fill="url(#vGrad)">V</tspan>
+      <tspan>UE</tspan>
+    </text>
+  </g>
+
+  <!-- Divider & Subtitle: — CONSULTANTS — -->
+  <g transform="translate(400, 630)" text-anchor="middle">
+    <!-- Left Line -->
+    <line x1="-310" y1="-8" x2="-180" y2="-8" stroke="#0b2545" stroke-width="3" />
+    
+    <!-- Subtitle Text -->
+    <text y="0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="800" letter-spacing="14" fill="#0b2545">
+      CONSULTANTS
+    </text>
+    
+    <!-- Right Line -->
+    <line x1="180" y1="-8" x2="310" y2="-8" stroke="#0b2545" stroke-width="3" />
+  </g>
+</svg>

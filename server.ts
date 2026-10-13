@@ -7,6 +7,9 @@ import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
+// Ensure HMR is disabled in AI Studio container environment
+process.env.DISABLE_HMR = 'true';
+
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 async function startServer() {
@@ -266,7 +269,7 @@ ${text}
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, hmr: false },
       appType: "spa",
     });
     app.use(vite.middlewares);

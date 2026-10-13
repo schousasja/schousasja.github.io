@@ -77,14 +77,35 @@ export const Navbar = () => {
 
         <nav className={`w-full transition-all duration-300 pointer-events-auto ${isScrolled ? 'bg-brand-ivory shadow-md py-3 md:py-4' : 'bg-transparent py-4 md:py-6'}`}>
           <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <Link to="/" className="flex items-center gap-2 group z-50">
-              <span className="font-serif text-2xl font-normal tracking-tight transition-colors">
-                <span className="text-brand-gold">Univue</span> <span className={`${isScrolled || isMenuOpen ? 'text-brand-blue' : 'text-brand-ivory'}`}>Consultants ApS</span>
-              </span>
+            <Link to="/" className="relative flex items-center group z-50" aria-label="Univue Consultants ApS">
+              {/* Dark / Original brand logo (visible when navbar has background or menu is open) */}
+              <img 
+                src="/assets/images/logo.png" 
+                alt="Univue Consultants ApS" 
+                className={`h-9 sm:h-10 md:h-11 w-auto object-contain transition-opacity duration-300 group-hover:opacity-80 ${
+                  isScrolled || isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`} 
+              />
+              {/* White logo (visible when navbar is transparent without background, matching other navbar elements like Bareen) */}
+              <img 
+                src="/assets/images/logo-white.png" 
+                alt="Univue Consultants ApS" 
+                className={`absolute inset-0 h-full w-auto object-contain transition-opacity duration-300 group-hover:opacity-80 ${
+                  isScrolled || isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                }`} 
+              />
             </Link>
             
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-10 text-[11px] font-normal tracking-[0.2em] uppercase">
+              {/* Properties Link */}
+              <Link 
+                to="/properties" 
+                className={`transition-colors duration-300 ${isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory'}`}
+              >
+                {t('nav.properties')}
+              </Link>
+
               {/* Invest Dropdown */}
               <div 
                 className="relative py-2 group"
@@ -126,7 +147,7 @@ export const Navbar = () => {
 
                       <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center">
                         <Link 
-                          to="/market-catalog"
+                          to="/properties"
                           className="flex items-center gap-2 text-brand-gold hover:text-brand-blue transition-colors font-bold tracking-[0.2em] text-[10px]"
                         >
                           {t('nav.catalog')}
@@ -210,6 +231,15 @@ export const Navbar = () => {
                   </button>
                 </div>
 
+              {/* Mobile Properties Link */}
+              <Link 
+                to="/properties" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-3xl font-serif font-normal text-brand-blue uppercase"
+              >
+                {t('nav.properties')}
+              </Link>
+
               {/* Mobile Invest Section */}
               <div className="flex flex-col gap-4">
                 <button 
@@ -245,7 +275,8 @@ export const Navbar = () => {
                       
                       <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center">
                         <Link 
-                          to="/market-catalog"
+                          to="/properties"
+                          onClick={() => setIsMenuOpen(false)}
                           className="flex items-center gap-2 text-brand-gold hover:text-brand-blue transition-colors font-bold tracking-[0.2em] text-[10px]"
                         >
                           {t('nav.catalog')}

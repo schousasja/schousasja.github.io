@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { useAuth } from '../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { 
-  MapPin, 
-  Search, 
-  Image as ImageIcon, 
-  Save, 
-  CheckCircle2, 
-  AlertCircle, 
-  Loader2, 
-  ExternalLink,
-  Sliders,
-  Check,
-  Globe,
-  Compass
-} from 'lucide-react';
+import { MapPin, Search, Image as ImageIcon, Save, CheckCircle2, AlertCircle, Loader2, ExternalLink, Sliders, Check, Globe, Compass } from 'lucide-react';
 import { useMarkets } from '../contexts/MarketContext';
 import { useSiteSettings, PhotosMap } from '../contexts/SiteSettingsContext';
 import { AdminNav } from '../components/AdminNav';
@@ -56,19 +43,19 @@ const MARKET_ITEMS = [
 
 export const PhotoAdmin: React.FC = () => {
   const { profile } = useAuth();
-  const { cities, updateCity, loading: marketsLoading } = useMarkets();
-  const { photos, updatePhotos, loading: settingsLoading } = useSiteSettings();
+  const { cities, updateCity } = useMarkets();
+  const { photos, updatePhotos } = useSiteSettings();
   
   const [submitting, setSubmitting] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Track modified photo URLs locally for preview
+  // Local modifications state
   const [localPhotoUrls, setLocalPhotoUrls] = useState<Record<string, string>>({});
   
   // Status feedback toast/alerts
   const [status, setStatus] = useState<{ id: string, type: 'success' | 'error', message: string } | null>(null);
 
-  // Active workspace tab: heroes, core_markets, or cities
+  // Active workspace tab
   const [activeTab, setActiveTab] = useState<'heroes' | 'core_markets' | 'cities'>('heroes');
 
   // Load photos and cities into local state
@@ -140,12 +127,13 @@ export const PhotoAdmin: React.FC = () => {
         item.title.toLowerCase().includes(searchLower) || 
         item.description.toLowerCase().includes(searchLower)
       );
-    } else {
+    } else if (activeTab === 'cities') {
       return cities.filter(c => 
         (c.name || '').toLowerCase().includes(searchLower) || 
         (c.country || '').toLowerCase().includes(searchLower)
       );
     }
+    return [];
   };
 
   const itemsToDisplay = getFilteredItems();
@@ -160,25 +148,28 @@ export const PhotoAdmin: React.FC = () => {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-              <h1 className="text-brand-gold font-normal uppercase tracking-[0.4em] text-[10px] mb-3 font-sans">Arid Studio Layout Controls</h1>
-              <h2 className="text-3xl md:text-4xl font-serif text-brand-ivory leading-tight tracking-tighter">
-                Website <span className="text-gold-gradient">Layout Media Hub</span>
-              </h2>
-              <p className="text-brand-ivory/60 text-xs italic mt-2 max-w-2xl font-sans">
-                Streamlined administrative engine to modify photograph headers, hero sections, About us highlights, slide portfolios, and city banners website-wide.
+              <span className="text-brand-gold text-[9px] uppercase tracking-widest font-bold block mb-2 font-sans">
+                Content & Layout Media Control
+              </span>
+              <h1 className="text-3xl md:text-4xl font-serif text-brand-ivory leading-tight tracking-tighter">
+                Website <span className="text-gold-gradient">Photo & Visual Assets</span>
+              </h1>
+              <p className="text-brand-ivory/70 text-xs italic mt-2 max-w-2xl font-sans">
+                Update, replace, and curate high-resolution photographic banners, hero backdrops, and regional highlights across the entire Univue Consultants portal.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Control Tabs */}
-      <section className="py-6 px-6 bg-white border-b border-gray-100 sticky top-[80px] z-20 shadow-xs">
+      {/* Control Bar: Tabs & Search */}
+      <section className="py-4 px-6 bg-white border-b border-gray-100 sticky top-[80px] z-20 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 justify-between items-center">
           
-          <div className="flex border-b border-gray-100 w-full md:w-auto">
+          {/* Workspace Tabs */}
+          <div className="flex border-b border-gray-100 w-full md:w-auto overflow-x-auto">
             {[
-              { id: 'heroes', label: 'Heros & Headers', count: HERO_ITEMS.length, icon: Globe },
+              { id: 'heroes', label: 'Heros & Page Headers', count: HERO_ITEMS.length, icon: Globe },
               { id: 'core_markets', label: 'Core Homepage Markets', count: MARKET_ITEMS.length, icon: Sliders },
               { id: 'cities', label: 'Cities & Regions Showcase', count: cities.length, icon: MapPin },
             ].map(tab => (
@@ -188,11 +179,11 @@ export const PhotoAdmin: React.FC = () => {
                   setActiveTab(tab.id as any);
                   setSearchTerm('');
                 }}
-                className={`flex items-center gap-2 px-5 py-3 text-[10px] uppercase tracking-widest font-black transition-all relative whitespace-nowrap ${
-                  activeTab === tab.id ? 'text-brand-blue font-bold border-b-2 border-brand-gold' : 'text-gray-400 hover:text-brand-blue'
+                className={`flex items-center gap-2 px-5 py-3 text-[10px] uppercase tracking-widest font-black transition-all relative whitespace-nowrap cursor-pointer ${
+                  activeTab === tab.id ? 'text-brand-blue font-bold border-b-2 border-brand-gold bg-brand-ivory/50' : 'text-gray-400 hover:text-brand-blue'
                 }`}
               >
-                <tab.icon className="w-3.5 h-3.5" />
+                <tab.icon className={`w-3.5 h-3.5 ${activeTab === tab.id ? 'text-brand-gold' : ''}`} />
                 {tab.label}
                 <span className="ml-1 text-[8px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded-full font-sans">
                   {tab.count}
@@ -201,12 +192,13 @@ export const PhotoAdmin: React.FC = () => {
             ))}
           </div>
 
+          {/* Quick Search */}
           <div className="relative w-full md:w-80">
             <input
               type="text"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              placeholder={`Search in ${activeTab}...`}
+              placeholder={`Search ${itemsToDisplay.length} image slots...`}
               className="w-full pl-9 pr-4 py-2 text-xs bg-brand-ivory border border-gray-200 outline-none focus:border-brand-gold transition-colors font-sans text-brand-blue"
             />
             <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-gray-400" />
@@ -219,197 +211,138 @@ export const PhotoAdmin: React.FC = () => {
         </div>
       </section>
 
-      {/* Workspace Body */}
-      <section className="py-10 px-6 max-w-4xl mx-auto">
+      {/* Grid of Photo Cards */}
+      <section className="py-10 px-6 max-w-7xl mx-auto">
         
-        {/* Dynamic Image Cards list */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-serif text-xl text-brand-blue">
-              Modify Photographs: <span className="text-brand-gold capitalize">{activeTab.replace('_', ' ')}</span>
-            </h3>
-            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold font-sans">
-              Currently listing {itemsToDisplay.length} Nodes
-            </span>
+        {/* Toast / Status alert */}
+        {status && (
+          <div className={`mb-6 p-4 border flex items-center justify-between transition-all ${
+            status.type === 'success' ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : 'bg-red-50 border-red-300 text-red-800'
+          }`}>
+            <div className="flex items-center gap-3 text-xs font-bold font-sans">
+              {status.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
+              <span>{status.message}</span>
+            </div>
+            <button onClick={() => setStatus(null)} className="text-xs font-mono uppercase hover:opacity-75">Dismiss</button>
           </div>
+        )}
 
-          <div className="space-y-4">
-            <AnimatePresence mode="popLayout">
-              {itemsToDisplay.length === 0 ? (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="bg-white p-16 text-center border border-dashed border-gray-200"
-                >
-                  <p className="text-xs text-gray-400 font-sans italic">No active nodes match your filters.</p>
-                </motion.div>
-              ) : (
-                itemsToDisplay.map((item, idx) => {
-                  const currentPhotoUrl = localPhotoUrls[item.id] || '';
+        {itemsToDisplay.length === 0 ? (
+          <div className="py-20 text-center bg-white border border-gray-200">
+            <ImageIcon className="w-12 h-12 text-gray-300 mx-auto mb-4 stroke-1" />
+            <h3 className="font-serif text-lg text-brand-blue">No visual layout slots match your search</h3>
+            <p className="text-xs text-gray-500 font-sans mt-1">Try a different keyword or reset the filter.</p>
+            <button
+              onClick={() => setSearchTerm('')}
+              className="mt-4 px-4 py-2 bg-brand-blue text-brand-gold font-sans text-xs uppercase tracking-wider font-bold"
+            >
+              Reset Search
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {itemsToDisplay.map((item: any) => {
+              const currentUrl = localPhotoUrls[item.id] || '';
+              const isSubmittingThis = submitting === item.id;
+              
+              // For cities, item has name/country; for heroes, item has title/description
+              const title = item.title || `${item.name}, ${item.country}`;
+              const description = item.description || `Showcase photo for city card: ${item.name} (${item.country}).`;
+
+              return (
+                <div key={item.id} className="bg-white border border-gray-200/80 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
                   
-                  // Saved URL logic
-                  let savedUrl = '';
-                  if (activeTab === 'heroes' || activeTab === 'core_markets') {
-                    savedUrl = photos[item.id as keyof PhotosMap] || '';
-                  } else {
-                    savedUrl = (item as any).image || '';
-                  }
-
-                  const isSaved = savedUrl === currentPhotoUrl;
-
-                  return (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: Math.min(idx * 0.04, 0.4) }}
-                      className="bg-white p-5 border border-gray-200/80 shadow-md hover:shadow-lg transition-all grid grid-cols-1 md:grid-cols-12 gap-5 relative overflow-hidden group"
-                    >
-                      {/* Active Status Alert */}
-                      {status && status.id === item.id && (
-                        <div className={`absolute top-0 left-0 right-0 py-1.5 px-4 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider transition-all z-10 ${
-                          status.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'
-                        }`}>
-                          <span className="flex items-center gap-1.5">
-                            {status.type === 'success' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <AlertCircle className="w-3.5 h-3.5" />}
-                            {status.message}
-                          </span>
+                  {/* Top info & live image view */}
+                  <div>
+                    {/* Live Preview Container */}
+                    <div className="aspect-[16/9] w-full bg-brand-blue/10 relative overflow-hidden border-b border-gray-100 group">
+                      {currentUrl ? (
+                        <img 
+                          src={currentUrl} 
+                          alt={title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2070";
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4 text-center">
+                          <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+                          <span className="text-[10px] font-sans">No photo URL configured</span>
                         </div>
                       )}
 
-                      {/* Photo Thumbnail Visualiser */}
-                      <div className="md:col-span-3 flex flex-col justify-start">
-                        <div className="aspect-video md:aspect-[4/3] w-full bg-brand-ivory border border-gray-100 overflow-hidden relative shadow-inner">
-                          {currentPhotoUrl ? (
-                            <img 
-                              src={currentPhotoUrl} 
-                              alt={item.title || (item as any).name} 
-                              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" 
-                              onError={(e) => {
-                                (e.target as any).src = 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?auto=format&fit=crop&q=80&w=600';
-                              }}
-                              referrerPolicy="no-referrer"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
-                              <ImageIcon className="w-8 h-8 mb-1" />
-                              <span className="text-[8px] font-sans">Empty Link</span>
-                            </div>
-                          )}
-                          
-                          <div className="absolute top-2 left-2 flex gap-1 z-10">
-                            <span className="text-[8px] font-sans font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-blue text-brand-ivory">
-                              {activeTab.replace('_', ' ')}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="mt-1.5 flex justify-between items-center px-0.5">
-                          <span className="text-[8px] text-gray-400 font-mono">
-                            Aspect: Responsive
-                          </span>
-                          {!isSaved && (
-                            <span className="text-[7.5px] uppercase font-sans font-black tracking-widest text-rose-500 bg-rose-50 px-1 py-0.2 animate-pulse">
-                              Pending Unsaved Edits
-                            </span>
-                          )}
-                        </div>
+                      {/* Tag Overlay */}
+                      <div className="absolute top-2 left-2 px-2 py-1 bg-brand-blue/80 backdrop-blur-xs text-[8px] uppercase tracking-widest text-brand-gold font-bold">
+                        {activeTab === 'cities' ? 'City Media' : activeTab === 'core_markets' ? 'Market Slider' : 'Page Header'}
                       </div>
+                    </div>
 
-                      {/* Configurations Input Block */}
-                      <div className="md:col-span-9 flex flex-col justify-between space-y-3">
-                        <div>
-                          <div className="flex items-center justify-between flex-wrap gap-2">
-                            <h4 className="font-serif text-base text-brand-blue mb-1 leading-tight font-semibold">
-                              {item.title || (item as any).name}
-                            </h4>
-                            {(item as any).country && (
-                              <span className="text-[9px] font-sans text-brand-blue/50 flex items-center gap-1 bg-brand-ivory px-2 py-0.5 rounded">
-                                <Compass className="w-3 h-3 text-brand-gold" /> {(item as any).country}
-                              </span>
-                            )}
-                          </div>
-                          
-                          <p className="text-[10px] text-gray-400 font-sans mt-0.5">
-                            {item.description || `Showcase photo configuring the regional identity for ${(item as any).name || 'the system layout'}.`}
-                          </p>
-                          
-                          <div className="mt-3">
-                            <label className="block text-[8px] font-black uppercase tracking-[0.2em] text-brand-blue/40 mb-1.5">
-                              Image URL Address (HTTPS Link)
-                            </label>
-                            <div className="flex gap-2">
-                              <input 
-                                type="text"
-                                value={currentPhotoUrl}
-                                onChange={e => setLocalPhotoUrls(prev => ({
-                                  ...prev,
-                                  [item.id]: e.target.value
-                                }))}
-                                className="flex-1 px-3 py-2 bg-brand-ivory border border-gray-100 text-[10px] font-mono select-all text-brand-blue outline-none focus:border-brand-gold transition-colors focus:bg-white"
-                                placeholder="Paste clean photograph url here..."
-                              />
-                              
-                              {currentPhotoUrl && (
-                                <a 
-                                  href={currentPhotoUrl} 
-                                  target="_blank" 
-                                  rel="noreferrer" 
-                                  className="px-2.5 bg-brand-ivory hover:bg-gray-100 text-brand-blue border border-gray-100 flex items-center justify-center transition-colors"
-                                  title="Open live link"
-                                >
-                                  <ExternalLink className="w-3.5 h-3.5" />
-                                </a>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                    {/* Meta description */}
+                    <div className="p-4">
+                      <h4 className="font-serif text-brand-blue text-sm font-semibold leading-tight line-clamp-1">
+                        {title}
+                      </h4>
+                      <p className="text-[10px] text-gray-500 font-sans mt-1 line-clamp-2 leading-relaxed">
+                        {description}
+                      </p>
 
-                        {/* Save Action */}
-                        <div className="flex justify-end gap-3 pt-4 border-t border-gray-50">
-                          {currentPhotoUrl && (
-                            <button
-                              onClick={() => {
-                                setLocalPhotoUrls(prev => ({ ...prev, [item.id]: '' }));
-                                showToast(item.id, 'success', 'URL cleared! Click "Save Image" to commit.');
-                              }}
-                              className="px-4 py-2 text-[9px] uppercase tracking-widest font-black transition-all border bg-white hover:bg-rose-50 border-gray-200 hover:border-rose-400 text-rose-500 cursor-pointer"
-                            >
-                              Clear Photo
-                            </button>
-                          )}
-                          <button
-                            disabled={submitting === item.id || isSaved}
-                            onClick={() => handleSavePhotoChange(item.id, activeTab, currentPhotoUrl)}
-                            className={`px-5 py-2 text-[9px] uppercase tracking-widest font-black flex items-center gap-1.5 transition-all outline-none border ${
-                              isSaved 
-                                ? 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed' 
-                                : 'bg-brand-gold text-brand-blue border-brand-gold active:scale-[0.98] cursor-pointer hover:bg-brand-gold-light'
-                            }`}
-                          >
-                            {submitting === item.id ? (
-                              <>
-                                <Loader2 className="w-3 h-3 animate-spin" /> Committing...
-                              </>
-                            ) : isSaved ? (
-                              <>
-                                <Check className="w-3 h-3" /> Configured
-                              </>
-                            ) : (
-                              <>
-                                <Save className="w-3.5 h-3.5" /> Save Image
-                              </>
-                            )}
-                          </button>
-                        </div>
+                      {/* Image Input field */}
+                      <div className="mt-4">
+                        <label className="block text-[8px] font-black uppercase tracking-[0.2em] text-brand-blue/60 mb-1">
+                          Image HTTPS URL (Unsplash or CDN)
+                        </label>
+                        <input
+                          type="text"
+                          value={currentUrl}
+                          onChange={(e) => {
+                            setLocalPhotoUrls(prev => ({
+                              ...prev,
+                              [item.id]: e.target.value
+                            }));
+                          }}
+                          placeholder="https://images.unsplash.com/..."
+                          className="w-full px-3 py-2 bg-brand-ivory border border-gray-200 text-xs font-mono select-all text-brand-blue outline-none focus:border-brand-gold transition-colors"
+                        />
                       </div>
-                    </motion.div>
-                  );
-                })
-              )}
-            </AnimatePresence>
+                    </div>
+                  </div>
+
+                  {/* Actions footer */}
+                  <div className="p-4 pt-0 border-t border-gray-50 flex items-center justify-between gap-3">
+                    {currentUrl ? (
+                      <a
+                        href={currentUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-gray-400 hover:text-brand-blue flex items-center gap-1 font-sans transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" /> View Source
+                      </a>
+                    ) : <div />}
+
+                    <button
+                      disabled={isSubmittingThis}
+                      onClick={() => handleSavePhotoChange(item.id, activeTab, currentUrl)}
+                      className="px-4 py-2 bg-brand-blue text-brand-gold hover:bg-brand-gold hover:text-brand-blue font-bold uppercase tracking-widest text-[9px] flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      {isSubmittingThis ? (
+                        <>
+                          <Loader2 className="w-3 h-3 animate-spin" /> Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-3 h-3" /> Save Image
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
-
+        )}
       </section>
     </div>
   );

@@ -141,8 +141,8 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                     <p className="text-brand-ivory/30 text-sm">No assets found</p>
                   ) : (
                     <div className="flex flex-col gap-4">
-                       <button onClick={() => handleNavigate('/market-catalog')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2">
-                        <Building2 className="w-4 h-4" /> View Market Catalog
+                       <button onClick={() => handleNavigate('/properties')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2">
+                        <Building2 className="w-4 h-4" /> View Properties
                       </button>
                     </div>
                   )}

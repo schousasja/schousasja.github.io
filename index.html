@@ -1,24 +1,106 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      // Suppress Vite dev client WebSocket connection failure in Cloud Run / iFrame preview sandbox.
+      // In this environment, HMR WebSocket is not supported and fails with "WebSocket closed without opened."
+      (function() {
+        if (typeof window === 'undefined') return;
+
+        try {
+          var OriginalWebSocket = window.WebSocket;
+          if (OriginalWebSocket) {
+            window.WebSocket = function (url, protocols) {
+              var isViteHmr = 
+                protocols === 'vite-hmr' || 
+                protocols === 'vite-ping' || 
+                (Array.isArray(protocols) && (protocols.includes('vite-hmr') || protocols.includes('vite-ping'))) ||
+                (typeof url === 'string' && (url.includes('token=') && (url.includes('ais-dev') || url.includes('localhost'))));
+                
+              if (isViteHmr) {
+                var target = new EventTarget();
+                var mockSocket = {
+                  readyState: 1, // WebSocket.OPEN
+                  url: String(url),
+                  protocol: Array.isArray(protocols) ? protocols[0] : (protocols || ''),
+                  extensions: '',
+                  bufferedAmount: 0,
+                  binaryType: 'blob',
+                  send: function () {},
+                  close: function () {},
+                  addEventListener: target.addEventListener.bind(target),
+                  removeEventListener: target.removeEventListener.bind(target),
+                  dispatchEvent: target.dispatchEvent.bind(target),
+                  onopen: null,
+                  onclose: null,
+                  onerror: null,
+                  onmessage: null,
+                };
+                setTimeout(function () {
+                  var openEvent = new Event('open');
+                  if (typeof mockSocket.onopen === 'function') mockSocket.onopen(openEvent);
+                  mockSocket.dispatchEvent(openEvent);
+                }, 0);
+                return mockSocket;
+              }
+              return new OriginalWebSocket(url, protocols);
+            };
+            window.WebSocket.prototype = OriginalWebSocket.prototype;
+            window.WebSocket.CONNECTING = 0;
+            window.WebSocket.OPEN = 1;
+            window.WebSocket.CLOSING = 2;
+            window.WebSocket.CLOSED = 3;
+          }
+        } catch (_) {}
+
+        window.addEventListener('unhandledrejection', function(event) {
+          var reason = event && event.reason;
+          var msg = (reason && (reason.message || reason.stack || String(reason))) || '';
+          if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('@vite/client') !== -1) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+
+        window.addEventListener('error', function(event) {
+          var msg = (event && (event.message || event.filename || (event.error && event.error.stack))) || '';
+          if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('@vite/client') !== -1) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Univue Consultants | Dubai Investment & India Expansion Advisory</title>
     <meta name="description" content="Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients." />
     <meta name="keywords" content="Dubai investment, India business expansion, cross-border advisory, turnkey investment solutions, European business consulting, Univue Consultants, international advisory" />
+    <meta name="author" content="Univue Consultants ApS" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0B1F3A" />
+    <link rel="canonical" href="https://univueconsultants.com/" />
     
+    <!-- Browser Tab Favicon & Search Engine Icons -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+
     <!-- Preconnect to Font Servers -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://univueconsultants.com/" />
+    <meta property="og:site_name" content="Univue Consultants" />
     <meta property="og:title" content="Univue Consultants | International Advisory" />
     <meta property="og:description" content="Specializing in Dubai investment and India operational expansion for European clients." />
     <meta property="og:image" content="/og-image.jpg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://univueconsultants.com/" />
     <meta property="twitter:title" content="Univue Consultants | International Advisory" />
     <meta property="twitter:description" content="Specializing in Dubai investment and India operational expansion for European clients." />
     <meta property="twitter:image" content="/og-image.jpg" />

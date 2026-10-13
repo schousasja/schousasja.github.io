@@ -67,6 +67,20 @@ export const useDocumentMetadata = ({
 
     // 5. Update Type & Image
     setMetaTag('property', 'og:type', ogType);
+    
+    // 6. Update Canonical URL & og:url
+    const currentUrl = `https://univueconsultants.com${window.location.pathname}`;
+    setMetaTag('property', 'og:url', currentUrl);
+    setMetaTag('property', 'twitter:url', currentUrl);
+
+    let canonicalLink = document.querySelector("link[rel='canonical']");
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', currentUrl);
+
     if (ogImage) {
       // If it's a relative URL or starts with http, use it directly
       const finalImage = ogImage.startsWith('http') || ogImage.startsWith('/')

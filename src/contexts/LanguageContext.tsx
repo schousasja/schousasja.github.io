@@ -51,7 +51,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.seasia.markets': 'SOUTHEAST ASIA MARKETS',
     'nav.invest': 'MARKETS',
     'nav.services': 'SERVICES',
-    'nav.insights': 'INSIGHTS & RESEARCH',
+    'nav.insights': 'RESEARCH',
     'nav.process': 'PROCESS',
     'nav.search': 'SEARCH',
     'nav.book': 'SCHEDULE BRIEFING',
@@ -59,7 +59,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.login': 'LOG IN',
     'nav.logout': 'SIGN OUT',
     'nav.admin': 'ADMIN DASHBOARD',
-    'nav.catalog': 'EXPLORE MARKET CATALOG',
+    'nav.properties': 'PROPERTIES',
+    'nav.catalog': 'VIEW PROPERTIES',
     'nav.menu': 'MENU',
     'nav.close': 'CLOSE',
     'nav.markets_suffix': 'MARKETS',
@@ -153,7 +154,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.choice.rationale': 'Handpicked Rationale',
     'home.choice.developer': 'Developer Credibility',
     'home.choice.details': 'Details',
-    'home.choice.catalog': 'View market catalog',
+    'home.choice.catalog': 'VIEW PROPERTIES',
     'home.choice.empty': 'There is currently no property listings available...',
     'home.choice.empty.sub': 'Please check back soon for our latest curated opportunities',
 
@@ -309,7 +310,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'login.encrypted': 'Encrypted connection via Univue Cloud Services.',
 
     // Insights
-    'insights.title': 'Insights & Research',
+    'insights.title': 'Research',
     'insights.subtitle': 'Our latest thinking on the issues that matter most in the global market.',
     'insights.paper_type.all': 'All Types',
     'insights.market.all': 'All Markets',
@@ -906,7 +907,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.seasia.markets': 'SYDØSTASIEN MARKEDER',
     'nav.invest': 'MARKEDER',
     'nav.services': 'YDELSER',
-    'nav.insights': 'INDSIGT & RESEARCH',
+    'nav.insights': 'RESEARCH',
     'nav.process': 'PROCES',
     'nav.search': 'SØG',
     'nav.book': 'PLANLÆG BRIEFING',
@@ -914,7 +915,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.login': 'LOG IND',
     'nav.logout': 'LOG UD',
     'nav.admin': 'ADMIN DASHBOARD',
-    'nav.catalog': 'UDFORSK MARKEDSKATALOG',
+    'nav.properties': 'EJENDOMME',
+    'nav.catalog': 'SE EJENDOMME',
     'nav.menu': 'MENU',
     'nav.close': 'LUK',
     'nav.markets_suffix': 'MARKESER',
@@ -1008,7 +1010,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.choice.rationale': 'Håndplukket Begrundelse',
     'home.choice.developer': 'Udvikler Troværdighed',
     'home.choice.details': 'Detaljer',
-    'home.choice.catalog': 'Se markedskatalog',
+    'home.choice.catalog': 'SE EJENDOMME',
     'home.choice.empty': 'Der er i øjeblikket ingen ejendomsannoncer tilgængelige...',
     'home.choice.empty.sub': 'Tjek venligst tilbage snart for vores seneste udvalgte muligheder',
 
@@ -1164,7 +1166,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'login.encrypted': 'Krypteret forbindelse via Univue Cloud Services.',
 
     // Insights
-    'insights.title': 'Indsigt & Research',
+    'insights.title': 'Research',
     'insights.subtitle': 'Vores seneste tanker om de emner, der betyder mest på det globale marked.',
     'insights.paper_type.all': 'Alle Typer',
     'insights.market.all': 'Alle Markeder',

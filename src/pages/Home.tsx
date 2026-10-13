@@ -330,7 +330,7 @@ export const Home = () => {
                   {t('hero.cta.primary')} 
                 </button>
                 <button 
-                  onClick={() => navigate('/market-catalog')}
+                  onClick={() => navigate('/properties')}
                   className="btn-outline flex items-center justify-center gap-2 group uppercase text-[11px] tracking-widest"
                 >
                   {t('nav.catalog')}
@@ -638,8 +638,8 @@ export const Home = () => {
 
           <div className="mt-20 text-center">
             <button 
-              onClick={() => navigate('/market-catalog')}
-              className="btn-outline border-brand-blue/10 text-brand-blue hover:border-brand-gold"
+              onClick={() => navigate('/properties')}
+              className="btn-outline border-brand-blue/10 text-brand-blue hover:border-brand-gold uppercase text-[11px] tracking-widest"
             >
               {t('home.choice.catalog')}
             </button>

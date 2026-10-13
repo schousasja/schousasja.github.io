@@ -20,7 +20,7 @@ export const MarketCatalog = () => {
   const navigate = useNavigate();
 
   useDocumentMetadata({
-    title: t('nav.catalog') || 'Explore Market Catalog',
+    title: t('nav.properties') ? `${t('nav.properties')} | Univue Consultants ApS` : 'Properties | Univue Consultants ApS',
     description: t('catalog.hero.desc') || 'A curated selection of high-yield institutional-grade real estate assets across global growth corridors.',
     keywords: 'off-plan property, investment catalog, high yield properties Dubai, Bangalore IT office space'
   });

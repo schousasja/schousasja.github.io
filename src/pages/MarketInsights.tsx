@@ -64,7 +64,7 @@ export const MarketInsights = () => {
   useDocumentMetadata({
     title: view === 'article' && selectedArticle 
       ? selectedArticle.title 
-      : `${t('nav.insights') || 'Insights & Research'}`,
+      : `${t('nav.insights') || 'Research'}`,
     description: view === 'article' && selectedArticle 
       ? selectedArticle.description 
       : t('insights.subtitle') || 'Explore our dynamic library of cross-border real estate, legal, and operational investment papers and research reports.',

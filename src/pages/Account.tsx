@@ -433,10 +433,10 @@ export const Account: React.FC = () => {
                       Explore the developments inside the Market Discovery catalog and bookmark them to compare or review them later.
                     </p>
                     <button
-                      onClick={() => navigate('/catalog')}
+                      onClick={() => navigate('/properties')}
                       className="inline-block bg-brand-blue text-brand-gold text-[9px] font-bold uppercase tracking-widest px-6 py-3 hover:bg-brand-gold hover:text-brand-blue transition-colors duration-300 font-sans"
                     >
-                      Browse Market Catalog
+                      View Properties
                     </button>
                   </div>
                 )}

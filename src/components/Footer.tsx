@@ -9,10 +9,12 @@ export const Footer = () => {
     <footer className="bg-brand-blue text-brand-ivory py-12 px-6">
       <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 border-b border-brand-ivory/10 pb-12 mb-12">
         <div className="md:col-span-2">
-          <Link to="/" className="flex items-center gap-2 mb-6">
-            <span className="font-serif text-2xl font-normal tracking-tight">
-              <span className="text-brand-gold">Univue</span> <span>Consultants ApS</span>
-            </span>
+          <Link to="/" className="inline-flex items-center mb-6" aria-label="Univue Consultants ApS">
+            <img 
+              src="/assets/images/logo-white.png" 
+              alt="Univue Consultants ApS" 
+              className="h-10 sm:h-11 md:h-12 w-auto object-contain transition-opacity duration-300 hover:opacity-80" 
+            />
           </Link>
           <p className="text-brand-ivory/60 max-w-sm mb-6">
             {t('footer.desc')}
