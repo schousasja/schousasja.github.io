@@ -131,21 +131,21 @@ export const Home = () => {
       id: 0,
       title: t('home.hero.col.uae'),
       subtitle: "",
-      image: photos.hero_uae_col,
+      image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2070",
       link: "/uae"
     },
     {
       id: 1,
       title: t('home.hero.col.india'),
       subtitle: "",
-      image: photos.hero_india_col,
+      image: "https://media.istockphoto.com/id/175633219/photo/bangalore-or-bengalurucity-scape-with-green-trees-on-foreground.jpg?s=612x612&w=0&k=20&c=XoRqItFjHC4UxbiQ-Pa6EkQ7_Tkm-THhhBL7SX8GtfE=",
       link: "/india"
     },
     {
       id: 2,
       title: t('home.hero.col.seasia'),
       subtitle: "",
-      image: photos.hero_seasia_col,
+      image: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&q=80&w=2070",
       link: "/southeast-asia"
     }
   ];
@@ -233,7 +233,7 @@ export const Home = () => {
         {/* Simplified Premium Background for Mobile Screen Layout */}
         <div className="absolute inset-0 block md:hidden z-0 bg-brand-blue">
           <img 
-            src={photos.about_hero} 
+            src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2070" 
             alt="Univue Global Capital" 
             className="w-full h-full object-cover opacity-25 brightness-[0.45]"
             referrerPolicy="no-referrer"

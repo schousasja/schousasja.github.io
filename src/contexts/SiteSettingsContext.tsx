@@ -7,8 +7,8 @@ import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 export const DEFAULT_PHOTOS = {
   // Page Heroes
   hero_uae_col: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2070",
-  hero_india_col: "https://images.unsplash.com/photo-1562654501-a0ccc0af3fb1?auto=format&fit=crop&q=80&w=2070",
-  hero_seasia_col: "https://images.unsplash.com/photo-1525596662741-e94ff9926de3?auto=format&fit=crop&q=80&w=2070",
+  hero_india_col: "https://media.istockphoto.com/id/175633219/photo/bangalore-or-bengalurucity-scape-with-green-trees-on-foreground.jpg?s=612x612&w=0&k=20&c=XoRqItFjHC4UxbiQ-Pa6EkQ7_Tkm-THhhBL7SX8GtfE=",
+  hero_seasia_col: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&q=80&w=2070",
   
   about_hero: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2669",
   about_why: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop",
