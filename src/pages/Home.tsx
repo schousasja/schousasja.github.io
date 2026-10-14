@@ -433,83 +433,8 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="section-padding bg-brand-ivory overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-sm font-normal text-brand-gold uppercase tracking-[0.2em]">{t('home.markets.tag')}</h2>
-          </div>
-
-          <div className="space-y-12">
-            <ServiceCard 
-              id="uae"
-              title={t('home.markets.uae.title')}
-              description={t('home.markets.uae.desc')}
-              accentColor="gold"
-              images={[
-                photos.market_uae_slide1,
-                photos.market_uae_slide2,
-                photos.market_uae_slide3
-              ]}
-              ctaText={t('dubai.cta')}
-              link="/uae"
-              listHeader={t('home.markets.uae.advantages_title')}
-              items={[
-                t('home.markets.uae.item1'),
-                t('home.markets.uae.item2'),
-                t('home.markets.uae.item3'),
-                t('home.markets.uae.item4')
-              ]}
-            />
-
-            <ServiceCard 
-              id="india"
-              title={t('home.markets.india.title')}
-              description={t('home.markets.india.desc')}
-              accentColor="blue"
-              images={[
-                photos.market_india_slide1,
-                photos.market_india_slide2,
-                photos.market_india_slide3
-              ]}
-              ctaText={t('india.cta')}
-              link="/india"
-              imageRight={true}
-              listHeader={t('home.markets.india.advantages_title')}
-              items={[
-                t('home.markets.india.item1'),
-                t('home.markets.india.item2'),
-                t('home.markets.india.item3'),
-                t('home.markets.india.item4')
-              ]}
-            />
-
-            <ServiceCard 
-              id="seasia"
-              title={t('home.markets.seasia.title')}
-              description={t('home.markets.seasia.desc')}
-              accentColor="gold"
-              images={[
-                photos.market_seasia_slide1,
-                photos.market_seasia_slide2,
-                photos.market_seasia_slide3
-              ]}
-              ctaText={t('nav.seasia.markets')}
-              link="/southeast-asia"
-              listHeader={t('home.markets.seasia.advantages_title')}
-              items={[
-                t('home.markets.seasia.item1'),
-                t('home.markets.seasia.item2'),
-                t('home.markets.seasia.item3'),
-                t('home.markets.seasia.item4')
-              ]}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Opportunities */}
-      <section className="section-padding bg-brand-ivory overflow-hidden">
+      {/* Featured Opportunities / Advisor's Choice */}
+      <section id="choice" className="section-padding bg-brand-ivory overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <h2 className="text-xs font-normal text-brand-gold uppercase tracking-[0.4em] mb-4">{t('home.choice.tag')}</h2>
@@ -643,6 +568,81 @@ export const Home = () => {
             >
               {t('home.choice.catalog')}
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Services / Core Markets Section */}
+      <section id="services" className="section-padding bg-brand-ivory overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-sm font-normal text-brand-gold uppercase tracking-[0.2em]">{t('home.markets.tag')}</h2>
+          </div>
+
+          <div className="space-y-12">
+            <ServiceCard 
+              id="uae"
+              title={t('home.markets.uae.title')}
+              description={t('home.markets.uae.desc')}
+              accentColor="gold"
+              images={[
+                photos.market_uae_slide1,
+                photos.market_uae_slide2,
+                photos.market_uae_slide3
+              ]}
+              ctaText={t('dubai.cta')}
+              link="/uae"
+              listHeader={t('home.markets.uae.advantages_title')}
+              items={[
+                t('home.markets.uae.item1'),
+                t('home.markets.uae.item2'),
+                t('home.markets.uae.item3'),
+                t('home.markets.uae.item4')
+              ]}
+            />
+
+            <ServiceCard 
+              id="india"
+              title={t('home.markets.india.title')}
+              description={t('home.markets.india.desc')}
+              accentColor="blue"
+              images={[
+                photos.market_india_slide1,
+                photos.market_india_slide2,
+                photos.market_india_slide3
+              ]}
+              ctaText={t('india.cta')}
+              link="/india"
+              imageRight={true}
+              listHeader={t('home.markets.india.advantages_title')}
+              items={[
+                t('home.markets.india.item1'),
+                t('home.markets.india.item2'),
+                t('home.markets.india.item3'),
+                t('home.markets.india.item4')
+              ]}
+            />
+
+            <ServiceCard 
+              id="seasia"
+              title={t('home.markets.seasia.title')}
+              description={t('home.markets.seasia.desc')}
+              accentColor="gold"
+              images={[
+                photos.market_seasia_slide1,
+                photos.market_seasia_slide2,
+                photos.market_seasia_slide3
+              ]}
+              ctaText={t('nav.seasia.markets')}
+              link="/southeast-asia"
+              listHeader={t('home.markets.seasia.advantages_title')}
+              items={[
+                t('home.markets.seasia.item1'),
+                t('home.markets.seasia.item2'),
+                t('home.markets.seasia.item3'),
+                t('home.markets.seasia.item4')
+              ]}
+            />
           </div>
         </div>
       </section>
