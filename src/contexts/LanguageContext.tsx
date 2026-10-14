@@ -1862,43 +1862,6 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       'Post-handover payment plan': 'Betalingsplan efter overtagelse',
       'Attractive 60/40 Plan': 'Attraktiv 60/40 plan',
       'Easy installments': 'Nemme afdrag',
-      'Available': 'Tilgængelig',
-      'Sold Out': 'Udsolgt',
-      'Swimming Pool': 'Svømmebassin',
-      'Fitness Center': 'Fitnesscenter',
-      'Panoramic Sea Views': 'Panoramaudsigt over havet',
-      'Private Balcony': 'Privat balkon',
-      'Downtown Dubai': 'Downtown Dubai',
-      'Palm Jumeirah': 'Palm Jumeirah',
-      'Dubai Harbour': 'Dubai Havn',
-      'Sobha Realty': 'Sobha Realty',
-      'Damac Properties': 'Damac Properties',
-      'Binghatti': 'Binghatti',
-      'Danube': 'Danube',
-    };
-
-    // Helper for offline regex-based transforms
-    const transformOffline = (input: string): string => {
-      let tr = input;
-      tr = tr.replace(/Q([1-4])\s+(\d{4})/g, '$1. kvartal $2');
-      tr = tr.replace(/(\d+)\/(\d+)\s+Post-handover\s+plan/gi, '$1/$2 Plan efter overtagelse');
-      tr = tr.replace(/(\d+)\/(\d+)\s+During\s+construction/gi, '$1/$2 Under opførelse');
-      tr = tr.replace(/(\d+)\/(\d+)\s+On\s+Handover/gi, '$1/$2 Ved overtagelse');
-      tr = tr.replace(/Post-handover/gi, 'Efter overtagelse');
-      tr = tr.replace(/During construction/gi, 'Under opførelse');
-      tr = tr.replace(/On Handover/gi, 'Ved overtagelse');
-      tr = tr.replace(/\bAward-winning\b/gi, 'Prisvindende');
-      tr = tr.replace(/\bdeveloper\b/gi, 'udvikler');
-      tr = tr.replace(/\bdevelopers\b/gi, 'udviklere');
-      tr = tr.replace(/\bknown for\b/gi, 'kendt for');
-      tr = tr.replace(/\bZaha Hadid Design\b/gi, 'Zaha Hadid Design');
-      tr = tr.replace(/\bHigh Capital Appreciation\b/gi, 'Høj værditilvækst');
-      tr = tr.replace(/\bPrivate Beach Access\b/gi, 'Privat strandadgang');
-      tr = tr.replace(/\bPremium ROI\b/gi, 'Premium afkast');
-      tr = tr.replace(/\bWaterfront Views\b/gi, 'Udsigt over vandet');
-      tr = tr.replace(/\bSkyline Views\b/gi, 'Udsigt over horisonten');
-      tr = tr.replace(/\bLuxury Living\b/gi, 'Luksusliv');
-      return tr;
     };
 
     // 1. Direct dictionary match
@@ -1927,21 +1890,20 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       })
       .then(res => res.json())
       .then(data => {
-        const resolved = (data && data.text) ? data.text : transformOffline(text);
-        setDynamicTranslations(prev => {
-          const updated = { ...prev, [text]: resolved };
-          try {
-            localStorage.setItem('univue_dynamic_translations', JSON.stringify(updated));
-          } catch {
-            // ignore localStorage quota limit
-          }
-          return updated;
-        });
+        if (data.success && data.text) {
+          setDynamicTranslations(prev => {
+            const updated = { ...prev, [text]: data.text };
+            try {
+              localStorage.setItem('univue_dynamic_translations', JSON.stringify(updated));
+            } catch (e) {
+              console.warn("Storage quota or error saving translation:", e);
+            }
+            return updated;
+          });
+        }
       })
-      .catch(() => {
-        // Cache offline fallback so we never re-request infinitely
-        const fallback = transformOffline(text);
-        setDynamicTranslations(prev => ({ ...prev, [text]: fallback }));
+      .catch(err => {
+        console.error("Dynamic background translation error:", err);
       })
       .finally(() => {
         pendingTranslations.current.delete(text);
@@ -1949,7 +1911,23 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     }
 
     // 3. Fallback to offline regex-based transforms
-    return transformOffline(text);
+    let translated = text;
+    translated = translated.replace(/Q([1-4])\s+(\d{4})/g, '$1. kvartal $2');
+    translated = translated.replace(/(\d+)\/(\d+)\s+Post-handover\s+plan/gi, '$1/$2 Plan efter overtagelse');
+    translated = translated.replace(/(\d+)\/(\d+)\s+During\s+construction/gi, '$1/$2 Under opførelse');
+    translated = translated.replace(/Post-handover/gi, 'Efter overtagelse');
+    translated = translated.replace(/During construction/gi, 'Under opførelse');
+    translated = translated.replace(/On Handover/gi, 'Ved overtagelse');
+
+    translated = translated.replace(/\bAward-winning\b/gi, 'Prisvindende');
+    translated = translated.replace(/\bdeveloper\b/gi, 'udvikler');
+    translated = translated.replace(/\bknown for\b/gi, 'kendt for');
+    translated = translated.replace(/\bZaha Hadid Design\b/gi, 'Zaha Hadid Design');
+    translated = translated.replace(/\bHigh Capital Appreciation\b/gi, 'Høj værditilvækst');
+    translated = translated.replace(/\bPrivate Beach Access\b/gi, 'Privat strandadgang');
+    translated = translated.replace(/\bPremium ROI\b/gi, 'Premium afkast');
+
+    return translated;
   };
 
   return (
