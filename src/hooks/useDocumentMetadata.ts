@@ -47,7 +47,7 @@ export const useDocumentMetadata = ({
       setMetaTag('property', 'twitter:description', description);
     } else {
       // fallback to default description
-      const defaultDesc = 'Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients.';
+      const defaultDesc = 'Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.';
       setMetaTag('name', 'description', defaultDesc);
       setMetaTag('property', 'og:description', defaultDesc);
       setMetaTag('property', 'twitter:description', defaultDesc);

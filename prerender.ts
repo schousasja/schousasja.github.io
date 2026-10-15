@@ -45,7 +45,7 @@ const sharedFooter = `
       <div style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #FDFCF5; margin-bottom: 0.5rem;">UNIVUE CONSULTANTS</div>
       <p style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">International Cross-Border Advisory</p>
       <p style="color: rgba(253, 252, 245, 0.7); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-        Turnkey advisory firm specializing in Dubai real estate investment, capital allocation, and Indian operational corporate expansion for European investors and companies.
+        Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.
       </p>
       <p style="color: rgba(253, 252, 245, 0.5); font-size: 0.8rem;">
         CVR: 43834665 (Danish Business Registration)<br />
@@ -1019,12 +1019,12 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     case '/':
     default:
       return {
-        title: "Univue Consultants | Dubai Investment & India Expansion Advisory",
-        description: "Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients.",
-        keywords: "Dubai investment, India business expansion, cross-border advisory, turnkey investment solutions, European business consulting, Univue Consultants, international advisory",
+        title: "Univue Consultants | International Property Investment Advisory",
+        description: "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
+        keywords: "international property investment, cross-border real estate, turnkey property advisory, international acquisitions, Dubai real estate, overseas property investment, Univue Consultants",
         canonical: `${BASE_URL}/`,
-        ogTitle: "Univue Consultants | Dubai Investment & India Expansion Advisory",
-        ogDescription: "Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients.",
+        ogTitle: "Univue Consultants | International Property Investment Advisory",
+        ogDescription: "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",

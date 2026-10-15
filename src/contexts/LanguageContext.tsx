@@ -857,7 +857,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'book.sync': 'Information Syncing to Appointment',
 
     // Footer
-    'footer.desc': 'Univue Consultants ApS is an international cross-border advisory firm specializing in global investment and expansion opportunities.',
+    'footer.desc': 'Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.',
     'footer.markets': 'Global Markets',
     'footer.consultancy': 'Consultancy',
     'footer.contact': 'Contact',
@@ -1713,7 +1713,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'book.sync': 'Information synkroniseres til aftale',
 
     // Footer
-    'footer.desc': 'Univue Consultants ApS er et internationalt grænseoverskridende rådgivningsfirma med speciale i globale investerings- og ekspansionsmuligheder.',
+    'footer.desc': 'Univue Consultants forenkler international ejendomsinvestering ved at forbinde kunder med de rette ejendomme og koordinere den finansielle, juridiske og lovgivningsmæssige støtte, der er nødvendig for trygt at gennemføre grænseoverskridende opkøb.',
     'footer.markets': 'Globale Markeder',
     'footer.consultancy': 'Rådgivning',
     'footer.contact': 'Kontakt',

@@ -53,7 +53,7 @@ function App() {
     "name": "Univue Consultants ApS",
     "url": "https://univueconsultants.com",
     "logo": "https://univueconsultants.com/assets/images/logo.png",
-    "description": "Turnkey international cross-border advisory firm specializing in Dubai investment and India operational expansion for European clients.",
+    "description": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+45 26 37 82 70",
