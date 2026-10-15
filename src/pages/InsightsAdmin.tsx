@@ -973,10 +973,10 @@ export const InsightsAdmin = () => {
     setPasteInput(
       `1. ASIA PACIFIC SOVEREIGN TARGETS\n` +
       `Asset managers are pivoting aggressively toward key sovereign infrastructure shelters as central banking models cycle through unexpected credit adjustments.\n\n` +
-      `• Real estate yields in key Tier-1 Southeast Asian gateways continue to appreciate.\n` +
+      `• Commercial transactions across key Tier-1 Southeast Asian gateways continue to expand.\n` +
       `• Exit cap rates show structural resilience against commercial debt headwinds.\n\n` +
       `2. REGULATORY SAFE HAVENS ANALYSIS\n` +
-      `Institutional portfolios favor regions with clear trust protections, visa accessibility, and zero-tax frameworks on long-term wealth assets.`
+      `Institutional portfolios favor regions with clear trust protections, clear regulatory clarity, and modern business licensing frameworks on long-term wealth assets.`
     );
   };
 
@@ -1015,7 +1015,7 @@ export const InsightsAdmin = () => {
         {
           id: 'b-1',
           type: 'paragraph',
-          text: "Sovereign re-allocations are speeding up as conventional European capital anchors encounter changing regulatory profiles. This macroeconomic publication presents a deep dive into the transaction flows backing secondary high-yield placements across growth hubs.",
+          text: "Sovereign re-allocations are speeding up as conventional European capital anchors encounter changing regulatory profiles. This macroeconomic publication presents a deep dive into the transaction flows backing secondary institutional placements across strategic international hubs.",
           fontSize: 'base',
           fontStyle: 'normal'
         },
@@ -1027,7 +1027,7 @@ export const InsightsAdmin = () => {
         {
           id: 'b-3',
           type: 'paragraph',
-          text: "Institutional yield indicators consistently point toward asset classes featuring sovereign tenant underwriting. Residential assets in prime corridors have registered an exceptional 120 basis points premium.",
+          text: "Institutional occupancy indicators consistently point toward asset classes featuring sovereign tenant underwriting. Residential assets in prime corridors have registered an exceptional 120 basis points premium.",
           fontSize: 'base',
           fontStyle: 'normal'
         },
@@ -1035,20 +1035,20 @@ export const InsightsAdmin = () => {
           id: 'b-4',
           type: 'highlight',
           title: "Strategic Advisory Takeaway",
-          text: "The integration of Golden Visa framework incentives coupled with the absolute absence of personal tax margins insulates prime yields against aggressive Western bank contraction cycles."
+          text: "The integration of transparent escrow frameworks and modern digital title registration insulates prime real estate assets against cross-border friction."
         },
         {
           id: 'b-5',
           type: 'heading',
-          text: "GLOBAL YIELD METRICS COMPARATIVE"
+          text: "GLOBAL MARKET LIQUIDITY COMPARATIVE"
         },
         {
           id: 'b-6',
           type: 'chart',
-          title: "Macro Yield & Rental Index (Projected 2026)",
+          title: "Macro Market Liquidity & Occupancy Index (2026)",
           chartData: [
-            { label: "Dubai Prime Grade-A Yield", value: 92 },
-            { label: "Singapore Orchard Road Core", value: 68 },
+            { label: "Dubai Prime Grade-A Liquidity", value: 92 },
+            { label: "Singapore Prime Commercial Core", value: 68 },
             { label: "London Financial District Core", value: 42 },
             { label: "Munich Executive Commercial", value: 39 }
           ]
@@ -1077,10 +1077,10 @@ export const InsightsAdmin = () => {
         {
           id: 'b-2',
           type: 'grid',
-          col1Title: "High Yield Nodes (UAE & Asia)",
+          col1Title: "Strategic International Nodes (UAE & Asia)",
           col1Text: "• Regulatory shield via gold-standard business hubs\n• Streamlined digital asset settlement frameworks\n• Unprecedented tenant occupancy ratings up to 96%",
           col2Title: "Western Capital Centers",
-          col2Text: "• Substantial compliance burdens and interest rate stress\n• Asset value degradation under heavy inheritance laws\n• Capital flight toward yield-safe environments"
+          col2Text: "• Substantial compliance burdens and interest rate stress\n• Asset value degradation under heavy inheritance laws\n• Capital reallocation toward institutional hubs"
         },
         {
           id: 'b-3',
@@ -1147,7 +1147,7 @@ export const InsightsAdmin = () => {
         break;
       case 'highlight':
         newBlock.title = 'Critical Intelligence Summary';
-        newBlock.text = '• High operational premium is sustained across high-net-worth neighborhoods.\n• Streamlined visa allocation guarantees high occupancies.';
+        newBlock.text = '• High operational premium is sustained across high-net-worth neighborhoods.\n• Strategic demographic migration supports commercial occupancy.';
         break;
       case 'grid':
         newBlock.col1Title = 'Regional Advantages';
@@ -1165,10 +1165,10 @@ export const InsightsAdmin = () => {
         newBlock.caption = 'Figure 1.2: Premium Grade-A Commercial Asset Elevation Matrix.';
         break;
       case 'chart':
-        newBlock.title = 'Global Macro Yield index benchmark (%)';
+        newBlock.title = 'Global Commercial Liquidity Index Benchmark';
         newBlock.chartData = [
-          { label: 'Dubai Premium Commercial Yield', value: 92 },
-          { label: 'Singapore Orchard Road Core', value: 68 },
+          { label: 'Dubai Premium Commercial Liquidity', value: 92 },
+          { label: 'Singapore Prime Commercial Core', value: 68 },
           { label: 'Alternative Cash Spreads', value: 45 }
         ];
         break;
@@ -1210,7 +1210,7 @@ export const InsightsAdmin = () => {
           docName = "Singapore_Trade_Gateway_Study_2026.docx";
           dateVal = "SINGAPORE — " + new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toUpperCase();
           byVal = "BY THE SOUTHEAST ASIAN ADVISORY TEAM";
-          titleVal = "Singapore Trade Corridor and Logistics Yield Premium";
+          titleVal = "Singapore Trade Corridor and Modern Logistics Infrastructure";
           descVal = "Underwriting evaluation outlining automated luxury logistics corridors and Grade-A terminal occupancies in Singapore.";
           blocks = [
             {
@@ -1247,16 +1247,16 @@ export const InsightsAdmin = () => {
             }
           ];
         } else if (targetDoc === 'dubai') {
-          docName = "Dubai_Golden_Visa_Impact_Framework.docx";
+          docName = "Dubai_Institutional_Land_Framework.docx";
           dateVal = "DUBAI — " + new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toUpperCase();
           byVal = "BY THE MENA ADVISORY RESEARCH BOARD";
-          titleVal = "Dubai Golden Visa and Family Office Yield Framework";
-          descVal = "Quantitative evaluation of capital migration patterns and high-yield secondary asset allocations inside core Dubai Corridors.";
+          titleVal = "Dubai Strategic Land Registry & Family Office Infrastructure";
+          descVal = "Quantitative evaluation of capital migration patterns and prime master-planned asset allocations inside core Dubai Corridors.";
           blocks = [
             {
               id: 'w-1',
               type: 'paragraph',
-              text: "Sovereign re-allocations are speeding up as conventional European capital anchors encounter changing regulatory profiles. This macroeconomic briefing reviews secondary yield placements across UAE core growth hubs.",
+              text: "Sovereign re-allocations are speeding up as conventional European capital anchors encounter changing regulatory profiles. This macroeconomic briefing reviews secondary asset placements across UAE core international hubs.",
               fontSize: 'base',
               fontStyle: 'normal'
             },
@@ -1268,7 +1268,7 @@ export const InsightsAdmin = () => {
             {
               id: 'w-3',
               type: 'paragraph',
-              text: "Institutional indicators consistently point toward asset classes featuring sovereign tenant underwriting. Residential assets in prime corridors have registered an exceptional 120 basis points rent premium.",
+              text: "Institutional indicators consistently point toward asset classes featuring sovereign tenant underwriting. Prime master-planned corridors demonstrate exceptional long-term tenant absorption.",
               fontSize: 'base',
               fontStyle: 'normal'
             },
@@ -1276,20 +1276,20 @@ export const InsightsAdmin = () => {
               id: 'w-4',
               type: 'highlight',
               title: "Strategic Advisory Takeaway",
-              text: "The integration of Golden Visa framework incentives coupled with the complete absence of personal tax margins insulates prime yields against aggressive Western banking contraction cycles."
+              text: "The integration of transparent escrow frameworks and modern digital title registration safeguards sovereign capital preservation against cross-border market friction."
             },
             {
               id: 'w-5',
               type: 'heading',
-              text: "GLOBAL YIELD METRICS COMPARATIVE"
+              text: "GLOBAL MARKET LIQUIDITY COMPARATIVE"
             },
             {
               id: 'w-6',
               type: 'chart',
-              title: "Macro Yield & Rental Index (Projected 2026)",
+              title: "Macro Market Liquidity & Occupancy Index (2026)",
               chartData: [
-                { label: "Dubai Prime Grade-A Yield", value: 92 },
-                { label: "Singapore Orchard Road Core", value: 68 },
+                { label: "Dubai Prime Grade-A Liquidity", value: 92 },
+                { label: "Singapore Prime Commercial Core", value: 68 },
                 { label: "London Financial District Core", value: 42 },
                 { label: "Munich Executive Commercial", value: 39 }
               ]
@@ -1301,7 +1301,7 @@ export const InsightsAdmin = () => {
             {
               id: 'w-1',
               type: 'paragraph',
-              text: "Sovereign re-allocations are speeding up as conventional European capital anchors encounter changing regulatory profiles. This macroeconomic publication presents a deep dive into the transaction flows backing secondary high-yield placements across growth hubs.",
+              text: "Sovereign re-allocations are speeding up as conventional European capital anchors encounter changing regulatory profiles. This macroeconomic publication presents a deep dive into the transaction flows backing secondary institutional placements across strategic international hubs.",
               fontSize: 'base',
               fontStyle: 'normal'
             },
@@ -1432,7 +1432,7 @@ export const InsightsAdmin = () => {
           let selectedPreset = 'global';
           if (file.name.toLowerCase().includes('singapore') || file.name.toLowerCase().includes('asia')) {
             selectedPreset = 'singapore';
-          } else if (file.name.toLowerCase().includes('dubai') || file.name.toLowerCase().includes('visa') || file.name.toLowerCase().includes('yield')) {
+          } else if (file.name.toLowerCase().includes('dubai') || file.name.toLowerCase().includes('uae')) {
             selectedPreset = 'dubai';
           }
           

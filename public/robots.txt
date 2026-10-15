@@ -4,4 +4,17 @@ Disallow: /admin/
 Disallow: /admin/*
 Disallow: /account
 
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: https://univueconsultants.com/sitemap.xml
+

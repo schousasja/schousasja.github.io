@@ -150,62 +150,6 @@ export const Home = () => {
     }
   ];
 
-  const featuredOpportunities = [
-    {
-      title: "The Oasis by Emaar",
-      location: "Dubai, UAE",
-      yield: "7.2% Expected",
-      price: "From $1.2M",
-      rationale: "Strategic luxury expansion by Emaar with limited waterfront villas. Ideal for capital preservation and high rental demand from high-net-worth families.",
-      developer: "Emaar Properties",
-      image: "https://images.unsplash.com/photo-1582672097732-28a6044ca66a?auto=format&fit=crop&q=80&w=2000"
-    },
-    {
-      title: "Saadiyat Lagoons",
-      location: "Abu Dhabi, UAE",
-      yield: "6.8% Expected",
-      price: "From $1.8M",
-      rationale: "Culture-adjacent living in the UAE's most prestigious cultural district. Strong institutional backing and strict supply control ensure long-term value.",
-      developer: "Aldar Properties",
-      image: "https://images.unsplash.com/photo-1544918877-460635b6d13e?auto=format&fit=crop&q=80&w=2000"
-    },
-    {
-      title: "Wynn Residences",
-      location: "Al Marjan Island, RAK",
-      yield: "12% Capital Growth",
-      price: "From $850k",
-      rationale: "First mover advantage in the GCC's only integrated resort district. Massive upside potential as infrastructure completes.",
-      developer: "Marjan / Licensed Partners",
-      image: "https://images.unsplash.com/photo-1622323773173-9a4f7e274718?auto=format&fit=crop&q=80&w=2000"
-    },
-    {
-      title: "Bangalore North IT Hub",
-      location: "Bangalore, India",
-      yield: "8.5% Commercial",
-      price: "From $500k",
-      rationale: "Grade-A office assets in the heart of India's Silicon Valley. High pre-leasing velocity by global tech firms ensures immediate returns.",
-      developer: "Prestige Group",
-      image: "https://images.unsplash.com/photo-1596422846543-75c6fc183f23?auto=format&fit=crop&q=80&w=2000"
-    },
-    {
-      title: "Cyber City Phase II",
-      location: "Gurgaon, India",
-      yield: "9% Rental Yield",
-      price: "Portfolio Entry",
-      rationale: "Re-development of prime commercial land into premium flexible workspaces. Strategic positioning for Fortune 500 regional HQs.",
-      developer: "DLF Limited",
-      image: "https://images.unsplash.com/photo-1590059345108-a5649987f6ed?auto=format&fit=crop&q=80&w=2000"
-    },
-    {
-      title: "Palm Jumeirah Signature Suite",
-      location: "Dubai, UAE",
-      yield: "10% Short-term",
-      price: "From $2.4M",
-      rationale: "Rare trophy asset on the world's most famous man-made island. Exceptional short-term rental performance and secondary market liquidity.",
-      developer: "Select Group",
-      image: "https://images.unsplash.com/photo-1578142385315-77981f970220?auto=format&fit=crop&q=80&w=2000"
-    }
-  ];
 
   const organizationSchema = {
     "@context": "https://schema.org",

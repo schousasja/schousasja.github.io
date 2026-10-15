@@ -27,7 +27,7 @@ export const IndiaExpansion = () => {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": `${t('india.hero.title') || 'India Operational Expansion'} | Univue Consultants`,
-    "description": t('india.hero.desc') || 'Comprehensive operational entry and corporate advisory in Indian high-growth cities.',
+    "description": t('india.hero.desc') || 'Comprehensive operational entry and corporate advisory in Indian key commercial hubs.',
     "publisher": {
       "@type": "Organization",
       "name": "Univue Consultants ApS",
@@ -56,17 +56,17 @@ export const IndiaExpansion = () => {
       };
     } else {
       acc[city.name] = {
-        type: city.positioning + " Investment",
+        type: city.positioning + " Segment",
         desc: city.thesis,
         stats: [
           { label: "Talent", value: "1.5M+" },
-          { label: "Yield", value: city.rentalYield || "3-5%" },
+          { label: "Pricing Index", value: city.avgPricing || "Tier-1" },
           { label: "Status", value: city.positioning }
         ],
         highlights: [
-          city.infraGrowth || "Strategic infrastructure growth",
+          city.infraGrowth || "Strategic infrastructure pipeline",
           city.relevance || "Global tech capital relevance",
-          "High capital appreciation potential"
+          language === 'da' ? "Omfattende indenlandsk erhvervsabsorption og moderne logistik" : "Institutional commercial and enterprise absorption"
         ],
         image: city.image || "https://images.unsplash.com/photo-1596761301586-5c502150123b?auto=format&fit=crop&q=80&w=2070"
       };
@@ -79,12 +79,12 @@ export const IndiaExpansion = () => {
   const currentDetail = cityDetails[selectedCity] || {
     type: language === 'da' ? "Førsteklasses Virksomhedsetablering" : "Premium Enterprise Setup",
     desc: language === 'da' 
-      ? "Indien udgør en af de hurtigst voksende store økonomier globalt, drevet af teknologisk innovation, dybe talentmasser og store industrielle ekspansioner."
-      : "India constitutes one of the fastest-growing major economies globally, driven by tech innovation, deep talent pools, and major industrial expansions.",
+      ? "Indien udgør en af de mest dynamiske store økonomier globalt, drevet af teknologisk innovation, dybe talentmasser og store industrielle ekspansioner."
+      : "India constitutes one of the most dynamic major economies globally, driven by tech innovation, deep talent pools, and major industrial expansions.",
     stats: [
       { label: language === 'da' ? "Fagfolk" : "Talent", value: "1.5M+" },
-      { label: language === 'da' ? "Afkast" : "Yield", value: "3-5%" },
-      { label: "Status", value: language === 'da' ? "Vækstundermarked" : "Growth Sub-Market" }
+      { label: language === 'da' ? "Segment" : "Segment", value: "Grade-A Hub" },
+      { label: "Status", value: language === 'da' ? "Industrikorridor" : "Strategic Corridor" }
     ],
     highlights: [
       language === 'da'
@@ -92,10 +92,10 @@ export const IndiaExpansion = () => {
         : "Rapidly scaling Grade-A technology and innovation clusters",
       language === 'da'
         ? "Robuste regulatoriske initiativer og særlige økonomiske zonefordele"
-        : "Robust regulatory initiatives and special economic zone incentives",
+        : "Robust regulatory initiatives and special economic zone frameworks",
       language === 'da'
-        ? "Stærkt langsigtet indenlandsk forbrug og kapitalvækst"
-        : "Strong long-term domestic consumption and capital appreciation"
+        ? "Betydelig indenlandsk erhvervsabsorption og moderne logistik"
+        : "Substantial domestic enterprise absorption and modern logistics"
     ],
     image: "https://images.unsplash.com/photo-1596761301586-5c502150123b?auto=format&fit=crop&q=80&w=2070"
   };

@@ -21,8 +21,8 @@ export const MarketCatalog = () => {
 
   useDocumentMetadata({
     title: t('nav.properties') ? `${t('nav.properties')} | Univue Consultants ApS` : 'Properties | Univue Consultants ApS',
-    description: t('catalog.hero.desc') || 'A curated selection of high-yield institutional-grade real estate assets across global growth corridors.',
-    keywords: 'off-plan property, investment catalog, high yield properties Dubai, Bangalore IT office space'
+    description: t('catalog.hero.desc') || 'A curated selection of institutional-grade real estate assets across strategic international corridors.',
+    keywords: 'off-plan property, investment catalog, premium properties Dubai, Bangalore IT office space'
   });
 
   const [properties, setProperties] = useState<any[]>([]);

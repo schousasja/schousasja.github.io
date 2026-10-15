@@ -16,7 +16,7 @@ export const SoutheastAsiaMarkets = () => {
 
   useDocumentMetadata({
     title: `${t('sea.hero.title') || 'Southeast Asia Markets'}`,
-    description: t('sea.hero.desc') || 'Explore wealth preservation in Singapore and high-yield hospitality real estate developments in Thailand, Indonesia, and Vietnam.',
+    description: t('sea.hero.desc') || 'Explore wealth preservation in Singapore and premier hospitality real estate developments in Thailand, Indonesia, and Vietnam.',
     keywords: 'Singapore real estate, Bali resort villas, Thailand wellness hospitality, Vietnam logistics hub, Southeast Asia investment'
   });
 
@@ -27,7 +27,7 @@ export const SoutheastAsiaMarkets = () => {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": `${t('sea.hero.title') || 'Southeast Asia Strategic Property Investment'} | Univue Consultants`,
-    "description": t('sea.hero.desc') || 'Strategic asset sourcing and cross-border advisory across premium Southeast Asian growth hubs.',
+    "description": t('sea.hero.desc') || 'Strategic asset sourcing and cross-border advisory across premium Southeast Asian markets.',
     "publisher": {
       "@type": "Organization",
       "name": "Univue Consultants ApS",
@@ -59,9 +59,9 @@ export const SoutheastAsiaMarkets = () => {
         type: city.positioning + " Market",
         desc: city.thesis,
         stats: [
-          { label: "YIELD", value: city.rentalYield || "4-6%" },
-          { label: "GROWTH", value: "8-12%" },
-          { label: "STATUS", value: city.positioning }
+          { label: "SEGMENT", value: city.positioning || "Prime" },
+          { label: "PRICING", value: city.avgPricing || "Core" },
+          { label: "STATUS", value: "Established" }
         ],
         highlights: [
           city.infraGrowth || "Regional infrastructure connectivity",
@@ -79,12 +79,12 @@ export const SoutheastAsiaMarkets = () => {
   const currentDetail = regionDetails[selectedRegion] || {
     type: language === 'da' ? "Førsteklasses Regional Etablering" : "Premium Regional Setup",
     desc: language === 'da'
-      ? "Sydøstasiatiske markeder repræsenterer højvækstøkonomier karakteriseret ved stigende forbrugerefterspørgsel, infrastrukturudvidelser og international virksomhedstilstedeværelse."
-      : "Southeast Asian markets represent high-growth economies characterized by rising consumer demand, infrastructure expansions, and international corporate presence.",
+      ? "Sydøstasiatiske markeder repræsenterer dynamiske økonomier karakteriseret ved stigende forbrugerefterspørgsel, infrastrukturudvidelser og international virksomhedstilstedeværelse."
+      : "Southeast Asian markets represent dynamic economies characterized by consumer demand, infrastructure expansions, and international corporate presence.",
     stats: [
-      { label: language === 'da' ? "Afkast" : "Yield", value: "4-6%" },
-      { label: language === 'da' ? "Vækst" : "Growth", value: "8-12%" },
-      { label: language === 'da' ? "Klasse" : "Class", value: "Emerging Market" }
+      { label: language === 'da' ? "Segment" : "Segment", value: "Prime Core" },
+      { label: language === 'da' ? "Prisindeks" : "Pricing", value: "Institutional" },
+      { label: language === 'da' ? "Klasse" : "Class", value: "Regional Hub" }
     ],
     highlights: [
       language === 'da'

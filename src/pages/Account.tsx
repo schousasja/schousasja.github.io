@@ -249,7 +249,7 @@ export const Account: React.FC = () => {
                     <div className="relative z-10">
                       <h3 className="text-xl font-serif text-brand-gold mb-2">Market Intelligence Digest</h3>
                       <p className="text-sm text-brand-ivory/60 mb-6 max-w-lg">
-                        Subscribe to our exclusive newsletter for weekly deep-dives into high-growth markets, regulatory shifts, and off-market opportunities.
+                        Subscribe to our exclusive newsletter for weekly deep-dives into strategic markets, regulatory shifts, and off-market opportunities.
                       </p>
                       
                       <div className="flex flex-col sm:flex-row sm:items-center gap-6">

@@ -371,8 +371,8 @@ export const MarketManagementAdmin: React.FC = () => {
                                 className="w-full px-5 py-3 bg-brand-ivory border border-gray-100 focus:border-brand-gold outline-none transition-all"
                               >
                                 <option value="Luxury">Luxury Core</option>
-                                <option value="Growth">Growth/Expansion</option>
-                                <option value="Balanced">Balanced Yield</option>
+                                <option value="Growth">Strategic Expansion</option>
+                                <option value="Balanced">Balanced / Core</option>
                               </select>
                             </div>
                             <div>
@@ -386,13 +386,13 @@ export const MarketManagementAdmin: React.FC = () => {
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] font-black uppercase tracking-widest text-brand-blue/40 mb-2">Rental Yield Profile</label>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-brand-blue/40 mb-2">Market Indicator / Spec</label>
                               <input 
                                 type="text" 
                                 value={cityForm.rentalYield}
                                 onChange={e => setCityForm({...cityForm, rentalYield: e.target.value})}
                                 className="w-full px-5 py-3 bg-brand-ivory border border-gray-100 focus:border-brand-gold outline-none transition-all"
-                                placeholder="e.g. 6.5% - 8%"
+                                placeholder="e.g. Prime Freehold"
                               />
                             </div>
                           </div>

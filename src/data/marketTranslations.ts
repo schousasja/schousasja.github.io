@@ -11,452 +11,422 @@ export const marketTranslations: Record<'en' | 'da', Record<string, MarketDetail
       type: "Ultra-Liquid Investment",
       desc: "The global capital of real estate liquidity, branded urban development, and institutional-grade off-plan pipelines.",
       stats: [
-        { label: "YIELD", value: "5–8% (Net)" },
-        { label: "GROWTH", value: "6–10%" },
-        { label: "STATUS", value: "Ultra-Liquid" }
+        { label: "SEGMENT", value: "Prime Freehold" },
+        { label: "FRAMEWORK", value: "RERA Regulated" },
+        { label: "STATUS", value: "High Liquidity" }
       ],
       highlights: [
-        "Global liquidity hub for real estate resale: Dubai offers one of the fastest property exit markets globally, driven by constant international buyer inflows and high transaction volumes across Dubai. This creates unusually strong resale liquidity compared to other emerging markets.",
-        "Master-planned mega-developments pipeline (Dubai 2040-aligned): Large-scale urban expansion continues through integrated districts, waterfront cities, and transport-linked communities under the long-term city framework, reinforcing sustained capital inflows into new growth corridors.",
-        "Institutional-grade developer ecosystem (state-linked + listed giants): The market is anchored by major developers such as Emaar Properties and Dubai-linked holding structures, supporting large-scale, internationally marketed projects with relatively strong delivery credibility.",
-        "Off-plan dominated investment cycle with global buyer absorption: A significant share of transactions is driven by off-plan properties, supported by flexible payment plans and strong international demand, making Dubai one of the most active forward-selling residential markets globally."
+        "Global liquidity hub for real estate resale: Dubai offers one of the most active property markets globally, driven by international buyer interest and high transaction volumes. This creates deep market liquidity across primary districts.",
+        "Master-planned mega-developments pipeline (Dubai 2040-aligned): Large-scale urban development continues through integrated districts, waterfront communities, and transport-linked masterplans under the long-term city framework.",
+        "Institutional-grade developer ecosystem: The market is anchored by established developers with strong balance sheets and track records of delivering master communities.",
+        "Structured off-plan regulatory protections: Transactions are governed by government escrow regulations, milestone payments, and verified developer completion guarantees."
       ]
     },
     'abu-dhabi': {
       type: "PREMIUM CORE MARKET",
       desc: "The most institutionally stable real estate market in the UAE, driven by sovereign capital, controlled supply, and end-user demand dominance.",
       stats: [
-        { label: "YIELD", value: "5–8% (Net)" },
-        { label: "GROWTH", value: "4–7%" },
-        { label: "STATUS", value: "Institutional / Stable" }
+        { label: "SEGMENT", value: "Institutional Core" },
+        { label: "FRAMEWORK", value: "Sovereign-Backed" },
+        { label: "STATUS", value: "Controlled Supply" }
       ],
       highlights: [
-        "Sovereign-backed demand engine (low volatility market structure): Abu Dhabi’s real estate cycle is heavily influenced by sovereign wealth activity and state-linked developers such as Aldar, creating a more controlled, less speculative market compared to regional peers.",
-        "End-user dominated absorption (not investor-driven pricing cycles): Unlike more speculative markets, a large share of demand comes from end-users and long-term residents, leading to stronger occupancy stability and lower rental churn in core communities.",
-        "Supply discipline with master-planned expansion corridors: New supply is released gradually through large master developments (Yas, Saadiyat, Reem), supporting more measured price growth and reducing extreme oversupply risk in prime zones.",
-        "Financial district and infrastructure clustering (ADGM effect): The expansion of Abu Dhabi Global Market (ADGM) and adjacent economic zones is concentrating high-income tenants and professional demand into specific residential clusters, strengthening rental resilience in those areas."
+        "Sovereign-backed development engine: Abu Dhabi’s property market is heavily anchored by government-linked master developers such as Aldar, creating an institutionally stable and disciplined environment.",
+        "End-user dominated absorption: A major portion of demand is driven by long-term residents and corporate occupiers, contributing to high tenancy stability in core master communities.",
+        "Supply discipline across master-planned corridors: New development is released gradually across designated island districts (Yas, Saadiyat, Reem), maintaining structured market equilibrium.",
+        "Financial district integration (ADGM): The expansion of Abu Dhabi Global Market attracts multinational firms, regional financial headquarters, and high-income executive demand."
       ]
     },
     'ras-al-khaimah': {
-      type: "GROWTH EMERGING MARKET",
-      desc: "The UAE’s fastest-emerging lifestyle and tourism-driven real estate market, led by hospitality expansion and beachfront resort development.",
+      type: "EMERGING DESTINATION MARKET",
+      desc: "The UAE’s premier emerging lifestyle and tourism-driven real estate market, led by hospitality expansion and beachfront resort development.",
       stats: [
-        { label: "YIELD", value: "6–10% (Net potential)" },
-        { label: "GROWTH", value: "5–9%" },
-        { label: "STATUS", value: "Emerging / Tourism-Led" }
+        { label: "SEGMENT", value: "Hospitality & Coastal" },
+        { label: "FRAMEWORK", value: "Master-Planned" },
+        { label: "STATUS", value: "Emerging Hub" }
       ],
       highlights: [
-        "Tourism-led real estate expansion (hospitality-first growth model): Growth is strongly tied to large-scale tourism projects, resort development, and branded beachfront communities, making demand more seasonal but increasingly global in origin.",
-        "Branded residences and resort communities driving premiumisation: A growing share of new supply is linked to international hotel brands and integrated resort living, positioning the market toward lifestyle investment rather than pure urban housing.",
-        "Limited high-density urban competition (scarcity effect in prime coastal zones): Compared to major UAE cities, Ras Al Khaimah has a more constrained luxury beachfront inventory, which supports relative pricing strength in prime waterfront developments.",
-        "Infrastructure and destination repositioning strategy: The emirate is actively repositioning itself as a global leisure destination, with major investments in islands, coastal infrastructure, and entertainment-driven masterplans enhancing long-term demand visibility."
+        "Tourism-led real estate expansion: Development is anchored by large-scale hospitality projects, integrated coastal resorts, and waterfront residential communities.",
+        "Branded residences driving luxury positioning: A growing share of new inventory is linked to international hotel operators and branded resort concepts.",
+        "Constrained luxury beachfront inventory: Ras Al Khaimah features protected natural coastlines and island destinations with master-planned low-density zoning.",
+        "Destination infrastructure investments: Long-term expansion of airport facilities, leisure infrastructure, and marina districts underpins regional accessibility."
       ]
     },
     bangalore: {
       type: "TECH-DRIVEN MARKET",
-      desc: "India’s most consistent urban growth engine, driven by IT expansion, infrastructure-linked appreciation, and structurally strong rental demand.",
+      desc: "India’s premier urban technology metropolis, driven by IT enterprise expansion, infrastructure pipelines, and structural end-user demand.",
       stats: [
-        { label: "YIELD", value: "3–5% (Net Rental Yield)" },
-        { label: "GROWTH", value: "6–10%" },
+        { label: "SEGMENT", value: "Enterprise Tech Hub" },
+        { label: "FRAMEWORK", value: "SEZ & Grade-A" },
         { label: "STATUS", value: "IT Demand Driven" }
       ],
       highlights: [
-        "IT & Global Capability Center (GCC) absorption engine: Bangalore’s real estate demand is structurally supported by continuous expansion of IT parks and GCCs. This creates persistent end-user demand across mid and premium property segments.",
-        "Infrastructure-led micro-market appreciation cycle: Metro expansion, Peripheral Ring Road, and airport corridor development are reshaping pricing dynamics. Growth is highly corridor-specific rather than citywide.",
-        "Strong end-user bias with limited speculative overheating: Unlike highly cyclical markets, Bangalore is dominated by working professionals and relocating families, leading to steadier absorption and fewer extreme boom-bust swings.",
-        "Deep and liquid rental market anchored by IT employment: High tenant turnover from tech workers, expats, and inter-city migration keeps occupancy rates strong in core zones like Whitefield, ORR, and Sarjapur Road."
+        "Global Capability Center (GCC) absorption engine: Bangalore’s commercial real estate is anchored by multinational tech campuses and R&D centers, generating consistent end-user absorption.",
+        "Infrastructure-led micro-market connectivity: Metro line expansions, Peripheral Ring Road, and airport corridor integration connect major employment districts.",
+        "Professional end-user foundation: Dominated by skilled technology professionals and institutional corporate occupiers, leading to high occupancy in established tech corridors.",
+        "Deep corporate leasing market: Major business parks across Whitefield, Outer Ring Road, and North Bangalore host leading Fortune 500 engineering centers."
       ]
     },
     chennai: {
       type: "STRATEGIC CORE MARKET",
-      desc: "India’s most stable end-user driven coastal metro, increasingly shaped by GCC expansion, industrial resilience, and disciplined price growth.",
+      desc: "India’s established end-user driven coastal metro, shaped by GCC expansion, industrial resilience, and disciplined market absorption.",
       stats: [
-        { label: "YIELD", value: "3.5–5% (Net Rental Yield)" },
-        { label: "GROWTH", value: "5–8%" },
-        { label: "STATUS", value: "Stable / End-User Led" }
+        { label: "SEGMENT", value: "Industrial & SaaS" },
+        { label: "FRAMEWORK", value: "Manufacturing Corridor" },
+        { label: "STATUS", value: "End-User Dominated" }
       ],
       highlights: [
-        "GCC-led office expansion reshaping residential demand: Global Capability Centres now dominate office absorption, strengthening long-term housing demand in IT and business corridors like OMR and Perungudi.",
-        "End-user dominated housing cycle with low speculative volatility: Pricing is driven primarily by salaried professionals and families, resulting in steady absorption and limited boom-bust behaviour.",
-        "Infrastructure-led suburban expansion (metro & airport & ORR): Transport upgrades and metro Phase 2 are unlocking new growth zones along key suburban corridors.",
-        "Selective micro-market strength vs oversupply pockets: Well-connected IT corridors outperform significantly, while peripheral speculative developments show slower absorption."
+        "GCC and tech campus development: Global Capability Centers and SaaS headquarters establish deep demand in corridors like OMR and Guindy.",
+        "Resilient manufacturing and automobile ecosystem: Known as India's manufacturing backbone, supporting steady local employment and disciplined housing demand.",
+        "Infrastructure and suburban connectivity: Metro Phase 2 upgrades and industrial transit corridors connect outer logistics clusters with prime city districts.",
+        "Selective corridor performance: Well-connected infrastructure corridors with direct arterial access demonstrate steady commercial and residential absorption."
       ]
     },
     goa: {
       type: "LIFESTYLE & TOURISM CAPITAL",
-      desc: "India’s premium second-home and lifestyle-driven real estate market, transitioning from tourism asset class to global lifestyle investment destination.",
+      desc: "India’s premier second-home and lifestyle property market, transitioning into an established destination for boutique hospitality and remote enterprise work.",
       stats: [
-        { label: "YIELD", value: "4–6% (Net Rental Yield)" },
-        { label: "GROWTH", value: "6–10%" },
-        { label: "STATUS", value: "Lifestyle / Seasonal Luxury" }
+        { label: "SEGMENT", value: "Lifestyle & Hospitality" },
+        { label: "FRAMEWORK", value: "Coastal Masterplan" },
+        { label: "STATUS", value: "Boutique Residential" }
       ],
       highlights: [
-        "Tourism-driven capital inflow into residential luxury: Demand is increasingly driven by domestic HNIs, NRIs, and remote professionals seeking second homes and lifestyle assets.",
-        "Strong shift toward branded villas and managed residences: Hospitality-linked developments are reshaping the market into hybrid residential–hotel investment structures.",
-        "Geographic scarcity in prime coastal micro-markets: Limited beachfront inventory in North Goa supports relative pricing strength in select coastal zones.",
-        "Infrastructure & airport expansion improving accessibility: Improved connectivity and airport capacity upgrades are strengthening long-term demand visibility."
+        "High demand for branded villas and managed residences: Hospitality-linked developments offer serviced living and professional asset management.",
+        "Lifestyle migration and executive relocation: Broadening appeal among professionals, founders, and creative executives establishing second homes.",
+        "Protected coastal zoning: Regulatory restrictions on coastal development maintain architectural character and controlled density in prime micro-markets.",
+        "Upgraded connectivity via Manohar International Airport: Modern aviation and road infrastructure significantly improve regional and international accessibility."
       ]
     },
     'gurgaon-delhi': {
-      type: "PREMIUM CORPORATE HUB",
-      desc: "India’s most capital-intensive and infrastructure-driven real estate market, led by corporate demand, expressway corridors, and premium housing migration.",
+      type: "CORPORATE HEADQUARTERS HUB",
+      desc: "North India’s foremost corporate and commercial property market, anchored by multinational headquarters, modern expressway corridors, and master-planned townships.",
       stats: [
-        { label: "YIELD", value: "3–5% (Resi) / 7–11% (Comm)" },
-        { label: "GROWTH", value: "6–10%" },
-        { label: "STATUS", value: "High Liquidity / Cyclical Premium" }
+        { label: "SEGMENT", value: "Fortune 500 Corporate" },
+        { label: "FRAMEWORK", value: "Expressway Masterplan" },
+        { label: "STATUS", value: "Institutional Hub" }
       ],
       highlights: [
-        "Infrastructure-led value creation across expressway corridors: Dwarka Expressway, SPR, and Noida International Airport connectivity are reshaping growth geography across NCR.",
-        "Strong corporate demand anchoring rental and commercial real estate: Multinational companies, GCCs, and financial services firms continue to drive Grade-A office absorption and housing demand.",
-        "Premiumisation of housing supply and shrinking mid-segment dominance: Market increasingly favors branded developers, gated communities, and large-format residential projects.",
-        "Micro-market divergence driving selective returns: Dwarka Expressway and Golf Course Extension outperform, while legacy zones show slower appreciation."
+        "Corporate headquarters concentration: Over 250 Fortune 500 regional offices and major domestic conglomerates anchor Grade-A commercial leasing.",
+        "Expressway-driven urban corridors: Dwarka Expressway, Golf Course Extension, and Southern Peripheral Road integrate residential townships with commercial nodes.",
+        "Institutional developer presence: Dominated by major national developers delivering integrated mixed-use business parks and luxury gated communities.",
+        "Regional logistics and transit integration: Proximity to IGI Airport and the Delhi-Mumbai Industrial Corridor underpins strategic commercial relevance."
       ]
     },
     hyderabad: {
-      type: "TECH & EXPORT ENGINE",
-      desc: "India’s most balanced IT & industrial growth metro, driven by structured planning, global tech demand, and scalable residential absorption.",
+      type: "TECH & PHARMA METROPOLIS",
+      desc: "India’s efficiently planned tech and life sciences hub, characterized by modern road grids, large-scale commercial campuses, and scalable urban corridors.",
       stats: [
-        { label: "YIELD", value: "3–4.5%" },
-        { label: "GROWTH", value: "7–10%" },
-        { label: "STATUS", value: "Structured Growth Market" }
+        { label: "SEGMENT", value: "Technology & Life Sciences" },
+        { label: "FRAMEWORK", value: "Master-Planned Zoning" },
+        { label: "STATUS", value: "High Absorption" }
       ],
       highlights: [
-        "IT & pharma & GCC expansion sustaining long-term demand: Strong presence of global firms in HITEC City and Financial District ensures consistent residential absorption.",
-        "Planned infrastructure expansion supporting outward growth corridors: Outer Ring Road and metro extensions are shaping new high-growth micro-markets.",
-        "Mid-premium housing dominance with strong end-user base: Demand is concentrated in gated communities and mid-luxury apartments driven by professionals.",
-        "Controlled supply vs demand balance in key corridors: Core zones maintain relatively balanced absorption compared to overbuilt markets."
+        "Massive global tech campuses: Host to the largest international engineering facilities outside the US for global technology leaders.",
+        "Integrated infrastructure grids: The Outer Ring Road (ORR) provides rapid uninterrupted transit between HITEC City, Financial District, and the international airport.",
+        "Global vaccine and life sciences leadership: Genome Valley anchors an internationally recognized hub for pharmaceutical research and biotechnology manufacturing.",
+        "Predictable urban planning: Proactive municipal planning and clear zoning policies facilitate structured commercial and residential community delivery."
       ]
     },
     mumbai: {
-      type: "INDIA’S FINANCIAL CAPITAL",
-      desc: "India’s most expensive and liquidity-driven real estate market, defined by extreme price compression, redevelopment cycles, and premium asset scarcity.",
+      type: "FINANCIAL CAPITAL & CORE METRO",
+      desc: "India’s financial capital and premier real estate market, defined by corporate headquarters concentration, landmark infrastructure, and prime urban scarcity.",
       stats: [
-        { label: "YIELD", value: "2.5–4%" },
-        { label: "GROWTH", value: "4–7%" },
-        { label: "STATUS", value: "Ultra-Prime / Scarcity" }
+        { label: "SEGMENT", value: "Financial & Ultra-Prime" },
+        { label: "FRAMEWORK", value: "Coastal Infrastructure" },
+        { label: "STATUS", value: "High Scarcity" }
       ],
       highlights: [
-        "Structural scarcity in land and housing supply: Limited developable land in core Mumbai sustains long-term pricing pressure in prime zones.",
-        "Redevelopment-led supply cycle driving urban transformation: New supply is largely generated through redevelopment rather than greenfield expansion.",
-        "Premiumisation dominates across all segments: Even mid-segment areas are shifting toward higher-value redevelopment and luxury positioning.",
-        "Strong commercial & financial district anchoring demand: BKC and Nariman Point ecosystems continue to support high-income residential demand."
+        "National financial epicenter: Home to the Reserve Bank of India, leading commercial banks, stock exchanges, and multinational institutional funds.",
+        "Transformational infrastructure upgrades: Mumbai Trans Harbour Link (Atal Setu) and the Coastal Road dramatically improve island-to-mainland connectivity.",
+        "Concentrated commercial CBDs: Bandra-Kurla Complex (BKC) and Lower Parel serve as high-density institutional employment centers.",
+        "Scarcity-driven prime urban core: Island city geography creates inherent land constraints, supporting institutional-grade development standards."
       ]
     },
     pune: {
-      type: "IT & MID-PREMIUM GROWTH HUB",
-      desc: "India’s quietly compounding IT-driven real estate market, supported by strong employment corridors and stable rental ecosystems.",
+      type: "MANUFACTURING & TECH CORRIDOR",
+      desc: "India’s balanced industrial and technology hub, supported by a dual economy of automotive manufacturing and enterprise software campuses.",
       stats: [
-        { label: "YIELD", value: "3–5%" },
-        { label: "GROWTH", value: "6–10%" },
-        { label: "STATUS", value: "Stable Growth / IT Driven" }
+        { label: "SEGMENT", value: "Automotive & IT Hub" },
+        { label: "FRAMEWORK", value: "Industrial Belt" },
+        { label: "STATUS", value: "Balanced Absorption" }
       ],
       highlights: [
-        "IT corridor expansion driving sustained residential absorption: Hinjewadi, Wakad, and Baner remain core employment-driven residential hubs.",
-        "Strong end-user & rental mix with low speculative volatility: Demand is dominated by professionals and internal migration rather than speculative capital.",
-        "Infrastructure-linked suburban growth corridors expanding westward: Connectivity improvements are driving gradual expansion toward new micro-markets.",
-        "Balanced affordability vs lifestyle housing demand: Mid-premium segment continues to dominate overall absorption."
+        "Dual-engine economic base: Advanced automotive engineering and multinational IT parks create diversified employment across west and east corridors.",
+        "Academic and engineering talent reservoir: Renowned educational institutions supply a continuous pipeline of specialized technical and managerial talent.",
+        "Corridor-based urban integration: Key business clusters like Hinjewadi and Kharadi are supported by metro expansion and ring road transit upgrades.",
+        "Established corporate occupier base: Stable leasing demand from multinational engineering, automotive, and IT service enterprises."
       ]
     },
     singapore: {
-      type: "GLOBAL CAPITAL PRESERVATION HUB",
+      type: "GLOBAL FINANCIAL GATEWAY",
       desc: "Asia’s premier institutional capital and wealth management hub, defined by regulatory stability, asset protection, and ultra-prime real estate positioning.",
       stats: [
-        { label: "YIELD", value: "2–4%" },
-        { label: "GROWTH", value: "3–6%" },
-        { label: "STATUS", value: "Institutional / Safe-Haven" }
+        { label: "SEGMENT", value: "Ultra-Prime Safe Haven" },
+        { label: "FRAMEWORK", value: "Common Law Governance" },
+        { label: "STATUS", value: "Institutional Benchmark" }
       ],
       highlights: [
-        "Global wealth inflows sustaining ultra-prime real estate demand: Singapore continues attracting family offices, multinational firms, and high-net-worth migration from across Asia and Europe.",
-        "Financial services and regional headquarters dominance: The city-state remains Southeast Asia’s leading base for regional corporate operations and capital management.",
-        "Strict supply controls supporting long-term pricing resilience: Government-managed land release and housing controls maintain structural scarcity in prime districts.",
-        "Strategic role as Southeast Asia business gateway: Singapore functions as the primary legal, financial, and operational entry platform into Southeast Asia."
+        "Gold-standard legal and regulatory certainty: Uncompromising rule of law, transparent ownership frameworks, and exceptional capital security.",
+        "Global family office and treasury destination: Recognized internationally as the preferred wealth structuring and corporate headquarters hub for the Asia-Pacific.",
+        "Strict master-planned supply controls: The Urban Redevelopment Authority (URA) strictly regulates land releases, preserving urban density and living standards.",
+        "World-class municipal and port infrastructure: Changi Airport, Tuas Mega Port, and digital infrastructure cement its position as a global trade nexus."
       ]
     },
     indonesia: {
-      type: "EMERGING SCALE MARKET",
-      desc: "Southeast Asia’s largest domestic consumption economy, driven by urban expansion, industrial relocation, and long-term infrastructure transformation.",
+      type: "LARGEST REGIONAL ECONOMY",
+      desc: "Southeast Asia’s largest economy, characterized by substantial domestic consumption, industrial development, and prime island hospitality destinations.",
       stats: [
-        { label: "YIELD", value: "4–7%" },
-        { label: "GROWTH", value: "6–10%" },
-        { label: "STATUS", value: "Emerging / Industrial" }
+        { label: "SEGMENT", value: "Hospitality & Resource Hub" },
+        { label: "FRAMEWORK", value: "PMA & Long Leasehold" },
+        { label: "STATUS", value: "Consumer Market" }
       ],
       highlights: [
-        "Industrial relocation and manufacturing diversification accelerating demand: Global supply chain shifts continue driving investment into industrial corridors around Jakarta, Batam, and East Java.",
-        "Nusantara capital development reshaping long-term infrastructure strategy: The new capital city initiative is creating multi-decade infrastructure and construction investment flows across the country.",
-        "Expanding middle-class urbanisation supporting residential absorption: Rapid urban migration continues strengthening demand for mid-market residential and mixed-use developments.",
-        "Strong resource economy supporting long-term capital inflows: Nickel, EV supply chain investment, and commodity exports remain major structural growth drivers."
-      ]
-    },
-    'sri-lanka': {
-      type: "FRONTIER RECOVERY MARKET",
-      desc: "A frontier investment market undergoing economic stabilisation, with long-term tourism, logistics, and coastal development potential.",
-      stats: [
-        { label: "YIELD", value: "4–7%" },
-        { label: "GROWTH", value: "5–9%" },
-        { label: "STATUS", value: "Frontier / Recovery" }
-      ],
-      highlights: [
-        "Tourism recovery driving renewed hospitality and coastal investment: Visitor inflows continue recovering, supporting hotel, resort, and mixed-use development activity.",
-        "Strategic Indian Ocean trade positioning supporting logistics potential: Sri Lanka’s maritime location continues attracting regional infrastructure and port-related interest.",
-        "Currency repricing creating selective foreign entry opportunities: Market corrections and exchange-rate adjustments have improved foreign investor accessibility in select sectors.",
-        "Colombo premium segment remains supply constrained: High-quality Grade-A commercial and residential inventory remains limited relative to long-term demand potential."
+        "Premier global island destination: Bali represents one of the world's most sought-after leisure destinations with an established luxury villa and eco-resort sector.",
+        "Massive domestic economic scale: Population exceeding 275 million drives long-term consumer demand, manufacturing relocation, and urban infrastructure.",
+        "Foreign investment structures (PT PMA): Clear corporate investment vehicles allow international entities to hold commercial properties and developments.",
+        "Large-scale infrastructure initiatives: Expansion of toll roads, sea ports, and regional airport upgrades improve connectivity across primary islands."
       ]
     },
     thailand: {
-      type: "TOURISM & LIFESTYLE POWERHOUSE",
-      desc: "One of Asia’s most established tourism and hospitality-driven property markets, combining lifestyle demand with regional business expansion.",
+      type: "HOSPITALITY & LIFESTYLE HUB",
+      desc: "One of Southeast Asia’s most established hospitality and lifestyle property markets, combining international tourism demand with regional commercial expansion.",
       stats: [
-        { label: "YIELD", value: "4–8%" },
-        { label: "GROWTH", value: "5–8%" },
-        { label: "STATUS", value: "Lifestyle / Tourism Driven" }
+        { label: "SEGMENT", value: "Lifestyle & Wellness" },
+        { label: "FRAMEWORK", value: "Condominium Freehold" },
+        { label: "STATUS", value: "International Tourism" }
       ],
       highlights: [
-        "Tourism recovery sustaining hospitality and branded residence growth: Bangkok, Phuket, and Pattaya continue benefiting from strong international visitor demand and lifestyle migration.",
-        "Regional manufacturing and business diversification supporting urban demand: Thailand remains a major automotive, electronics, and regional operations hub within Southeast Asia.",
-        "Foreign buyer demand concentrated in resort and luxury segments: International investors continue targeting branded residences and serviced lifestyle developments.",
-        "Infrastructure expansion improving inter-city connectivity: Transport upgrades and EEC development continue reshaping industrial and residential growth corridors."
+        "Established Condominium Act foreign freehold quota: Clear legal frameworks permit up to 49% direct foreign ownership in registered condominium developments.",
+        "World-leading healthcare and hospitality infrastructure: Renowned medical centers and luxury hospitality brands position Bangkok and Phuket as premier destination hubs.",
+        "Extensive public transit and infrastructure networks: Modern mass transit (BTS/MRT) in Bangkok and regional transport links enhance urban mobility.",
+        "Lifestyle destination appeal: Vibrant culinary, cultural, and natural attractions sustain global leisure migration and second-home demand."
       ]
     },
     vietnam: {
-      type: "HIGH-GROWTH MANUFACTURING HUB",
-      desc: "Southeast Asia’s fastest-scaling manufacturing and export-driven economy, supported by industrial expansion and rising foreign direct investment.",
+      type: "MANUFACTURING & INDUSTRIAL HUB",
+      desc: "Southeast Asia’s leading manufacturing and export-driven economy, supported by extensive industrial relocation and international trade integration.",
       stats: [
-        { label: "YIELD", value: "4–7%" },
-        { label: "GROWTH", value: "7–12%" },
-        { label: "STATUS", value: "High-Growth / Export Driven" }
+        { label: "SEGMENT", value: "Industrial & Mixed-Use" },
+        { label: "FRAMEWORK", value: "FDI Free Trade" },
+        { label: "STATUS", value: "Export Driven" }
       ],
       highlights: [
-        "Global manufacturing relocation accelerating industrial expansion: Vietnam continues attracting large-scale electronics, technology, and supply-chain diversification investment.",
-        "Rapid urbanisation supporting residential and mixed-use growth: Major cities such as Ho Chi Minh City and Hanoi continue experiencing strong population and income expansion.",
-        "Infrastructure investment reshaping logistics and regional connectivity: Expressways, ports, airports, and industrial parks remain central to the country’s long-term growth strategy.",
-        "Rising middle-class consumption strengthening domestic demand: Income growth and urban migration continue supporting retail, residential, and commercial real estate absorption."
+        "Key beneficiary of global supply chain diversification: Electronics, technology manufacturing, and export assembly attract record foreign direct investment.",
+        "Extensive free trade network: Comprehensive multilateral agreements (CPTPP, EVFTA, RCEP) provide seamless market access to global economies.",
+        "Rapid infrastructure modernization: Major investments in deep-water ports, inter-provincial expressways, and international airports strengthen logistical efficiency.",
+        "Expanding urban commercial centers: Ho Chi Minh City and Hanoi are experiencing significant modernization across Grade-A office and residential masterplans."
       ]
     }
   },
   da: {
     dubai: {
-      type: "Ultra-likvid investering",
-      desc: "Den globale hovedstad for ejendomslikviditet, brandede byudviklinger og off-plan projekter i institutionsklasse.",
+      type: "Højlikvid Investering",
+      desc: "Den globale hovedstad for ejendomslikviditet, brandet byudvikling og professionelle off-plan projekter.",
       stats: [
-        { label: "AFKAST", value: "5–8% (Netto)" },
-        { label: "VÆKST", value: "6–10%" },
-        { label: "STATUS", value: "Ultra-likvid" }
+        { label: "SEGMENT", value: "Prime Freehold" },
+        { label: "RAMMER", value: "RERA-reguleret" },
+        { label: "STATUS", value: "Høj likviditet" }
       ],
       highlights: [
-        "Globalt likviditetscentrum for videresalg af ejendomme: Dubai tilbyder et af de hurtigste markeder for ejendoms-exit i verden, drevet af konstant international køberetilstrømning og høje transaktionsvolumener. Dette skaber en usædvanlig stærk likviditet sammenlignet med andre vækstmarkeder.",
-        "Udvikling af masterplanlagte megaprojekter (tilpasset Dubai 2040): Storstilet byudvikling fortsætter gennem integrerede distrikter, havnebyer og transportforbundne samfund under den langsigtede byramme, hvilket styrker den vedvarende kapitaltilstrømning til nye vækstkorridorer.",
-        "Udvikler-økosystem i institutionsklasse (statsforbundne + børsnoterede giganter): Markedet er forankret af store udviklere som f.eks. Emaar Properties og Dubai-forbundne holdingselskaber, hvilket understøtter storstilede, internationalt markedsførte projekter med høj leveringstroværdighed.",
-        "Investeringscyklus domineret af off-plan med global køberabsorption: En betydelig del af transaktionerne er drevet af off-plan ejendomme, understøttet af fleksible betalingsplaner og stærk international efterspørgsel, hvilket gør Dubai til et af de mest aktive forward-selling boligmarkeder i verden."
+        "Globalt likviditetscentrum for videresalg af ejendomme: Dubai tilbyder et af de mest aktive markeder for ejendomshandel globalt, drevet af konstant international køberinteresse og høje transaktionsvolumener.",
+        "Udvikling af masterplanlagte megaprojekter (tilpasset Dubai 2040): Storstilet byudvikling fortsætter gennem integrerede distrikter, kystnære byer og transportforbundne samfund under byens langsigtede rammeværk.",
+        "Professionelt udviklerøkosystem: Markedet er forankret af etablerede udviklere med solide balancer og dokumenteret erfaring inden for levering af master-samfund.",
+        "Strukturerede regulatoriske køberbeskyttelser: Off-plan transaktioner er underlagt lovpligtige spærrede deponeringskonti (escrow), etapevise betalingsplaner og byggetilsyn."
       ]
     },
     'abu-dhabi': {
-      type: "PREMIUM KERNEMARKED",
-      desc: "Det mest institutionelt stabile ejendomsmarked i UAE, drevet af statslig kapital, kontrolleret udbud og dominans af slutbrugerefterspørgsel.",
+      type: "PREMIUM CORE MARKED",
+      desc: "Det mest institutionelt stabile ejendomsmarked i UAE, drevet af statslig kapital, styret udbud og høj slutbrugerandel.",
       stats: [
-        { label: "AFKAST", value: "5–8% (Netto)" },
-        { label: "VÆKST", value: "4–7%" },
-        { label: "STATUS", value: "Institutionel / Stabil" }
+        { label: "SEGMENT", value: "Institutionelt Core" },
+        { label: "RAMMER", value: "Statsstøttet" },
+        { label: "STATUS", value: "Styret udbud" }
       ],
       highlights: [
-        "Statsstøttet efterspørgselsmotor (marked med lav volatilitet): Abu Dhabis ejendomscyklus er stærkt påvirket af statslige investeringsfonde og statsforbundne udviklere som Aldar, hvilket skaber et mere kontrolleret og mindre spekulativt marked.",
-        "Slutbruger-domineret absorption (ikke investor-drevne priscyklusser): I modsætning til mere spekulative markeder kommer en stor del af efterspørgslen fra slutbrugere og langtidsbeboere, hvilket fører til stærkere stabilitet i belægningsprocenten og lavere lejeafgang.",
-        "Udbudsdisciplin med masterplanlagte udbygningskorridorer: Nyt udbud frigives gradvist gennem store master-projekter (Yas, Saadiyat, Reem), hvilket understøtter en mere afmålt prisvækst og mindsker risikoen for ekstremt overudbud i prime zoner.",
-        "Finansdistrikt og infrastruktursamling (ADGM-effekt): Udvidelsen af Abu Dhabi Global Market (ADGM) og tilstødende økonomiske zoner koncentrerer højindkomstlejere og professionel efterspørgsel i specifikke boligklynger, hvilket styrker lejemodstandskraften."
+        "Statsstøttet udviklingsmotor: Abu Dhabis ejendomsmarked er solidt forankret af statsknyttede master-udviklere som Aldar, hvilket skaber et institutionelt stabilt og disciplineret miljø.",
+        "Efterspørgsel drevet af faste indbyggere: En stor del af absorptionen bæres af langsigtede beboere og virksomhedsbrugere, hvilket sikrer høj stabilitet i udlejningsgraden i kerneområder.",
+        "Udbudsdisciplin i masterplanlagte områder: Nyt udbud frigives gradvist gennem store master-projekter (Yas, Saadiyat, Reem), hvilket opretholder en sund markedsbalance.",
+        "Finansielt centrum og klyngeudvikling (ADGM): Udvidelsen af Abu Dhabi Global Market tiltrækker multinationale selskaber, regionale hovedsæder og velstillede professionelle."
       ]
     },
     'ras-al-khaimah': {
-      type: "VÆKST- OG VÆKSTMARKED",
-      desc: "UAE's hurtigst voksende livsstils- og turismedrevne ejendomsmarked, anført af ekspansion inden for hotel og restaurationsbranchen samt udvikling af strandresorter.",
+      type: "FREMVOKSENDE DESTINATIONSMARKED",
+      desc: "UAE's førende fremvoksende livsstils- og turismedrevne ejendomsmarked, anført af hotel- og resortudvikling.",
       stats: [
-        { label: "AFKAST", value: "6–10% (Netto potentiale)" },
-        { label: "VÆKST", value: "5–9%" },
-        { label: "STATUS", value: "Voksende / Turisme-ledet" }
+        { label: "SEGMENT", value: "Hospitality & Kyst" },
+        { label: "RAMMER", value: "Masterplanlagt" },
+        { label: "STATUS", value: "Fremvoksende hub" }
       ],
       highlights: [
-        "Turisme-ledet ejendomsekspansion (hotel-først vækstmodel): Væksten er stærkt knyttet til store turismeprojekter, feriestedsudvikling og brandede strandsamfund, hvilket gør efterspørgslen mere sæsonpræget, men i stigende grad global.",
-        "Branded residences og resortmiljøer, der driver premiumisering: En voksende andel af det nye udbud er knyttet til internationale hotelbrands og integreret resortliv, hvilket positionerer markedet mod livsstilsinvesteringer i stedet for almindelige boliger.",
-        "Begrænset tætbefolket konkurrence (knaphedseffekt i kystnære zoner): Sammenlignet med store UAE-byer har Ras Al Khaimah et mere begrænset lager af luksuriøse strandgrunde, hvilket understøtter relative priser i førsteklasses havnefrontudviklinger.",
-        "Infrastruktur- og destinationsprofileringsstrategi: Emiratet flytter aktivt sin position til en global fritidsdestination med store investeringer i øer, kystinfrastruktur og underholdningsdrevne masterplaner, hvilket forbedrer den langsigtede efterspørgsel."
+        "Turisme-ledet ejendomsekspansion: Udviklingen er tæt forbundet med store turismeprojekter, ferieresorts og integrerede kystnære boligområder.",
+        "Brandede boliger og luksuspositionering: En stigende andel af nye projekter er knyttet til internationale hotelkæder og integrerede resort-koncepter.",
+        "Begrænset udbud i kystnære zoner: Ras Al Khaimah råder over uberørte kyststrækninger med lav bebyggelsestæthed og beskyttet kystnatur.",
+        "Infrastrukturinvesteringer i destinationen: Lufthavnsudvidelser, forbedrede veje og lystbådehavne styrker tilgængeligheden til emiratet markant."
       ]
     },
     bangalore: {
       type: "TEKNOLOGIDREVET MARKED",
-      desc: "Indiens mest konsekvente urbane vækstmotor, drevet af IT-ekspansion, infrastrukturforbundet værdistigning og strukturelt stærk lejeefterspørgsel.",
+      desc: "Indiens førende teknologimetropol, drevet af IT-erhvervsekspansion, infrastrukturprojekter og reel slutbrugerefterspørgsel.",
       stats: [
-        { label: "AFKAST", value: "3–5% (Netto lejeafkast)" },
-        { label: "VÆKST", value: "6–10%" },
-        { label: "STATUS", value: "IT-efterspørgselsdrevet" }
+        { label: "SEGMENT", value: "Enterprise Tech-hub" },
+        { label: "RAMMER", value: "SEZ & Grade-A" },
+        { label: "STATUS", value: "IT-efterspørgsel" }
       ],
       highlights: [
-        "IT & Global Capability Center (GCC) som absorptionsmotor: Bangalores efterspørgsel efter fast ejendom understøttes strukturelt af kontinuerlig ekspansion af IT-parker og GCC'er. Dette skaber vedvarende efterspørgsel i mid- og premiumsegmenterne.",
-        "Infrastrukturdrevet mikromarkeds værdistigningscyklus: Metroudbygning, Peripheral Ring Road og lufthavnskorridorudvikling omformer prisdynamikken. Væksten er meget korridorspecifik.",
-        "Stærk slutbrugertendens uden ekstrem spekulation: I modsætning til meget cykliske markeder er Bangalore domineret af arbejdende professionelle og tilflyttende familier, hvilket fører til mere stabil absorption.",
-        "Dyb og likvid lejemulighed forankret i IT-job: Høj udskiftning af lejere blandt tech-medarbejdere, udlændinge og tilflyttere holder belægningsprocenten stærk i kernezoner som Whitefield, ORR og Sarjapur Road."
+        "Global Capability Center (GCC) absorption: Bangalores erhvervsejendomme understøttes massivt af multinationale tech-campusser og forskningscentre.",
+        "Infrastrukturdrevet bysammenhæng: Metroforlængelser, Peripheral Ring Road og lufthavnskorridoren forbinder byens centrale erhvervsdistrikter.",
+        "Stærk professionel slutbrugerbase: Markedet er domineret af veluddannede teknologiprofessionelle og etablerede familier med stabile boligbehov.",
+        "Dyb virksomhedsleje: Førende erhvervsparker i Whitefield, Outer Ring Road og North Bangalore huser globale ingeniør- og IT-hovedkvarterer."
       ]
     },
     chennai: {
-      type: "STRATEGISK KERNEMARKED",
-      desc: "Indiens mest stabile slutbrugerdrevne kystby, i stigende grad præget af GCC-ekspansion, industriel robusthed og disciplineret prisvækst.",
+      type: "STRATEGISK CORE MARKED",
+      desc: "Indiens etablerede slutbrugerdrevne kystby, præget af GCC-ekspansion, industriel robusthed og balanceret markedsabsorption.",
       stats: [
-        { label: "AFKAST", value: "3.5–5% (Netto lejeafkast)" },
-        { label: "VÆKST", value: "5–8%" },
-        { label: "STATUS", value: "Stabil / Slutbrugerdrevet" }
+        { label: "SEGMENT", value: "Industri & SaaS" },
+        { label: "RAMMER", value: "Produktionskorridor" },
+        { label: "STATUS", value: "Slutbruger-drevet" }
       ],
       highlights: [
-        "GCC-ledet kontorekspansion omformer boligefterspørgslen: Global Capability Centres dominerer kontorabsorptionen, hvilket styrker den langsigtede efterspørgsel efter boliger i IT- og erhvervskorridorer.",
-        "Slutbruger-domineret boligcyklus med lav spekulativ volatilitet: Prissætningen drives primært af lønnede fagfolk og familier, hvilket resulterer i stabil absorption og begrænset spekulation.",
-        "Infrastruktur-ledet forstadsudvidelse (metro, lufthavn & ORR): Transportopgraderinger og metrofase 2 åbner nye vækstzoner langs centrale forstadskorridorer.",
-        "Selektiv styrke i mikromarkeder mod overudbudslommer: Velforbundne IT-korridorer overperformer markant, mens perifere spekulative projekter viser langsommere absorption."
+        "GCC- og IT-campusudvikling: Globale kompetencecentre og SaaS-virksomheder skaber vedvarende efterspørgsel i korridorer som OMR og Guindy.",
+        "Industriel produktionsrygrad: Kendt som Indiens produktionshjerte for bilindustrien, hvilket sikrer en stabil lokal beskæftigelse.",
+        "Infrastrukturforbedringer: Metrofase 2 og transportkorridorer forbinder ydre logistik- og industriområder med byens centrale dele.",
+        "Fokus på integrerede korridorer: Korridorer med direkte adgang til infrastruktur oplever en jævn og stabil erhvervs- og boligabsorption."
       ]
     },
     goa: {
       type: "LIVSSTILS- OG TURISMEHOVEDSTAD",
-      desc: "Indiens førende marked for sekundære boliger og livsstil, der transformerer sig fra en turismeaktivklasse til en global livsstilsinvesteringsdestination.",
+      desc: "Indiens førende fritids- og livsstilsejendomsmarked, under overgang til en etableret destination for boutique-hospitality og fjernarbejde.",
       stats: [
-        { label: "AFKAST", value: "4–6% (Netto, turismeafhængigt)" },
-        { label: "VÆKST", value: "6–10%" },
-        { label: "STATUS", value: "Livsstil / Sæsonpræget luksus" }
+        { label: "SEGMENT", value: "Livsstil & Hospitality" },
+        { label: "RAMMER", value: "Kystplanlagt" },
+        { label: "STATUS", value: "Boutique boligmarked" }
       ],
       highlights: [
-        "Turismedrevet kapitaltilstrømning til boligluksus: Efterspørgslen drives i stigende grad af nationale HNIs, NRIs og fjernarbejdere, der søger sekundære boliger.",
-        "Stærkt skift mod brandede villaer og forvaltede boliger: Hotel- og hospitality-forbundne projekter omformer markedet til hybride bolig- og hotelinvesteringsstrukturer.",
-        "Geografisk knaphed i førsteklasses kystnære mikromarkeder: Begrænset udbud af kystgrunde i det nordlige Goa understøtter prisstyrken i udvalgte kystzoner.",
-        "Infrastruktur- og lufthavnsekspansion forbedrer tilgængeligheden: Forbedret infrastruktur og opgraderinger af lufthavnskapaciteten styrker den langsigtede efterspørgsel."
+        "Efterspørgsel på brandede villaer og servicerede boliger: Udviklinger i tilknytning til hospitality-brands tilbyder professionel drift og vedligeholdelse.",
+        "Tiltrækning af professionelle og grundlæggere: Tiltagende efterspørgsel fra iværksættere og ledere, der etablerer sekundære boliger i rolige omgivelser.",
+        "Beskyttede kystzoner: Strenge byggerestriktioner langs kysten bevarer områdets arkitektoniske særpræg og begrænser overbebyggelse.",
+        "Manohar Internationale Lufthavn: Den nye lufthavnsinfrastruktur har forbedret den nationale og internationale tilgængelighed betragteligt."
       ]
     },
     'gurgaon-delhi': {
-      type: "PREMIUM ERHVERVSHUB",
-      desc: "Indiens mest kapitalintensive og infrastrukturdrevne ejendomsmarked, anført af erhvervsefterspørgsel, motorvejskorridorer og premium boligmigrering.",
+      type: "VIRKSOMHEDERNES HOVEDKVARTERSHUB",
+      desc: "Nordindiens førende erhvervs- og kontorejendomsmarked, anført af multinationale hovedkvarterer, motorvejskorridorer og luksussamfund.",
       stats: [
-        { label: "AFKAST", value: "3–5% (Boliger) / 7–11% (Erhverv)" },
-        { label: "VÆKST", value: "6–10%" },
-        { label: "STATUS", value: "Høj likviditet / Cyklisk premium" }
+        { label: "SEGMENT", value: "Fortune 500 Virksomheder" },
+        { label: "RAMMER", value: "Motorvejskorridor" },
+        { label: "STATUS", value: "Institutionelt knudepunkt" }
       ],
       highlights: [
-        "Infrastrukturdrevet værdiskabelse langs motorveje: Dwarka Expressway, SPR og lufthavnsforbindelsen i Noida omformer vækstgeografien på tværs af NCR.",
-        "Stærk erhvervsefterspørgsel forankrer udlejning og erhvervsejendomme: Multinationale selskaber, GCC'er og finansielle servicevirksomheder driver Grade-A efterspørgsel.",
-        "Premiumisering af boligudbuddet: Markedet favoriserer i stigende grad etablerede udviklere, lukkede samfund og store ejerlejligheder.",
-        "Divergens i mikromarkeder driver selektive afkast: Dwarka Expressway og Golf Course Extension overperformer markant."
+        "Koncentration af virksomhedshovedkvarterer: Over 250 Fortune 500-regionalkontorer og store konglomerater danner grundlag for Grade-A kontorudlejning.",
+        "Motorvejsdrevne bykorridorer: Dwarka Expressway og Golf Course Extension integrerer moderne boligområder direkte med forretningskvarterer.",
+        "Institutionelle master-udviklere: Førende nationale udviklere etablerer integrerede erhvervsparker og lukkede boligresortsamfund.",
+        "Logistisk knudepunkt i Nordindien: Nærhed til IGI Airport og Delhi-Mumbai Industrial Corridor understøtter byens strategiske position."
       ]
     },
     hyderabad: {
-      type: "TEKNOLOGI- OG EKSPORTMOTOR",
-      desc: "Indiens mest balancerede IT- og industrielle vækstby, drevet af struktureret planlægning, global techefterspørgsel og skalerbar boligabsorption.",
+      type: "TECH- OG PHARMA-METROPOL",
+      desc: "Indiens velstrukturerede teknologihub, kendetegnet ved moderne vejnet, store erhvervscampusser og skalerbare byzoner.",
       stats: [
-        { label: "AFKAST", value: "3–4.5%" },
-        { label: "VÆKST", value: "7–10%" },
-        { label: "STATUS", value: "Struktureret vækstmarked" }
+        { label: "SEGMENT", value: "Teknologi & Life Science" },
+        { label: "RAMMER", value: "Masterplanlagt zone" },
+        { label: "STATUS", value: "Høj absorption" }
       ],
       highlights: [
-        "IT-, farma- og GCC-ekspansion understøtter langsigtet efterspørgsel: Stærkt fodfæste for globale virksomheder i HITEC City og Financial District sikrer stabil absorption.",
-        "Planlagt infrastrukturudvidelse understøtter vækstkorridorer udad: Outer Ring Road og metroudvidelser åbner nye højvækst-mikromarkeder.",
-        "Mid-premium boligdominans med stærk slutbrugerbase: Efterspørgslen er koncentreret i lukkede boligområder og moderne lejligheder.",
-        "Kontrolleret balance mellem udbud og efterspørgsel: Kernezoner opretholder en relativt afbalanceret absorption sammenlignet med overbyggede markeder."
+        "Globale tech-giganters campusser: Byen rummer nogle af de største internationale udviklingsafdelinger for globale teknologiselskaber uden for USA.",
+        "Integreret vej- og transportnetværk: Outer Ring Road (ORR) muliggør hurtig transport mellem Financial District, HITEC City og lufthavnen.",
+        "Globalt life science-centrum: Genome Valley udgør en internationalt anerkendt klynge for bioteknologi og medicinalproduktion.",
+        "Struktureret byplanlægning: Fremsynet kommunal planlægning og tydelig zoneinddeling sikrer ordnede rammer for byudviklingen."
       ]
     },
     mumbai: {
-      type: "INDIENS FINANSIELLE HOVEDSTAD",
-      desc: "Indiens dyreste og mest likviditetsdrevne ejendomsmarked, defineret af ekstreme priser, byfornyelsescyklusser og knaphed på premiumaktiver.",
+      type: "FINANSHUB & KERNEMETROPOL",
+      desc: "Indiens finansielle hjerte og mest likvide ejendomsmarked, defineret af bankhovedsæder, markant infrastruktur og begrænset byareal.",
       stats: [
-        { label: "AFKAST", value: "2.5–4%" },
-        { label: "VÆKST", value: "4–7%" },
-        { label: "STATUS", value: "Ultra-prime / Knaphedsmarked" }
+        { label: "SEGMENT", value: "Finans & Ultra-Prime" },
+        { label: "RAMMER", value: "Kystinfrastruktur" },
+        { label: "STATUS", value: "Høj knaphed" }
       ],
       highlights: [
-        "Strukturel knaphed på jord og boligudbud: Begrænset byggejord i det centrale Mumbai opretholder et langsigtet prispres i prime zoner.",
-        "Byfornyelses-drevet udbudscyklus: Nyt udbud genereres i vid udstrækning gennem sanering og renovering snarere end ubebygget jord.",
-        "Premiumisering dominerer på tværs af alle segmenter: Selv traditionelle mellemliggende områder skifter mod byfornyelse i højere kvalitet og luksuspositionering.",
-        "Stærkt erhvervs- og finansdistrikt forankrer efterspørgslen: BKC- og Nariman Point-økosystemerne fortsætter med at understøtte højindkomstefterspørgsel."
+        "Nationalt finanscentrum: Hjemsted for Indiens centralbank, førende forretningsbanker, børser og institutionelle investeringsfonde.",
+        "Banebrydende infrastrukturprojekter: Atal Setu (MTHL) og Coastal Road forbedrer transportforbindelserne på tværs af halvøen markant.",
+        "Koncentrerede forretningsdistrikter: Bandra-Kurla Complex (BKC) fungerer som landets førende moderne finansielle centrum.",
+        "Knaphed i bykernen: Ø-byens geografi medfører naturlige begrænsninger for nybyggeri, hvilket understøtter høje kvalitetsstandarder."
       ]
     },
     pune: {
-      type: "IT- OG MID-PREMIUM VÆKSTHUB",
-      desc: "Indiens støt voksende IT-drevne ejendomsmarked, understøttet af stærke beskæftigelseskorridorer og stabile lejeøkosystemer.",
+      type: "PRODUKTIONS- OG TECH-KORRIDOR",
+      desc: "Indiens balancerede industri- og teknologihub, båret af bilproduktion, ingeniørvirksomheder og IT-parker.",
       stats: [
-        { label: "AFKAST", value: "3–5%" },
-        { label: "VÆKST", value: "6–10%" },
-        { label: "STATUS", value: "Stabil vækst / IT-drevet" }
+        { label: "SEGMENT", value: "Automotive & IT-hub" },
+        { label: "RAMMER", value: "Industribælte" },
+        { label: "STATUS", value: "Balanceret absorption" }
       ],
       highlights: [
-        "IT-korridorens vækst driver boligabsorption: Hinjewadi, Wakad og Baner forbliver de primære jobdrevne boligområder.",
-        "Stærk slutbruger- og lejemiks med lav spekulativ volatilitet: Efterspørgslen domineres af professionelle og national tilflytning i stedet for spekulativ kapital.",
-        "Infrastrukturforbundne vækstkorridorer udbygger sig vestover: Forbindelsesforbedringer driver en gradvis ekspansion mod nye mikromarkeder.",
-        "Afbalanceret forhold mellem pris og livsstil: Mid-premium segmentet fortsætter med at dominere den overordnede absorption."
+        "To stærke økonomiske ben: Avanceret bilindustri og internationale IT-parker skaber bred beskæftigelse på tværs af vestlige og østlige korridorer.",
+        "Uddannelsesmæssig talentbase: Anerkendte universiteter sikrer en kontinuerlig tilgang af specialiserede ingeniører og ledere.",
+        "Korridordrevne bydele: Vigtige knudepunkter som Hinjewadi og Kharadi understøttes af udbygning af metro og ringveje.",
+        "Etableret lejersegment: Stabil efterspørgsel på erhvervslejemål fra multinationale ingeniør- og IT-virksomheder."
       ]
     },
     singapore: {
-      type: "GLOBAL HUB FOR KAPITALBEVARING",
-      desc: "Asiens førende institutionelle kapital- og formueforvaltningshub, defineret af lovgivningsmæssig stabilitet, aktivbeskyttelse og ultra-prime ejendomspositionering.",
+      type: "GLOBAL FINANSIEL PORT",
+      desc: "Asiens førende institutionelle kapital- og formueforvaltningshub, defineret af juridisk stabilitet, formuebeskyttelse og eksklusive ejendomme.",
       stats: [
-        { label: "AFKAST", value: "2–4%" },
-        { label: "VÆKST", value: "3–6%" },
-        { label: "STATUS", value: "Institutionelt helle / Safe-Haven" }
+        { label: "SEGMENT", value: "Ultra-Prime Safe Haven" },
+        { label: "RAMMER", value: "Common Law Lovgivning" },
+        { label: "STATUS", value: "Institutionelt benchmark" }
       ],
       highlights: [
-        "Globale formuestrømme understøtter ultra-prime ejendomme: Singapore tiltrækker fortsat family offices, multinationale virksomheder og HNWI-migration fra hele verden.",
-        "Finansielle tjenesteydelser og regionalt hovedsædedominans: Bynationen er fortsat Sydøstasiens førende base for regional drift og kapitalforvaltning.",
-        "Stram udbudskontrol understøtter langsigtet prismodstandskraft: Regeringsstyret frigivelse af jord og boligregulering opretholder knaphed i prime distrikter.",
-        "Strategisk rolle som erhvervsport til Sydøstasien: Singapore fungerer som den primære juridiske, finansielle og operationelle platform ind i ASEAN."
+        "Højeste juridiske standard og retssikkerhed: Tydelige ejerskabsregler, gennemsigtighed og markant kapitalbeskyttelse.",
+        "Internationalt family office-centrum: Anerkendt globalt som den foretrukne placering for formuestrukturering og Asien-hovedsæder.",
+        "Stramt planlagt udbudskontrol: Byplanmyndigheden (URA) styrer udbuddet af byggegrunde nøje, hvilket fastholder byens høje standarder.",
+        "Infrastruktur i særklasse: Changi Airport, Tuas Mega Port og digital infrastruktur fastholder bystatens position som internationalt handelsknudepunkt."
       ]
     },
     indonesia: {
-      type: "VÆKST- OG SKALERINGSMARKED",
-      desc: "Sydøstasiens største indenlandske forbrugsøkonomi, drevet af forstadsudvidelse, industriel udflytning og langsigtet infrastrukturtransformation.",
+      type: "REGIONENS STØRSTE ØKONOMI",
+      desc: "Sydøstasiens største økonomi, karakteriseret ved stærkt indenlandsk forbrug, industriudbygning og førende resortdestinationer.",
       stats: [
-        { label: "AFKAST", value: "4–7%" },
-        { label: "VÆKST", value: "6–10%" },
-        { label: "STATUS", value: "Voksende / Industriel" }
+        { label: "SEGMENT", value: "Hospitality & Ressourcehub" },
+        { label: "RAMMER", value: "PMA & Langtidsleasing" },
+        { label: "STATUS", value: "Forbrugermarked" }
       ],
       highlights: [
-        "Industriel relokalisering og produktionsspredning accelererer efterspørgslen: Globale forsyningskædeskift driver investeringer til industrikorridorer.",
-        "Udvikling af Nusantara-hovedstaden omformer infrastrukturen: Det nye hovedstadsideasæt skaber årtiers byggeri- og anlægsinvesteringer over hele landet.",
-        "Bredere byudvikling for den voksende middelklasse: Hurtig urban migration styrker efterspørgslen efter boliger og blandede bymiljøer.",
-        "Stærk ressourceøkonomi understøtter langsigtet kapital: Investeringer i nikkel, elbil-forsyningskæder og råvareeksport er vigtige drivkræfter."
-      ]
-    },
-    'sri-lanka': {
-      type: "FRONTIER RESTITUTIONSMARKED",
-      desc: "Et frontier-investeringsmarked under økonomisk stabilisering, med langsigtet potentiale inden for turisme, logistik og kystudvikling.",
-      stats: [
-        { label: "AFKAST", value: "4–7%" },
-        { label: "VÆKST", value: "5–9%" },
-        { label: "STATUS", value: "Frontier / Restitutionsmarked" }
-      ],
-      highlights: [
-        "Turismens genopretning driver hotel- og kystinvesteringer: Besøgende strømmer til igen, hvilket understøtter hoteller, resorter og blandede ferieprojekter.",
-        "Strategisk placering i Det Indiske Ocean understøtter logistikken: Sri Lankas maritime position tiltrækker regional infrastruktur og havnerelateret interesse.",
-        "Valutakorrektion skaber selektive indgangsmuligheder: Markedskorrektioner og valutajusteringer har forbedret tilgængeligheden for udenlandske investorer.",
-        "Colombos premiumsegment er fortsat udbudsbegrænset: Grade-A kontorer og boliger af høj kvalitet er fortsat begrænset i forhold til det langsigtede potentiale."
+        "Verdensførende ø-destination: Bali udgør et af verdens mest eftertragtede feriemål med en udbygget sektor for luksusvillaer og boutique-resorts.",
+        "Omfattende indenlandsk marked: En befolkning på over 275 millioner understøtter langsigtet forbrugsefterspørgsel og infrastrukturudbygning.",
+        "Investeringsstrukturer (PT PMA): Tydelige selskabsstrukturer gør det muligt for internationale investorer at erhverve og drive erhvervsprojekter.",
+        "Markante infrastrukturprojekter: Nye motorveje, havneudvidelser og opgraderede lufthavne forbedrer sammenhængen mellem de vigtigste øer."
       ]
     },
     thailand: {
-      type: "TURISME- OG LIVSSTILS-KRAFTCENTER",
-      desc: "Et af Asiens mest etablerede turisme- og hotelprægede ejendomsmarkeder, der forbinder livsstilsefterspørgsel med regional erhvervsudvikling.",
+      type: "HOSPITALITY- OG LIVSSTILSHUB",
+      desc: "Et af Sydøstasiens mest etablerede hospitality- og livsstilsmarkeder, der forener international turisme med regional forretningsekspansion.",
       stats: [
-        { label: "AFKAST", value: "4–8%" },
-        { label: "VÆKST", value: "5–8%" },
-        { label: "STATUS", value: "Livsstil / Turismedrevet" }
+        { label: "SEGMENT", value: "Livsstil & Wellness" },
+        { label: "RAMMER", value: "Condominium Freehold" },
+        { label: "STATUS", value: "International turisme" }
       ],
       highlights: [
-        "Turismens genopretning understøtter hotelprojekter og brandede boliger: Bangkok, Phuket og Pattaya nyder godt af stærk international efterspørgsel.",
-        "Regional produktion og diversificering understøtter byerne: Thailand er fortsat en stor hub for bilindustri, elektronik og regional drift i ASEAN.",
-        "Udenlandsk efterspørgsel koncentreret i feriesteder og luksussegmentet: Internationale købere søger primært brandede boliger og servicerede ferielejligheder.",
-        "Infrastrukturudbygning forbedrer forbindelser mellem byerne: EEC-korridorudvikling og jernbaneopgraderinger omformer vækstkanalerne."
+        "Etableret ejerlejlighedslovgivning: Den thailandske Condominium Act tillader op til 49% direkte udenlandsk freehold-ejerskab i godkendte byggerier.",
+        "Hospitality og sundhedssektor i særklasse: Anerkendte privathospitaler og internationale hotelbrands positionerer Bangkok og Phuket stærkt.",
+        "Omfattende kollektiv infrastruktur: Moderne storbynetværk (BTS/MRT) i Bangkok og regionale transportforbindelser letter den daglige mobilitet.",
+        "Attraktiv livsstilsdestination: Det rige udbud af gastronomi, kultur og naturoplevelser tiltrækker internationale tilflyttere og ferieboligkøbere."
       ]
     },
     vietnam: {
-      type: "PRODUKTIONSHUB MED HØJ VÆKST",
-      desc: "Sydøstasiens hurtigst voksende produktions- og eksportdrevne økonomi, understøttet af industriel ekspansion og stigende udenlandske direkte investeringer (FDI).",
+      type: "PRODUKTIONS- OG INDUSTRIHUB",
+      desc: "Sydøstasiens førende produktions- og eksportøkonomi, understøttet af international industriflytning og tæt global handelsintegration.",
       stats: [
-        { label: "AFKAST", value: "4–7%" },
-        { label: "VÆKST", value: "7–12%" },
-        { label: "STATUS", value: "Høj vækst / Eksportdrevet" }
+        { label: "SEGMENT", value: "Industri & Mixed-Use" },
+        { label: "RAMMER", value: "FDI Frihandelsaftaler" },
+        { label: "STATUS", value: "Eksportdrevet" }
       ],
       highlights: [
-        "Global udflytning af produktion accelererer den industrielle udbygning: Vietnam tiltrækker store investeringer inden for elektronik, teknologi og forsyningskæder.",
-        "Hurtig urbanisering understøtter boligmarkedet og erhvervsbyggeri: Større byer som Ho Chi Minh City og Hanoi oplever fortsat stærk befolkningstilvækst.",
-        "Infrastrukturinvesteringer omformer logistikken: Motorveje, dybvandshavne, lufthavne og industriparker er centrale for den langsigtede strategi.",
-        "Stigende middelklasseforbrug styrker den indenlandske efterspørgsel: Indkomstudvikling og bymigration understøtter detailhandel, boliger og erhverv."
+        "Centrum for globale forsyningskæder: Elektronik- og højteknologiproduktion tiltrækker rekordstore mængder direkte udenlandske investeringer (FDI).",
+        "Bredt frihandelsnetværk: Omfattende multilaterale handelsaftaler (CPTPP, EVFTA, RCEP) sikrer direkte adgang til globale markeder.",
+        "Hurtig infrastrukturmodernisering: Store investeringer i dybvandshavne, motorveje og internationale lufthavne styrker logistikeffektiviteten.",
+        "Moderne bycentre: Ho Chi Minh City og Hanoi oplever en markant opgradering af Grade-A kontorbyggerier og moderne bykvarterer."
       ]
     }
   }

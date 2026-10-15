@@ -20,7 +20,7 @@ const CityMicrosite: React.FC = () => {
   useDocumentMetadata({
     title: city ? (language === 'da' ? `${translateCity(city.name)} Markedsanalyse & Indsigt` : `${city.name} Market Analysis & Insights`) : (language === 'da' ? 'Markedsanalyse' : 'Market Analysis'),
     description: city ? (localizedData?.desc || city.thesis) : 'Local market insights and strategic real estate/business expansion analysis.',
-    keywords: city ? `${city.name} real estate, ${city.name} yield, ${city.name} investment, Univue ${city.name}` : 'market analysis, property investment'
+    keywords: city ? `${city.name} real estate, ${city.name} property market, ${city.name} investment, Univue ${city.name}` : 'market analysis, property investment'
   });
 
   const cityPageSchema = city ? {
@@ -163,7 +163,7 @@ const CityMicrosite: React.FC = () => {
                 {localizedData?.type || `${city.positioning} Focus`}
               </span>
               <span className="px-4 py-2 border border-brand-gold/20 bg-brand-gold/5 backdrop-blur-md rounded-full text-brand-gold text-xs uppercase tracking-widest">
-                {city.rentalYield} {t('catalog.yield')}
+                {city.avgPricing}
               </span>
             </div>
           </motion.div>
@@ -217,36 +217,31 @@ const CityMicrosite: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-5">
-                  <div>
-                    <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">{t('city.stats.yield')}</span>
-                    <span className="text-2xl font-serif">{city.rentalYield}</span>
-                  </div>
-                </div>
-
-                {localizedData && (
+                {localizedData ? (
+                  localizedData.stats.map((stat, i) => (
+                    <div key={i} className="flex items-start gap-5">
+                      <div>
+                        <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
+                          {stat.label}
+                        </span>
+                        <span className="text-2xl font-serif">
+                          {stat.value}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
                   <div className="flex items-start gap-5">
                     <div>
                       <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
-                        {language === 'da' ? "VÆKST" : "GROWTH"}
+                        {t('city.stats.infra')}
                       </span>
-                      <span className="text-2xl font-serif">
-                        {localizedData.stats[1]?.value}
+                      <span className="text-lg leading-snug">
+                        {city.infraGrowth}
                       </span>
                     </div>
                   </div>
                 )}
-
-                <div className="flex items-start gap-5">
-                  <div>
-                    <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
-                      {localizedData ? localizedData.stats[2]?.label : t('city.stats.infra')}
-                    </span>
-                    <span className="text-lg leading-snug">
-                      {localizedData ? localizedData.stats[2]?.value : city.infraGrowth}
-                    </span>
-                  </div>
-                </div>
               </div>
 
               <button 
@@ -267,14 +262,16 @@ const CityMicrosite: React.FC = () => {
             {language === 'da' ? "Markedshøjdepunkter" : "Market Highlights"}
           </h3>
           <h2 className="text-3xl md:text-4xl font-serif text-brand-blue mb-12">
-            {language === 'da' ? `Strategiske investeringsfaktorer for ${city.name}` : `Strategic Investment Drivers for ${city.name}`}
+            {language === 'da' ? `Strategiske markedsfaktorer for ${city.name}` : `Strategic Market Drivers for ${city.name}`}
           </h2>
           
           <div className="grid md:grid-cols-2 gap-8">
             {(localizedData?.highlights || [
               `Infrastructure and Development: ${city.infraGrowth || 'Major master-planned development projects and infrastructure pipelines.'}`,
               `Cross-border Relevance: ${city.relevance || 'Establishment of special economic initiatives and premium asset positioning.'}`,
-              `Stable Yield Environment: Strong organic demand delivering high rental performance relative to regional peers.`
+              language === 'da'
+                ? 'Institutionelle rammer: Gennemsigtigt tinglysningssystem, deponeringsbeskyttelse og klare juridiske ejerskabsstandarder.'
+                : 'Institutional Framework: Transparent land registry, escrow protections, and clear legal ownership standards.'
             ]).map((h, i) => {
               const hasColon = h.includes(':');
               const title = hasColon ? h.substring(0, h.indexOf(':')) : (language === 'da' ? `Punkt ${i + 1}` : `Point ${i + 1}`);

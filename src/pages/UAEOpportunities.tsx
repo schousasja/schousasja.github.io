@@ -16,8 +16,8 @@ export const UAEOpportunities = () => {
 
   useDocumentMetadata({
     title: `${t('uae.hero.title') || 'UAE Investment Markets'}`,
-    description: t('uae.hero.desc') || 'Explore high-yield real estate investments and strategic advisory services in Dubai, Abu Dhabi, and Ras Al Khaimah (RAK).',
-    keywords: 'Dubai properties, Emaar projects, Abu Dhabi luxury, Ras Al Khaimah Wynn, tax efficient real estate'
+    description: t('uae.hero.desc') || 'Explore strategic real estate opportunities and advisory coordination across Dubai, Abu Dhabi, and Ras Al Khaimah (RAK).',
+    keywords: 'Dubai properties, Emaar projects, Abu Dhabi luxury, Ras Al Khaimah Wynn, strategic property market advisory'
   });
 
   const uaeCities = cities.filter(c => c.marketId === 'uae');
@@ -52,17 +52,17 @@ export const UAEOpportunities = () => {
       };
     } else {
       acc[city.name] = {
-        type: city.positioning + " Investment",
+        type: city.positioning + " Segment",
         desc: city.thesis,
         stats: [
-          { label: t('catalog.yield'), value: city.rentalYield || "6-9%" },
-          { label: "Growth", value: "10-15%" },
-          { label: "Status", value: city.positioning }
+          { label: "Segment", value: city.positioning || "Prime Core" },
+          { label: "Pricing Index", value: city.avgPricing || "Tier-1" },
+          { label: "Status", value: "Active Freehold" }
         ],
         highlights: [
           city.infraGrowth || "Major infrastructure development",
           city.relevance || "Strategic economic relevance",
-          "Tax-advantaged rental income"
+          language === 'da' ? "Gennemsigtigt digitalt tinglysnings- og deponeringssystem" : "Transparent digital land registry & escrow frameworks"
         ],
         image: city.image || "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2070"
       };
@@ -73,25 +73,25 @@ export const UAEOpportunities = () => {
   const districts = Object.keys(districtDetails);
   
   const currentDetail = districtDetails[selectedDistrict] || {
-    type: language === 'da' ? "Premium Ejendomsinvestering" : "Premium Real Estate Investment",
+    type: language === 'da' ? "Førsteklasses Ejendomsmarked" : "Prime Real Estate Market",
     desc: language === 'da' 
-      ? "UAE tilbyder et dynamisk, skatteeffektivt ejendomsmarked karakteriseret ved høje afkast og stærk kapitalstigning."
-      : "The UAE offers a dynamic, tax-efficient real estate market characterized by high yields and strong capital appreciation.",
+      ? "UAE tilbyder et etableret, internationalt ejendomsmarked karakteriseret ved stærk likviditet, masterplanlagte bysamfund og moderne tinglysningssystemer."
+      : "The UAE offers an established international real estate market characterized by high liquidity, master-planned urban communities, and transparent regulatory frameworks.",
     stats: [
-      { label: t('catalog.yield'), value: "6.8%" },
-      { label: language === 'da' ? "Vækst" : "Growth", value: "10-15%" },
+      { label: language === 'da' ? "Segment" : "Segment", value: "Prime Freehold" },
+      { label: language === 'da' ? "Prisindeks" : "Pricing", value: "$400–$1,200/sq.ft" },
       { label: "Status", value: language === 'da' ? "Aktiv" : "Active" }
     ],
     highlights: [
       language === 'da' 
-        ? "Større infrastrukturudvikling og smarte initiativer" 
-        : "Major infrastructure development and smart initiative investments",
+        ? "Større infrastrukturudvikling og masterplanlagte bysamfund" 
+        : "Major infrastructure development and master-planned urban communities",
       language === 'da'
-        ? "Strategisk økonomisk relevans med høj kapitalbevarelse"
-        : "Strategic economic relevance with high capital preservation",
+        ? "Strategisk økonomisk relevans og global markedslikviditet"
+        : "Strategic economic relevance and deep global market liquidity",
       language === 'da'
-        ? "Skattefordelagtigt, højt og stabilt lejeafkast"
-        : "Tax-advantaged high consistent rental income"
+        ? "Gennemsigtigt digitalt tinglysnings- og deponeringssystem"
+        : "Transparent digital land registry and verified escrow protections"
     ],
     image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=2070"
   };

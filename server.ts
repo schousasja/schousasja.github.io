@@ -1,9 +1,11 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { Resend } from "resend";
 import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
+import { getPrerenderedPage } from "./prerender";
 
 dotenv.config();
 
@@ -266,18 +268,55 @@ ${text}
     }
   });
 
-  // Vite middleware for development
+  // Server-Side Pre-rendering & Vite Integration
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true, hmr: false },
-      appType: "spa",
+      appType: "custom",
     });
+
+    // Mount Vite asset handling middleware first
     app.use(vite.middlewares);
+
+    // SSR / Pre-rendering route handler for all HTML page navigations
+    app.get('*', async (req, res, next) => {
+      // Skip API routes and static asset paths
+      if (req.path.startsWith('/api') || path.extname(req.path) !== '') {
+        return next();
+      }
+
+      try {
+        const url = req.originalUrl;
+        const templatePath = path.resolve(process.cwd(), 'index.html');
+        let template = fs.readFileSync(templatePath, 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        const html = getPrerenderedPage(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html; charset=utf-8' }).end(html);
+      } catch (err: any) {
+        vite.ssrFixStacktrace(err);
+        next(err);
+      }
+    });
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+    // Serve static assets without defaulting to index.html automatically
+    app.use(express.static(distPath, { index: false }));
+
+    // SSR / Pre-rendering handler for production
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api') || path.extname(req.path) !== '') {
+        return next();
+      }
+
+      try {
+        const url = req.originalUrl;
+        const templatePath = path.resolve(distPath, 'index.html');
+        const template = fs.readFileSync(templatePath, 'utf-8');
+        const html = getPrerenderedPage(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html; charset=utf-8' }).end(html);
+      } catch (err: any) {
+        next(err);
+      }
     });
   }
 

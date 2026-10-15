@@ -1014,7 +1014,7 @@ export const NewsletterAdmin = () => {
                                 value={customRemarks}
                                 onChange={(e) => setCustomRemarks(e.target.value)}
                                 rows={3}
-                                placeholder="e.g., Dear Client, this week we examine cross-border capital flows realignments and high-yield real estate corridors in Dubai..."
+                                placeholder="e.g., Dear Client, this week we examine cross-border capital flows realignments and institutional commercial real estate corridors in Dubai..."
                                 className="w-full bg-white border border-gray-200 px-4 py-3 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold resize-none focus:outline-none placeholder:text-gray-300 font-light"
                               />
                             </div>
@@ -1031,7 +1031,7 @@ export const NewsletterAdmin = () => {
                                 value={aiTopic}
                                 onChange={(e) => setAiTopic(e.target.value)}
                                 rows={4}
-                                placeholder="e.g., An intelligence synthesis exploring Dubai Business Bay commercial office yields versus residential investment realignments in Q3."
+                                placeholder="e.g., An intelligence synthesis exploring Dubai Business Bay commercial office footprints versus residential community realignments in Q3."
                                 className="w-full bg-white border border-gray-200 px-4 py-3 text-brand-blue text-xs focus:ring-1 focus:ring-brand-gold resize-none focus:outline-none placeholder:text-gray-300 font-light"
                               />
                             </div>
@@ -1210,7 +1210,7 @@ export const NewsletterAdmin = () => {
                         type="text"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        placeholder="Weekly Intelligence: High-Growth Corridors in Business Bay"
+                        placeholder="Weekly Intelligence: Prime Commercial Corridors in Business Bay"
                         className="w-full bg-gray-50 border-none px-6 py-4 text-brand-blue text-sm focus:ring-1 focus:ring-brand-gold"
                         required
                       />
