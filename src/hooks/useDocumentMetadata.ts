@@ -14,7 +14,7 @@ export const useDocumentMetadata = ({
   description,
   keywords,
   ogType = 'website',
-  ogImage = '/og-image.jpg'
+  ogImage = '/logo.png'
 }: MetadataProps) => {
   const { language } = useLanguage();
 
