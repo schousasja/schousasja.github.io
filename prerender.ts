@@ -848,6 +848,36 @@ ${sharedFooter}
 export function getRouteMetadata(pathname: string): PageMetadata {
   const cleanPath = pathname.split('?')[0].replace(/\/+$/, '') || '/';
 
+  if (cleanPath.startsWith('/markets/')) {
+    const cityId = cleanPath.split('/markets/')[1]?.toLowerCase();
+    const cityNames: Record<string, string> = {
+      dubai: 'Dubai',
+      'abu-dhabi': 'Abu Dhabi',
+      'ras-al-khaimah': 'Ras Al Khaimah',
+      bangalore: 'Bangalore',
+      gurgaon: 'Gurgaon',
+      mumbai: 'Mumbai',
+      singapore: 'Singapore',
+      bangkok: 'Bangkok'
+    };
+    const cityName = cityNames[cityId] || (cityId ? cityId.charAt(0).toUpperCase() + cityId.slice(1) : 'Market');
+    return {
+      title: `${cityName} Real Estate & Market Analysis | Univue Consultants ApS`,
+      description: `Institutional analysis, yield data, and investment advisory for ${cityName} by Univue Consultants.`,
+      keywords: `${cityName} real estate, ${cityName} property market, ${cityName} investment, Univue ${cityName}`,
+      canonical: `${BASE_URL}${cleanPath}`,
+      ogTitle: `${cityName} Real Estate & Market Analysis | Univue Consultants`,
+      ogDescription: `Institutional analysis, yield data, and investment advisory for ${cityName}.`,
+      ogType: "website",
+      schema: {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": `${cityName} Market Insights | Univue Consultants`,
+        "description": `Market analysis and advisory for ${cityName}.`
+      }
+    };
+  }
+
   switch (cleanPath) {
     case '/about':
       return {
@@ -1028,21 +1058,212 @@ export function getRouteMetadata(pathname: string): PageMetadata {
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
-          "@type": "WebSite",
-          "name": "Univue Consultants ApS",
-          "url": BASE_URL,
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": `${BASE_URL}/market-catalog?q={search_term_string}`,
-            "query-input": "required name=search_term_string"
-          }
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": `${BASE_URL}/#website`,
+              "name": "Univue Consultants ApS",
+              "url": BASE_URL,
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": `${BASE_URL}/market-catalog?q={search_term_string}`,
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "Organization",
+              "@id": `${BASE_URL}/#organization`,
+              "name": "Univue Consultants ApS",
+              "url": BASE_URL,
+              "logo": `${BASE_URL}/logo.png`,
+              "description": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
+              "telephone": "+45 26 37 82 70",
+              "email": "info@univueconsultants.com",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Copenhagen",
+                "addressCountry": "DK"
+              },
+              "founder": {
+                "@type": "Person",
+                "name": "Nimmi Schou"
+              },
+              "areaServed": ["DK", "AE", "IN", "SG"]
+            },
+            {
+              "@type": "ProfessionalService",
+              "@id": `${BASE_URL}/#service`,
+              "name": "Univue Consultants ApS - International Real Estate & Advisory",
+              "url": BASE_URL,
+              "priceRange": "$$$$",
+              "telephone": "+45 26 37 82 70",
+              "email": "info@univueconsultants.com",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Copenhagen",
+                "addressCountry": "DK"
+              },
+              "serviceType": [
+                "International Property Investment Advisory",
+                "Off-Plan Real Estate Sourcing",
+                "Transaction & Escrow Legal Coordination",
+                "Cross-Border Portfolio Positioning",
+                "India Operational Corporate Expansion"
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "@id": `${BASE_URL}/#faq`,
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What services does Univue Consultants ApS provide?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Which geographic markets does Univue Consultants specialize in?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Univue specializes in the United Arab Emirates (Dubai, Abu Dhabi, Ras Al Khaimah), India (Bangalore, Gurgaon, Mumbai), and Southeast Asian growth corridors (Singapore, Bangkok)."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How does Univue assist with the UAE Golden Visa?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Purchasing real estate valued at 2,000,000 AED or greater qualifies investors and their families for the renewable 10-year UAE Golden Visa. Univue coordinates developer allocations, DLD registration, escrow verification, and full visa processing."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I schedule a strategic briefing with Univue?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can schedule a confidential consultation directly through our website at /book or by telephone at +45 26 37 82 70."
+                  }
+                }
+              ]
+            }
+          ]
         }
       };
   }
 }
 
+function renderCityMicrositeBody(cityId: string): string {
+  const cityTitles: Record<string, { name: string; country: string; segment: string; desc: string }> = {
+    dubai: {
+      name: "Dubai",
+      country: "United Arab Emirates",
+      segment: "Prime Freehold & Off-Plan Liquidity",
+      desc: "Global capital of real estate liquidity, branded urban development, and institutional-grade off-plan pipelines."
+    },
+    'abu-dhabi': {
+      name: "Abu Dhabi",
+      country: "United Arab Emirates",
+      segment: "Institutional Core & Sovereign Backed",
+      desc: "The most institutionally stable real estate market in the UAE, driven by sovereign capital, controlled supply, and end-user demand."
+    },
+    'ras-al-khaimah': {
+      name: "Ras Al Khaimah",
+      country: "United Arab Emirates",
+      segment: "Hospitality & Coastal Expansion",
+      desc: "The UAE’s premier emerging lifestyle and tourism-driven real estate market, led by hospitality expansion and beachfront resort development at Al Marjan Island."
+    },
+    bangalore: {
+      name: "Bangalore",
+      country: "India",
+      segment: "Enterprise Tech Metropolis",
+      desc: "India’s premier urban technology metropolis, driven by IT enterprise expansion, infrastructure pipelines, and structural institutional demand."
+    },
+    gurgaon: {
+      name: "Gurgaon (Delhi NCR)",
+      country: "India",
+      segment: "Fortune 500 Corporate Hub",
+      desc: "Northern India's primary institutional commercial corridor hosting regional headquarters for top multinationals."
+    },
+    mumbai: {
+      name: "Mumbai",
+      country: "India",
+      segment: "Financial Capital & Institutional Real Estate",
+      desc: "India's financial nerve center featuring premium commercial assets in BKC and high-net-worth residential development."
+    },
+    singapore: {
+      name: "Singapore",
+      country: "Singapore",
+      segment: "Sovereign Wealth & Family Office Hub",
+      desc: "Global regulatory benchmark, AAA credit rating, Section 13O / 13U family office tax incentive structures, and regional treasury headquarters."
+    },
+    bangkok: {
+      name: "Bangkok",
+      country: "Thailand",
+      segment: "Lifestyle & Regional Commercial Gateway",
+      desc: "Prime luxury residential in Sukhumvit and Sathorn, dynamic regional tourism, and competitive corporate operational headquarters for ASEAN distribution."
+    }
+  };
+
+  const city = cityTitles[cityId] || {
+    name: cityId ? cityId.charAt(0).toUpperCase() + cityId.slice(1) : "Market",
+    country: "International",
+    segment: "Strategic Corridor",
+    desc: "Market analysis and strategic real estate/business expansion insights."
+  };
+
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${city.country} • ${city.segment}</span>
+      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${city.name} Market Analysis & Intelligence
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
+        ${city.desc}
+      </p>
+      <div style="margin-top: 2rem;">
+        <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+          Schedule ${city.name} Briefing
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 72rem; margin: 4rem auto; padding: 0 1.5rem;">
+    <article style="background: #ffffff; padding: 3rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
+      <h2 style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: #0B1F3A; margin-bottom: 1.5rem;">
+        Strategic Market Position: ${city.name}
+      </h2>
+      <p style="color: #4b5563; font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem;">
+        Univue Consultants coordinates developer access, transactional legal compliance, and corporate structuring for clients acquiring assets or establishing operations in ${city.name}.
+      </p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/market-catalog" style="background-color: #0B1F3A; color: #FDFCF5; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
+          View Properties
+        </a>
+        <a href="/services" style="border: 1px solid #0B1F3A; color: #0B1F3A; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
+          Advisory Scope
+        </a>
+      </div>
+    </article>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
 export function getPrerenderedBody(pathname: string): string {
   const cleanPath = pathname.split('?')[0].replace(/\/+$/, '') || '/';
+
+  if (cleanPath.startsWith('/markets/')) {
+    const cityId = cleanPath.split('/markets/')[1]?.toLowerCase();
+    return renderCityMicrositeBody(cityId);
+  }
 
   switch (cleanPath) {
     case '/about':
@@ -1126,15 +1347,30 @@ export function getPrerenderedPage(pathname: string, htmlTemplate: string): stri
     `<link rel="canonical" href="${meta.canonical}" />`
   );
 
-  // 5. Inject Schema.org JSON-LD structured data before </head>
-  const schemaScript = `\n    <script type="application/ld+json">\n${JSON.stringify(meta.schema, null, 2)}\n    </script>\n  `;
-  output = output.replace('</head>', `${schemaScript}</head>`);
+  // 5. Inject Schema.org JSON-LD structured data: replace existing schema block or insert before </head>
+  const schemaScript = `<script type="application/ld+json">\n${JSON.stringify(meta.schema, null, 2)}\n    </script>`;
+  if (/<script\s+type=["']application\/ld\+json["'][\s\S]*?<\/script>/i.test(output)) {
+    output = output.replace(/<script\s+type=["']application\/ld\+json["'][\s\S]*?<\/script>/i, schemaScript);
+  } else {
+    output = output.replace('</head>', `\n    ${schemaScript}\n  </head>`);
+  }
 
-  // 6. Inject pre-rendered body inside <div id="root">...</div>
-  output = output.replace(
-    /<div id=["']root["']>[\s\S]*?(\s*<script type=["']module["']\s+src=["']\/src\/main\.tsx["']>)/i,
-    `<div id="root">${bodyHtml}</div>$1`
-  );
+  // 6. Clean, exact root container injection that works 100% reliably in development and production
+  const rootStart = '<div id="root">';
+  const rootStartIndex = output.indexOf(rootStart);
+  if (rootStartIndex !== -1) {
+    const scriptIndex = output.indexOf('<script', rootStartIndex);
+    let rootEndIndex = -1;
+    if (scriptIndex !== -1) {
+      rootEndIndex = scriptIndex;
+    } else {
+      const bodyCloseIndex = output.indexOf('</body>', rootStartIndex);
+      rootEndIndex = bodyCloseIndex !== -1 ? bodyCloseIndex : output.length;
+    }
+    output = output.substring(0, rootStartIndex) + `<div id="root">${bodyHtml}</div>\n    ` + output.substring(rootEndIndex);
+  } else {
+    output = output.replace('<body>', `<body><div id="root">${bodyHtml}</div>`);
+  }
 
   return output;
 }

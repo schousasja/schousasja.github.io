@@ -299,8 +299,8 @@ ${text}
     });
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    // Serve static assets without defaulting to index.html automatically
-    app.use(express.static(distPath, { index: false }));
+    // Serve static assets with automatic index.html resolution for pre-rendered route folders
+    app.use(express.static(distPath, { index: 'index.html' }));
 
     // SSR / Pre-rendering handler for production
     app.get('*', (req, res, next) => {
@@ -309,10 +309,16 @@ ${text}
       }
 
       try {
-        const url = req.originalUrl;
+        const cleanPath = req.path.split('?')[0].replace(/\/+$/, '') || '/';
+        const staticHtmlPath = path.join(distPath, cleanPath === '/' ? 'index.html' : path.join(cleanPath, 'index.html'));
+        if (fs.existsSync(staticHtmlPath)) {
+          const html = fs.readFileSync(staticHtmlPath, 'utf-8');
+          return res.status(200).set({ 'Content-Type': 'text/html; charset=utf-8' }).end(html);
+        }
+
         const templatePath = path.resolve(distPath, 'index.html');
         const template = fs.readFileSync(templatePath, 'utf-8');
-        const html = getPrerenderedPage(url, template);
+        const html = getPrerenderedPage(cleanPath, template);
         res.status(200).set({ 'Content-Type': 'text/html; charset=utf-8' }).end(html);
       } catch (err: any) {
         next(err);

@@ -73,7 +73,7 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Univue Consultants | Dubai Investment & India Expansion Advisory</title>
+    <title>Univue Consultants | International Property Investment Advisory</title>
     <meta name="description" content="Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence." />
     <meta name="keywords" content="international property investment, cross-border real estate, turnkey property advisory, international acquisitions, Dubai real estate, overseas property investment, Univue Consultants" />
     <meta name="author" content="Univue Consultants ApS" />
@@ -105,44 +105,134 @@
     <meta property="twitter:description" content="Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence." />
     <meta property="twitter:image" content="/logo.png" />
 
-    <!-- Schema.org JSON-LD Structured Data for Crawlers & AI Agents -->
+    <!-- Schema.org JSON-LD Structured Data for Crawlers & AI Agents (Organization, ProfessionalService, FAQPage) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Univue Consultants ApS",
-      "url": "https://univueconsultants.com",
-      "logo": "https://univueconsultants.com/logo.png",
-      "description": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
-      "telephone": "+45 26 37 82 70",
-      "email": "info@univueconsultants.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Copenhagen",
-        "addressCountry": "DK"
-      },
-      "founder": {
-        "@type": "Person",
-        "name": "Nimmi Schou"
-      },
-      "areaServed": ["DK", "AE", "IN", "SG"]
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Univue Consultants ApS",
-      "url": "https://univueconsultants.com",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://univueconsultants.com/market-catalog?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://univueconsultants.com/#website",
+          "name": "Univue Consultants ApS",
+          "url": "https://univueconsultants.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://univueconsultants.com/market-catalog?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://univueconsultants.com/#organization",
+          "name": "Univue Consultants ApS",
+          "url": "https://univueconsultants.com",
+          "logo": "https://univueconsultants.com/logo.png",
+          "description": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
+          "telephone": "+45 26 37 82 70",
+          "email": "info@univueconsultants.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Copenhagen",
+            "addressCountry": "DK"
+          },
+          "founder": {
+            "@type": "Person",
+            "name": "Nimmi Schou"
+          },
+          "areaServed": ["DK", "AE", "IN", "SG"]
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://univueconsultants.com/#service",
+          "name": "Univue Consultants ApS - International Property Investment & Advisory",
+          "url": "https://univueconsultants.com",
+          "priceRange": "$$$$",
+          "telephone": "+45 26 37 82 70",
+          "email": "info@univueconsultants.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Copenhagen",
+            "addressCountry": "DK"
+          },
+          "serviceType": [
+            "International Property Investment Advisory",
+            "Off-Plan Real Estate Sourcing",
+            "Transaction & Escrow Legal Coordination",
+            "Cross-Border Portfolio Positioning",
+            "India Operational Corporate Expansion"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://univueconsultants.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What services does Univue Consultants ApS provide?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Which geographic markets does Univue Consultants specialize in?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Univue specializes in the United Arab Emirates (Dubai, Abu Dhabi, Ras Al Khaimah), India (Bangalore, Gurgaon, Mumbai), and Southeast Asian growth corridors (Singapore, Bangkok)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does Univue assist with the UAE Golden Visa?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Purchasing real estate valued at 2,000,000 AED or greater qualifies investors and their families for the renewable 10-year UAE Golden Visa. Univue coordinates developer allocations, DLD registration, escrow verification, and full visa processing."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I schedule a strategic briefing with Univue?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can schedule a confidential consultation directly through our website at https://univueconsultants.com/book or by telephone at +45 26 37 82 70."
+              }
+            }
+          ]
+        }
+      ]
     }
     </script>
   </head>
   <body>
+    <!-- Fallback Content for Crawlers, Non-JS Clients, and AI Search Bots -->
+    <noscript>
+      <div style="padding: 2.5rem 1.5rem; background-color: #0B1F3A; color: #FDFCF5; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="max-width: 64rem; margin: 0 auto;">
+          <h1 style="font-size: 2rem; color: #C8A96A; margin-bottom: 1rem;">Univue Consultants ApS</h1>
+          <p style="font-size: 1.15rem; line-height: 1.6; margin-bottom: 2rem;">
+            Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border: 1px solid rgba(200,169,106,0.3);">
+              <h2 style="font-size: 1.2rem; color: #C8A96A;">UAE Real Estate</h2>
+              <p>Off-plan luxury properties, 0% tax, 6-10% rental yields, and 10-year Golden Visa advisory in Dubai, Abu Dhabi, and Ras Al Khaimah (Al Marjan Island / Wynn Resort).</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border: 1px solid rgba(200,169,106,0.3);">
+              <h2 style="font-size: 1.2rem; color: #C8A96A;">India Corporate Expansion</h2>
+              <p>Turnkey market entry, Grade-A commercial workspace, entity incorporation, and FDI regulatory guidance across Bangalore, Gurgaon, and Mumbai.</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border: 1px solid rgba(200,169,106,0.3);">
+              <h2 style="font-size: 1.2rem; color: #C8A96A;">Southeast Asia</h2>
+              <p>Singapore family office structuring, Bangkok prime real estate, and regional ASEAN cross-border capital coordination.</p>
+            </div>
+          </div>
+          <p style="font-size: 0.95rem; border-top: 1px solid rgba(200,169,106,0.2); padding-top: 1rem;">
+            <strong>Direct Phone:</strong> <a href="tel:+4526378270" style="color: #C8A96A;">+45 26 37 82 70</a> | <strong>Email:</strong> <a href="mailto:info@univueconsultants.com" style="color: #C8A96A;">info@univueconsultants.com</a> | <strong>HQ:</strong> Copenhagen, Denmark (CVR: 43834665)
+          </p>
+        </div>
+      </div>
+    </noscript>
     <div id="root">
       <header role="banner" style="background-color: #0B1F3A; color: #FDFCF5; border-bottom: 1px solid rgba(200, 169, 106, 0.2); padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 50;">
         <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
