@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, X, ArrowRight, Building2, TrendingUp, Newspaper } from 'lucide-react';
+import { Search, X, Building2, Globe, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, getDocs, limit } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useLanguage } from '../contexts/LanguageContext';
+import { cities } from '../constants/cities';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ interface SearchOverlayProps {
 export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState<{ properties: any[], insights: any[] }>({ properties: [], insights: [] });
+  const [results, setResults] = useState<{ properties: any[], markets: any[] }>({ properties: [], markets: [] });
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
       if (searchQuery.trim().length >= 2) {
         performSearch();
       } else {
-        setResults({ properties: [], insights: [] });
+        setResults({ properties: [], markets: [] });
       }
     }, 300);
 
@@ -44,28 +45,26 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
   const performSearch = async () => {
     setIsSearching(true);
     try {
-      // Note: Real client-side text search is limited without Algolia/Elastic.
-      // We'll fetch a batch and filter client-side for this demo.
-      const propertiesSnap = await getDocs(query(collection(db, 'properties'), limit(20)));
-      const insightsSnap = await getDocs(query(collection(db, 'insights'), limit(20)));
-
       const searchLower = searchQuery.toLowerCase();
 
+      // Search properties from Firestore
+      const propertiesSnap = await getDocs(query(collection(db, 'properties'), limit(20)));
       const filteredProperties = propertiesSnap.docs
         .map(doc => ({ id: doc.id, ...doc.data() } as any))
         .filter(p => 
           p.name?.toLowerCase().includes(searchLower) || 
-          p.location?.toLowerCase().includes(searchLower)
+          p.location?.toLowerCase().includes(searchLower) ||
+          p.city?.toLowerCase().includes(searchLower)
         ).slice(0, 4);
 
-      const filteredInsights = insightsSnap.docs
-        .map(doc => ({ id: doc.id, ...doc.data() } as any))
-        .filter(i => 
-          i.title?.toLowerCase().includes(searchLower) || 
-          i.summary?.toLowerCase().includes(searchLower)
-        ).slice(0, 4);
+      // Search cities & markets from verified registry
+      const filteredMarkets = cities.filter(c => 
+        c.name.toLowerCase().includes(searchLower) ||
+        c.country.toLowerCase().includes(searchLower) ||
+        c.thesis.toLowerCase().includes(searchLower)
+      ).slice(0, 4);
 
-      setResults({ properties: filteredProperties, insights: filteredInsights });
+      setResults({ properties: filteredProperties, markets: filteredMarkets });
     } catch (error) {
       console.error("Search failed:", error);
     } finally {
@@ -90,6 +89,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
           <button 
             onClick={onClose}
             className="absolute top-10 right-10 p-4 text-brand-ivory/40 hover:text-brand-gold transition-colors"
+            aria-label="Close search overlay"
           >
             <X className="w-8 h-8" />
           </button>
@@ -102,7 +102,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('search.placeholder') || "Search for markets, insights, or properties..."}
+                placeholder="Search for markets, corridors, or properties..."
                 className="w-full bg-transparent border-b-2 border-brand-ivory/10 py-8 pl-16 text-4xl font-serif text-brand-ivory outline-none focus:border-brand-gold transition-all placeholder:text-brand-ivory/20"
               />
               {isSearching && (
@@ -127,7 +127,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                     <button
                       key={p.id}
                       onClick={() => handleNavigate(`/market-catalog?id=${p.id}`)}
-                      className="group flex items-start gap-4 text-left w-full"
+                      className="group flex items-start gap-4 text-left w-full cursor-pointer"
                     >
                       <div className="w-16 h-16 bg-white/5 overflow-hidden flex-shrink-0">
                         <img src={p.image} alt="" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
@@ -141,35 +141,44 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                     <p className="text-brand-ivory/30 text-sm">No assets found</p>
                   ) : (
                     <div className="flex flex-col gap-4">
-                       <button onClick={() => handleNavigate('/properties')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2">
-                        <Building2 className="w-4 h-4" /> View Properties
+                      <button onClick={() => handleNavigate('/properties')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2 cursor-pointer">
+                        <Building2 className="w-4 h-4" /> View Properties Catalog
                       </button>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Insights Results */}
+              {/* Market Corridors */}
               <div>
                 <h3 className="text-brand-gold text-[10px] font-black uppercase tracking-[0.4em] mb-10 pb-4 border-b border-white/5">
-                  Market Intel
+                  Markets & Corridors
                 </h3>
                 <div className="space-y-8">
-                   {results.insights.length > 0 ? results.insights.map((i) => (
+                  {results.markets.length > 0 ? results.markets.map((m) => (
                     <button
-                      key={i.id}
-                      onClick={() => handleNavigate('/insights')}
-                      className="group block text-left w-full"
+                      key={m.id}
+                      onClick={() => handleNavigate(`/markets/${m.id}`)}
+                      className="group block text-left w-full cursor-pointer"
                     >
-                      <div className="text-brand-ivory font-serif text-lg group-hover:text-brand-gold transition-colors mb-1">{i.title}</div>
-                      <div className="text-[10px] text-brand-ivory/40 uppercase tracking-widest">{i.category}</div>
+                      <div className="text-brand-ivory font-serif text-lg group-hover:text-brand-gold transition-colors mb-1 flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-brand-gold" />
+                        {m.name}
+                      </div>
+                      <div className="text-[10px] text-brand-ivory/40 uppercase tracking-widest">{m.country} • {m.positioning}</div>
                     </button>
                   )) : searchQuery.length > 1 && !isSearching ? (
-                    <p className="text-brand-ivory/30 text-sm">No insights found</p>
+                    <p className="text-brand-ivory/30 text-sm">No markets found</p>
                   ) : (
                     <div className="flex flex-col gap-4">
-                      <button onClick={() => handleNavigate('/insights')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2">
-                        <Newspaper className="w-4 h-4" /> Browse Intel Feed
+                      <button onClick={() => handleNavigate('/uae')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2 cursor-pointer">
+                        <Globe className="w-4 h-4" /> Explore UAE Markets
+                      </button>
+                      <button onClick={() => handleNavigate('/india')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2 cursor-pointer">
+                        <Globe className="w-4 h-4" /> Explore India Expansion
+                      </button>
+                      <button onClick={() => handleNavigate('/southeast-asia')} className="text-brand-ivory/40 hover:text-brand-gold transition-colors text-sm flex items-center gap-2 cursor-pointer">
+                        <Globe className="w-4 h-4" /> Explore Southeast Asia
                       </button>
                     </div>
                   )}
@@ -181,7 +190,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
               <span>Univue Discovery Gateway v2.0</span>
               <button 
                 onClick={onClose}
-                className="hover:text-brand-gold transition-colors flex items-center gap-2"
+                className="hover:text-brand-gold transition-colors flex items-center gap-2 cursor-pointer"
               >
                 Press ESC to close
               </button>

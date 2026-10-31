@@ -47,7 +47,7 @@ const CityMicrosite: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!city && !loading) {
-      navigate('/insights');
+      navigate('/properties');
     }
   }, [city, loading, navigate]);
 

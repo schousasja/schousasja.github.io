@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
@@ -21,7 +21,6 @@ const Questionnaire = lazy(() => import('./pages/Questionnaire').then(m => ({ de
 const Booking = lazy(() => import('./pages/Booking').then(m => ({ default: m.Booking })));
 const Services = lazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
 const AboutUs = lazy(() => import('./pages/AboutUs').then(m => ({ default: m.AboutUs })));
-const MarketInsights = lazy(() => import('./pages/MarketInsights').then(m => ({ default: m.MarketInsights })));
 const MarketCatalog = lazy(() => import('./pages/MarketCatalog').then(m => ({ default: m.MarketCatalog })));
 const CityMicrosite = lazy(() => import('./pages/CityMicrosite'));
 const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
@@ -53,7 +52,13 @@ function App() {
     "name": "Univue Consultants ApS",
     "url": "https://univueconsultants.com",
     "logo": "https://univueconsultants.com/assets/images/logo.png",
-    "description": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Amaliegårdvej 1",
+      "postalCode": "8543",
+      "addressLocality": "Hornslet",
+      "addressCountry": "DK"
+    },
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+45 26 37 82 70",
@@ -81,7 +86,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<AboutUs />} />
                         <Route path="/services" element={<Services />} />
-                        <Route path="/insights" element={<MarketInsights />} />
+                        <Route path="/insights" element={<Navigate to="/" replace />} />
                         <Route path="/market-catalog" element={<MarketCatalog />} />
                         <Route path="/properties" element={<MarketCatalog />} />
                         <Route path="/catalog" element={<MarketCatalog />} />

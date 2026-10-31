@@ -2063,16 +2063,10 @@ export const InsightsAdmin = () => {
                           <h4 className="text-xl font-serif text-brand-blue group-hover:text-brand-gold transition-colors">{insight.title}</h4>
                         </div>
                         <div className="flex gap-2">
-                          <Link 
-                            to="/insights" 
-                            className="p-2 border border-gray-100 text-gray-400 hover:text-brand-blue hover:border-brand-blue transition-all"
-                            title="View Publicly"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Link>
                           <button 
                             onClick={() => handleEdit(insight)}
                             className="p-2 border border-gray-100 text-brand-blue hover:bg-brand-blue hover:text-white transition-all shadow-sm"
+                            title="Edit"
                           >
                             <Pencil className="w-4 h-4" />
                           </button>

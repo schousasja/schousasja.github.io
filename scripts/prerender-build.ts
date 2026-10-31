@@ -1,15 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import { getPrerenderedPage } from '../prerender';
+import { cities } from '../src/constants/cities';
 
-const routes = [
+const coreRoutes = [
   '/',
   '/about',
   '/services',
   '/uae',
   '/india',
   '/southeast-asia',
-  '/insights',
   '/market-catalog',
   '/properties',
   '/catalog',
@@ -17,8 +17,15 @@ const routes = [
   '/questionnaire'
 ];
 
+const cityRoutes = cities.map(c => `/markets/${c.id}`);
+if (!cityRoutes.includes('/markets/ras-al-khaimah')) {
+  cityRoutes.push('/markets/ras-al-khaimah');
+}
+
+const allRoutes: string[] = Array.from(new Set([...coreRoutes, ...cityRoutes]));
+
 async function prerenderBuild() {
-  console.log('⚡ Starting static build-time pre-rendering for all routes...');
+  console.log(`⚡ Starting static build-time pre-rendering for all ${allRoutes.length} routes...`);
   const distDir = path.resolve(process.cwd(), 'dist');
   const baseHtmlPath = path.resolve(distDir, 'index.html');
 
@@ -29,11 +36,10 @@ async function prerenderBuild() {
 
   const baseHtml = fs.readFileSync(baseHtmlPath, 'utf-8');
 
-  for (const route of routes) {
+  for (const route of allRoutes) {
     const renderedHtml = getPrerenderedPage(route, baseHtml);
 
     if (route === '/') {
-      // Overwrite dist/index.html with pre-rendered homepage
       fs.writeFileSync(baseHtmlPath, renderedHtml, 'utf-8');
       console.log(`  ✓ Baked static pre-render for / -> dist/index.html (${renderedHtml.length} bytes)`);
     } else {
@@ -43,15 +49,10 @@ async function prerenderBuild() {
         fs.mkdirSync(routeDir, { recursive: true });
       }
 
-      // Write dist/${route}/index.html (standard for clean URLs on all static hosts and servers)
       const routeIndexPath = path.resolve(routeDir, 'index.html');
       fs.writeFileSync(routeIndexPath, renderedHtml, 'utf-8');
 
-      // Also write dist/${route}.html (for hosts that resolve clean URLs without directory)
-      const routeHtmlPath = path.resolve(distDir, `${cleanRoute}.html`);
-      fs.writeFileSync(routeHtmlPath, renderedHtml, 'utf-8');
-
-      console.log(`  ✓ Baked static pre-render for ${route} -> dist/${cleanRoute}/index.html & dist/${cleanRoute}.html`);
+      console.log(`  ✓ Baked static pre-render for ${route} -> dist/${cleanRoute}/index.html`);
     }
   }
 
@@ -59,11 +60,9 @@ async function prerenderBuild() {
   const publicDir = path.resolve(process.cwd(), 'public');
   if (fs.existsSync(path.resolve(publicDir, 'llms.txt'))) {
     fs.copyFileSync(path.resolve(publicDir, 'llms.txt'), path.resolve(distDir, 'llms.txt'));
-    console.log('  ✓ Synced llms.txt to dist/llms.txt');
   }
   if (fs.existsSync(path.resolve(publicDir, 'llms-full.txt'))) {
     fs.copyFileSync(path.resolve(publicDir, 'llms-full.txt'), path.resolve(distDir, 'llms-full.txt'));
-    console.log('  ✓ Synced llms-full.txt to dist/llms-full.txt');
   }
 
   console.log('✅ Static build-time pre-rendering complete!');

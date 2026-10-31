@@ -159,7 +159,6 @@ export const Navbar = () => {
               </div>
 
               <Link to="/services" className={isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory transition-colors duration-300'}>{t('nav.services')}</Link>
-              <Link to="/insights" className={isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory transition-colors duration-300'}>{t('nav.insights')}</Link>
               <Link to="/about" className={isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory transition-colors duration-300'}>{t('nav.about')}</Link>
               
               {isAdmin && (
@@ -292,13 +291,6 @@ export const Navbar = () => {
                 className="text-3xl font-serif font-normal text-brand-blue uppercase"
               >
                 {t('nav.services')}
-              </Link>
-
-              <Link 
-                to="/insights" 
-                className="text-3xl font-serif font-normal text-brand-blue uppercase"
-              >
-                {t('nav.insights')}
               </Link>
               
               <Link 

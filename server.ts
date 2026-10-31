@@ -235,7 +235,7 @@ ${text}
 
         if (!recipientEmail) return null;
 
-        const unsubUrl = `${origin}/insights?unsub=${encodeURIComponent(recipientEmail)}`;
+        const unsubUrl = `${origin}/account?unsub=${encodeURIComponent(recipientEmail)}`;
 
         // Replace template variables (support {{name}}, {{ name }}, {{Name}}, %7B%7Bname%7D%7D, url encoded spaces etc.)
         let personalizedHtml = html;

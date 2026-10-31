@@ -232,7 +232,7 @@ export const NewsletterAdmin = () => {
     if (!html) return '';
     const namePreview = profile?.displayName || profile?.firstName || "Alex Mercer";
     const emailPreview = profile?.email || "subscriber@univue-clients.com";
-    const unsubPreview = `${window.location.origin}/insights?unsub=${encodeURIComponent(emailPreview)}`;
+    const unsubPreview = `${window.location.origin}/account?unsub=${encodeURIComponent(emailPreview)}`;
     return html
       .replace(/\{\{\s*name\s*\}\}/gi, namePreview)
       .replace(/%7[bB]%7[bB](\s*(%20)*)*name(\s*(%20)*)*%7[dD]%7[dD]/gi, namePreview)
@@ -527,7 +527,7 @@ export const NewsletterAdmin = () => {
 
         if (insightsToRender.length > 0) {
           const rowsHTML = insightsToRender.map((ins, index) => {
-            const articleUrl = `${window.location.origin}/insights?id=${ins.id}`;
+            const articleUrl = `${window.location.origin}/properties`;
             const rightImg = index % 2 === 0
               ? "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80"
               : "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=300&q=80";
@@ -685,7 +685,7 @@ export const NewsletterAdmin = () => {
             <h3 class="insight-title">Title of Your Featured Report</h3>
             <p class="insight-desc">Write your key analysis overview, capital flows, or macroeconomic summary of the report here to hook readers. Keep it concise and clinical.</p>
             <div style="margin-top: 15px;">
-              <a href="${window.location.origin}/insights" target="_blank" class="button" style="color: #faf8f5 !important;">Access Full Briefing</a>
+              <a href="${window.location.origin}/properties" target="_blank" class="button" style="color: #faf8f5 !important;">View Properties</a>
             </div>
           </div>
         `;

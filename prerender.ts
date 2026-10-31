@@ -1,10 +1,25 @@
 /**
- * Server-side Pre-rendering Engine for Univue Consultants ApS
- * Generates full semantic HTML, body text, metadata, and structured data
- * for search engines, AI crawlers (Claude, ChatGPT, Perplexity), and initial page loads.
+ * Dynamic Pre-rendering & SEO Engine for Univue Consultants ApS
+ * 
+ * Automatically generates static, semantic HTML and rich SEO metadata
+ * directly from the live application data (Language translations, cities registry,
+ * properties catalog, market corridor theses, and site settings).
  */
 
-export interface PageMetadata {
+import { translations } from './src/contexts/LanguageContext';
+import { cities, CityData } from './src/constants/cities';
+import { properties, Property } from './src/constants/properties';
+import { marketTranslations } from './src/data/marketTranslations';
+import { DEFAULT_PHOTOS } from './src/contexts/SiteSettingsContext';
+
+const BASE_URL = 'https://univueconsultants.com';
+const tEn = translations.en;
+
+function t(key: string): string {
+  return tEn[key] || key;
+}
+
+export interface RouteMetadata {
   title: string;
   description: string;
   keywords: string;
@@ -12,896 +27,77 @@ export interface PageMetadata {
   ogTitle: string;
   ogDescription: string;
   ogType: string;
-  schema: object;
+  ogImage?: string;
+  schema: Record<string, any>;
 }
 
-const BASE_URL = "https://univueconsultants.com";
+// ============================================================================
+// 1. DYNAMIC ROUTE METADATA GENERATOR (Titles, Descriptions, OG, Twitter, Schema)
+// ============================================================================
 
-const sharedNav = `
-<header class="univue-header" role="banner" style="background-color: #0B1F3A; color: #FDFCF5; border-bottom: 1px solid rgba(200, 169, 106, 0.2); position: sticky; top: 0; z-index: 50; padding: 1rem 1.5rem;">
-  <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-    <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: #FDFCF5;">
-      <span style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; letter-spacing: 0.05em; font-weight: 500;">UNIVUE</span>
-      <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; border-left: 1px solid rgba(200, 169, 106, 0.4); padding-left: 0.75rem;">Consultants ApS</span>
-    </a>
-    <nav role="navigation" aria-label="Main Navigation" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-      <a href="/about" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">About Us</a>
-      <a href="/services" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Services</a>
-      <a href="/uae" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">UAE Markets</a>
-      <a href="/india" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">India Expansion</a>
-      <a href="/southeast-asia" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Southeast Asia</a>
-      <a href="/insights" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Research</a>
-      <a href="/market-catalog" style="color: #FDFCF5; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Properties</a>
-      <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 0.5rem 1.25rem; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border: 1px solid #C8A96A;">Schedule Briefing</a>
-    </nav>
-  </div>
-</header>
-`;
-
-const sharedFooter = `
-<footer class="univue-footer" role="contentinfo" style="background-color: #0B1F3A; color: #FDFCF5; border-top: 1px solid rgba(200, 169, 106, 0.2); padding: 4rem 1.5rem 2rem 1.5rem; margin-top: auto;">
-  <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;">
-    <div>
-      <div style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #FDFCF5; margin-bottom: 0.5rem;">UNIVUE CONSULTANTS</div>
-      <p style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">International Cross-Border Advisory</p>
-      <p style="color: rgba(253, 252, 245, 0.7); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-        Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.
-      </p>
-      <p style="color: rgba(253, 252, 245, 0.5); font-size: 0.8rem;">
-        CVR: 43834665 (Danish Business Registration)<br />
-        Registered Office: Copenhagen, Denmark
-      </p>
-    </div>
-    <div>
-      <h3 style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem; font-family: 'Bodoni Moda', serif;">Strategic Corridors</h3>
-      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
-        <li><a href="/uae" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">United Arab Emirates (Dubai, Abu Dhabi, RAK)</a></li>
-        <li><a href="/india" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">India (Bangalore, Gurgaon, Mumbai, Chennai)</a></li>
-        <li><a href="/southeast-asia" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Southeast Asia (Singapore & Regional Gateways)</a></li>
-        <li><a href="/market-catalog" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Advisor's Choice Real Estate Portfolio</a></li>
-        <li><a href="/insights" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Macro Insights & Editorial Analysis</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3 style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem; font-family: 'Bodoni Moda', serif;">Advisory Services</h3>
-      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
-        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Off-Plan Real Estate Sourcing</a></li>
-        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Cross-Border Portfolio Positioning</a></li>
-        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Transaction & Escrow Legal Coordination</a></li>
-        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">India Commercial Workspace & Market Entry</a></li>
-        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Golden Visa & Corporate Structuring</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3 style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem; font-family: 'Bodoni Moda', serif;">Direct Contact</h3>
-      <p style="color: rgba(253, 252, 245, 0.8); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.75rem;">
-        Telephone: <a href="tel:+4526378270" style="color: #C8A96A; text-decoration: none; font-weight: 600;">+45 26 37 82 70</a><br />
-        Email: <a href="mailto:info@univueconsultants.com" style="color: #C8A96A; text-decoration: none;">info@univueconsultants.com</a>
-      </p>
-      <p style="color: rgba(253, 252, 245, 0.7); font-size: 0.85rem; margin-bottom: 1.25rem;">
-        Private briefing sessions available at our Copenhagen headquarters or online via secure executive conference.
-      </p>
-      <a href="/book" style="display: inline-block; background-color: transparent; border: 1px solid #C8A96A; color: #C8A96A; padding: 0.5rem 1rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;">Schedule Consultation</a>
-    </div>
-  </div>
-  <div style="max-width: 80rem; margin: 0 auto; border-top: 1px solid rgba(253, 252, 245, 0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.75rem; color: rgba(253, 252, 245, 0.5);">
-    <p>© ${new Date().getFullYear()} Univue Consultants ApS. All rights reserved. Danish CVR: 43834665.</p>
-    <div style="display: flex; gap: 1.5rem;">
-      <a href="/about" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">About</a>
-      <a href="/services" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">Services</a>
-      <a href="/questionnaire" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">Assessment</a>
-      <a href="/book" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">Briefing</a>
-    </div>
-  </div>
-</footer>
-`;
-
-function renderHomeBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <!-- Hero Section -->
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem 6rem 1.5rem; position: relative; overflow: hidden; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="display: inline-block; color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.25rem; font-weight: 600;">
-        Univue Consultants ApS | International Advisory
-      </span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin: 0 0 1.5rem 0; font-weight: 400; letter-spacing: -0.02em;">
-        Opening Doors Across <span style="color: #C8A96A; font-style: italic;">Borders.</span>
-      </h1>
-      <p style="font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.6; max-width: 48rem; color: rgba(253, 252, 245, 0.85); margin-bottom: 2.5rem; font-weight: 300;">
-        Turnkey cross-border coordination supported through strategic real estate partner networks, including RE/MAX-linked collaborations and Tier-1 developers across the UAE, India, and Southeast Asian markets.
-      </p>
-      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 1rem 2.25rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-          Schedule Briefing
-        </a>
-        <a href="/market-catalog" style="border: 1px solid rgba(200, 169, 106, 0.5); color: #C8A96A; padding: 1rem 2.25rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-          Explore Opportunities
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Key Corridors Overview -->
-  <section style="max-width: 80rem; margin: -2.5rem auto 4rem auto; padding: 0 1.5rem; position: relative; z-index: 10;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 01</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; margin: 0.5rem 0 1rem 0; color: #0B1F3A;">United Arab Emirates</h2>
-        <p style="color: #4b5563; line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
-          Dubai, Abu Dhabi, and Ras Al Khaimah (Al Marjan Island). Strategic off-plan luxury residences, 0% personal tax environment, and sustained rental demand backed by Tier-1 developers.
-        </p>
-        <a href="/uae" style="color: #0B1F3A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
-          Explore UAE Markets →
-        </a>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 02</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; margin: 0.5rem 0 1rem 0; color: #0B1F3A;">India Expansion</h2>
-        <p style="color: #4b5563; line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
-          Bangalore IT Hub, Gurgaon Cyber City, and Mumbai BKC. Turnkey market entry, Grade-A commercial setups, talent acquisition coordination, and FDI compliance for European enterprises.
-        </p>
-        <a href="/india" style="color: #0B1F3A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
-          Explore India Expansion →
-        </a>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 03</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; margin: 0.5rem 0 1rem 0; color: #0B1F3A;">Southeast Asia</h2>
-        <p style="color: #4b5563; line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
-          Singapore family office and treasury hubs, Bangkok prime residential, and high-growth ASEAN capital corridors connecting Europe, the Middle East, and Asia.
-        </p>
-        <a href="/southeast-asia" style="color: #0B1F3A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
-          Explore Southeast Asia →
-        </a>
-      </article>
-    </div>
-  </section>
-
-  <!-- Featured Investment Opportunities -->
-  <section style="max-width: 80rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="text-align: center; margin-bottom: 3.5rem;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Advisors' Selection</span>
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2rem, 3.5vw, 3rem); color: #0B1F3A; margin: 0.5rem 0;">
-        Featured Cross-Border Assets
-      </h2>
-      <p style="color: #6b7280; font-size: 1.1rem; max-width: 36rem; margin: 0 auto; font-weight: 300;">
-        Curated institutional and private client investments with pre-negotiated terms and strong growth theses.
-      </p>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
-      <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; border-top: 3px solid #C8A96A;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Dubai, UAE • Emaar Properties</span>
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; margin: 0.5rem 0; color: #0B1F3A;">The Oasis by Emaar</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          Strategic luxury expansion with limited waterfront villas. Ideal for capital preservation, strong secondary liquidity, and high rental demand from international high-net-worth families.
-        </p>
-        <div style="display: flex; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 1rem; font-size: 0.9rem; font-weight: 600;">
-          <span style="color: #0B1F3A;">Asset Class: Luxury Waterfront</span>
-          <span style="color: #C8A96A;">From $1.2M</span>
-        </div>
-      </div>
-
-      <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; border-top: 3px solid #C8A96A;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Ras Al Khaimah, UAE • Marjan / Wynn</span>
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; margin: 0.5rem 0; color: #0B1F3A;">Wynn Residences, Al Marjan</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          First-mover advantage in the GCC's only integrated gaming and luxury resort destination. Exceptional upside potential driven by multi-billion infrastructure completion.
-        </p>
-        <div style="display: flex; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 1rem; font-size: 0.9rem; font-weight: 600;">
-          <span style="color: #0B1F3A;">Asset Class: Branded Hospitality</span>
-          <span style="color: #C8A96A;">From $850k</span>
-        </div>
-      </div>
-
-      <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; border-top: 3px solid #C8A96A;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Bangalore, India • Prestige Group</span>
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; margin: 0.5rem 0; color: #0B1F3A;">North Bangalore Commercial Tech Hub</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          Grade-A commercial workspace in India's leading technology corridor. High pre-leasing velocity by multinational technology leaders securing institutional cash flows.
-        </p>
-        <div style="display: flex; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 1rem; font-size: 0.9rem; font-weight: 600;">
-          <span style="color: #0B1F3A;">Asset Class: Grade-A Commercial</span>
-          <span style="color: #C8A96A;">From $500k</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Partner Developers & Strategic Network -->
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 4.5rem 1.5rem; margin-top: 4rem;">
-    <div style="max-width: 80rem; margin: 0 auto; text-align: center;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Direct Developer Access</span>
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); margin: 0.5rem 0 2rem 0;">
-        Tier-1 Institutional Alliances
-      </h2>
-      <p style="color: rgba(253, 252, 245, 0.75); font-size: 1.05rem; max-width: 44rem; margin: 0 auto 3rem auto; line-height: 1.6;">
-        Univue provides European clients direct, priority allocations and pre-launch pricing through strategic relationships with leading master developers and brokerage alliances:
-      </p>
-      <div style="display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap; opacity: 0.9;">
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">EMAAR</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">SOBHA REALTY</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">DAMAC</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">BINGHATTI</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">AZIZI</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">WASL</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">PRESTIGE GROUP</span>
-        <span style="font-family: 'Bodoni Moda', serif; font-size: 1.4rem; letter-spacing: 0.15em;">DLF LIMITED</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Who We Work With -->
-  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
-    <div style="text-align: center; margin-bottom: 3.5rem;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Client Engagement</span>
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2rem, 3.5vw, 3rem); color: #0B1F3A; margin: 0.5rem 0;">
-        Who We Work With
-      </h2>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-      <div style="background: #ffffff; padding: 2rem; border-left: 3px solid #0B1F3A; border: 1px solid #e5e7eb;">
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.3rem; color: #0B1F3A; margin-bottom: 0.75rem;">Private Wealth & Investors</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          European high-net-worth individuals and family offices seeking capital diversification, tax efficiency, and UAE residency through real estate acquisitions.
-        </p>
-      </div>
-
-      <div style="background: #ffffff; padding: 2rem; border-left: 3px solid #0B1F3A; border: 1px solid #e5e7eb;">
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.3rem; color: #0B1F3A; margin-bottom: 0.75rem;">Expanding Tech & Enterprise</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          Nordic and European businesses establishing engineering hubs and operational subsidiaries in Bangalore and Delhi NCR with compliant legal structures.
-        </p>
-      </div>
-
-      <div style="background: #ffffff; padding: 2rem; border-left: 3px solid #0B1F3A; border: 1px solid #e5e7eb;">
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.3rem; color: #0B1F3A; margin-bottom: 0.75rem;">International Entrepreneurs</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          Founders expanding into GCC free zones (DIFC, DMCC, ADGM), requiring corporate banking setup, Golden Visa facilitation, and local commercial leases.
-        </p>
-      </div>
-
-      <div style="background: #ffffff; padding: 2rem; border-left: 3px solid #0B1F3A; border: 1px solid #e5e7eb;">
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.3rem; color: #0B1F3A; margin-bottom: 0.75rem;">Family Offices & Groups</h3>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          Institutional-grade portfolio allocation, currency risk mitigation, and commercial asset acquisition across cross-border high-growth corridors.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Executive CTA Briefing Banner -->
-  <section style="background-color: #FDFCF5; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 5rem 1.5rem; text-align: center;">
-    <div style="max-width: 48rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Initiate Discussion</span>
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2rem, 3.5vw, 3rem); color: #0B1F3A; margin: 0.75rem 0 1.5rem 0;">
-        Schedule Your Private Strategic Briefing
-      </h2>
-      <p style="color: #4b5563; font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
-        Speak directly with an executive advisor in Copenhagen or connect virtually to evaluate specific asset allocations, corporate expansion feasibility, or market entry timelines.
-      </p>
-      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
-          Book Consultation
-        </a>
-        <a href="/questionnaire" style="border: 1px solid #0B1F3A; color: #0B1F3A; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
-          Take Investor Assessment
-        </a>
-      </div>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderAboutBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">About Univue Consultants ApS</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Leadership & Cross-Border Mission
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 48rem; margin: 0 auto; line-height: 1.6; font-style: italic;">
-        "Bridging the strategic gap for European capital and expanding businesses venturing into the high-growth markets of the UAE, India, and Southeast Asia."
-      </p>
-    </div>
-  </section>
-
-  <!-- Mission & Thesis -->
-  <section style="max-width: 72rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem; align-items: center;">
-      <div>
-        <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Our Purpose</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 2.2rem; color: #0B1F3A; margin: 0.5rem 0 1.5rem 0;">
-          Navigating Complexity with Danish Governance & Local Execution
-        </h2>
-        <p style="color: #4b5563; font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.25rem;">
-          Cross-border expansion into the UAE and South Asia represents immense financial upside, but it is accompanied by distinct regulatory, cultural, and transactional complexities. Traditional brokerages prioritize single asset sales, while conventional management consultancies lack localized real estate execution.
-        </p>
-        <p style="color: #4b5563; font-size: 1.05rem; line-height: 1.7;">
-          Univue Consultants ApS provides an independent, turnkey fiduciary bridge. Registered in Denmark (CVR: 43834665), we combine rigorous Nordic compliance and investor protection with established, senior-level relationships across Dubai, Abu Dhabi, Bangalore, and Singapore.
-        </p>
-      </div>
-
-      <div style="background: #ffffff; padding: 3rem; border: 1px solid #e5e7eb; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 4px solid #C8A96A;">
-        <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">Core Values</h3>
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.5rem;">
-          <li>
-            <strong style="color: #0B1F3A; font-size: 1.05rem; display: block; margin-bottom: 0.25rem;">1. Absolute Independence</strong>
-            <span style="color: #6b7280; font-size: 0.95rem; line-height: 1.5;">We operate on behalf of our clients, not single property developers, providing objective due diligence and transparent asset valuations.</span>
-          </li>
-          <li>
-            <strong style="color: #0B1F3A; font-size: 1.05rem; display: block; margin-bottom: 0.25rem;">2. Turnkey Accountability</strong>
-            <span style="color: #6b7280; font-size: 0.95rem; line-height: 1.5;">From initial thesis formulation to escrow signing, legal incorporation, and operational onboarding, we steward the entire lifecycle.</span>
-          </li>
-          <li>
-            <strong style="color: #0B1F3A; font-size: 1.05rem; display: block; margin-bottom: 0.25rem;">3. High-Discipline Corridors</strong>
-            <span style="color: #6b7280; font-size: 0.95rem; line-height: 1.5;">Specialized focus on high-conviction hubs: UAE tax-free wealth preservation and Indian Grade-A commercial scaling.</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Leadership -->
-  <section style="background-color: #ffffff; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 5rem 1.5rem;">
-    <div style="max-width: 60rem; margin: 0 auto; text-align: center;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Executive Leadership</span>
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: 2.5rem; color: #0B1F3A; margin: 0.5rem 0 2rem 0;">
-        Nimmi Schou
-      </h2>
-      <p style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; margin-bottom: 1.5rem;">
-        Founder & Managing Partner
-      </p>
-      <p style="color: #4b5563; font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
-        With deep experience guiding European enterprises and high-net-worth investors through cross-border real estate and operational transitions, Nimmi leads Univue's international client engagements. Her focus is on structuring bespoke capital allocations and ensuring seamless alignment between Danish regulatory standards and dynamic Middle Eastern and Indian growth corridors.
-      </p>
-      <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-        Request Direct Meeting
-      </a>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderServicesBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Tailored Cross-Border Advisory</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Our Core Advisory Pillars
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        From premier off-plan real estate allocations in Dubai to corporate operational setup in Bangalore, our services are designed for turnkey execution.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 76rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem;">
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">1. Off-Plan Real Estate Sourcing</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Direct developer allocations and pre-launch access to premium residential and commercial developments across Dubai, Abu Dhabi, and Ras Al Khaimah.
-        </p>
-        <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
-          <li>Tier-1 developers: Emaar, Sobha, Damac, Binghatti, Aldar</li>
-          <li>Independent valuation and cash flow modeling</li>
-          <li>Escrow account verification and milestone oversight</li>
-        </ul>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">2. Cross-Border Portfolio Positioning</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Strategic wealth diversification for European clients seeking hard asset positioning outside the Eurozone and exposure to USD-pegged economies.
-        </p>
-        <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
-          <li>Currency risk mitigation and inflation hedging</li>
-          <li>Long-term vs. short-term leasing framework strategies</li>
-          <li>Exit liquidity planning and secondary market resale management</li>
-        </ul>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">3. Transaction & Legal Coordination</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Fiduciary representation throughout cross-border acquisitions to protect European capital under local UAE Land Department (DLD) and RERA frameworks.
-        </p>
-        <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
-          <li>Power of Attorney (PoA) and remote transaction execution</li>
-          <li>Sales & Purchase Agreement (SPA) contract due diligence</li>
-          <li>Escrow payment verification and Title Deed handover registration</li>
-        </ul>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">4. India Corporate Expansion</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Comprehensive market entry for European technology and manufacturing firms establishing operational and engineering centers in India.
-        </p>
-        <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
-          <li>Bangalore, Gurgaon, and Mumbai ecosystem evaluation</li>
-          <li>Wholly-owned subsidiary structuring and FDI compliance</li>
-          <li>Senior leadership recruitment coordination and local vendor audit</li>
-        </ul>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">5. Commercial Real Estate & Workspace</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Grade-A commercial office acquisition, lease negotiation, and managed infrastructure solutions in primary business hubs.
-        </p>
-        <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
-          <li>Office asset sourcing with prestige developers (DLF, Prestige, Embassy)</li>
-          <li>Tenant-favorable lease structuring and lock-in term advisory</li>
-          <li>Fit-out project management and connectivity infrastructure</li>
-        </ul>
-      </article>
-
-      <article style="background: #ffffff; padding: 2.5rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin-bottom: 1rem;">6. Golden Visa & Free Zone Incorporation</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Turnkey residency and corporate licensing facilitation in premier UAE jurisdictions including DIFC, DMCC, and ADGM.
-        </p>
-        <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
-          <li>10-Year UAE Golden Visa processing via property investment ($545k+)</li>
-          <li>Free Zone corporate registration and tax residency certification</li>
-          <li>Corporate and private banking onboarding support</li>
-        </ul>
-      </article>
-    </div>
-
-    <div style="text-align: center; margin-top: 4rem;">
-      <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-        Discuss Your Advisory Scope
-      </a>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderUAEBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">GCC Growth Corridor</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        United Arab Emirates Investment Markets
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Dubai, Abu Dhabi, and Ras Al Khaimah. Prime freehold districts, 0% personal income tax, USD-pegged stability, and 10-year Golden Visa residency for European capital.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 76rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Global Megacity Hub</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Dubai Prime Districts</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Downtown Dubai, Palm Jumeirah, Dubai Hills Estate, Business Bay, and Dubai Creek Harbour. Unmatched liquidity, world-class infrastructure, and resilient short- and long-term rental demand from international professionals and HNWI relocations.
-        </p>
-        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Segment Focus: Prime Freehold & Urban Waterfront</p>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Cultural & Sovereign Capital</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Abu Dhabi (Saadiyat & Yas)</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Saadiyat Cultural District (Louvre Abu Dhabi, Guggenheim, Zayed National Museum) and Al Maryah Island Financial Free Zone. Strict supply caps and high sovereign institutional backing ensure long-term capital preservation.
-        </p>
-        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Segment Focus: Cultural & Sovereign Core Assets</p>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Gaming & Tourism Frontier</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Ras Al Khaimah (RAK)</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Al Marjan Island, home to the multi-billion-dollar Wynn Integrated Resort and gaming center. Projected to create dramatic tourism inflows and land value appreciation, representing significant long-term leisure positioning in the UAE.
-        </p>
-        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Segment Focus: Integrated Hospitality & Coastal Development</p>
-      </article>
-    </div>
-
-    <!-- Golden Visa Box -->
-    <div style="background: #ffffff; border: 1px solid rgba(200, 169, 106, 0.4); padding: 3rem; margin-top: 3rem; border-left: 4px solid #C8A96A;">
-      <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: #0B1F3A; margin-bottom: 0.75rem;">
-        UAE 10-Year Golden Visa via Property Acquisition
-      </h3>
-      <p style="color: #4b5563; font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem;">
-        Purchasing real estate valued at 2,000,000 AED (~$545,000 USD / ~3.8M DKK) or greater qualifies investors and their immediate families for the renewable 10-year UAE Golden Visa. Benefits include 100% foreign ownership, freedom to reside abroad without visa cancellation, and access to the UAE banking and corporate network. Univue provides end-to-end processing.
-      </p>
-      <a href="/book" style="color: #0B1F3A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
-        Inquire About Golden Visa Portfolios →
-      </a>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderIndiaBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">High-Growth Operational Expansion</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        India Operations & Corporate Advisory
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Empowering European enterprises to establish engineering capabilities, tech delivery centers, and Grade-A commercial footprints across Bangalore, Gurgaon, Mumbai, and Chennai.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 76rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Silicon Valley of Asia</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Bangalore Tech Corridor</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Outer Ring Road, North Bangalore, and Whitefield. The epicentre of global engineering centers (GCCs) housing over 400 Fortune 500 tech hubs. High availability of Tier-1 software engineering talent and specialized commercial parks.
-        </p>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Corporate Headquarters</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Gurgaon / Delhi NCR</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Cyber City, Golf Course Extension Road, and Aerocity. The premier address for multinational corporate headquarters, professional consulting firms, and central government liaison teams.
-        </p>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Financial Capital</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Mumbai (BKC)</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Bandra Kurla Complex (BKC) and South Mumbai. The nucleus of India's capital markets, private equity funds, and cross-border investment banking institutions.
-        </p>
-      </article>
-    </div>
-
-    <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 3rem; margin-top: 3rem;">
-      <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: #0B1F3A; margin-bottom: 1rem;">
-        Turnkey Market Entry Framework
-      </h3>
-      <p style="color: #4b5563; font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem;">
-        Expanding into India without local presence leads to prolonged setup delays and vendor misalignments. Univue oversees the entire expansion roadmap: company incorporation (Pvt Ltd / Branch Office), RBI and FDI filings, commercial workspace leasing with Prestige and DLF, and senior leadership talent vetting.
-      </p>
-      <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-        Schedule India Briefing
-      </a>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderSoutheastAsiaBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">ASEAN Financial Corridors</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Southeast Asia Growth Markets
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Connecting European private capital and enterprise operations with high-growth ASEAN economic centers: Singapore treasury hubs, Bangkok prime residential, and regional trade corridors.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 76rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Sovereign Wealth & Family Office Hub</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Singapore</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          Global regulatory benchmark, AAA credit rating, Section 13O / 13U family office tax incentive structures, and regional treasury headquarters for cross-border Asian expansion.
-        </p>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Lifestyle & Regional Commercial Hub</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Bangkok & Thailand</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          Prime luxury residential in Sukhumvit and Sathorn, dynamic regional tourism, and competitive corporate operational headquarters for ASEAN market distribution.
-        </p>
-      </article>
-    </div>
-
-    <div style="text-align: center; margin-top: 4rem;">
-      <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-        Inquire on Southeast Asian Portfolios
-      </a>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderInsightsBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Macroeconomic Research & Intelligence</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Market Insights & Policy Briefs
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Quantitative analysis, real estate valuation benchmarking, tax treaty developments, and macroeconomic commentary for international asset allocators.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 76rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem;">
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Macro Analysis • UAE</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">
-          Dubai Market Dynamics: Prime Residential vs. Commercial Growth
-        </h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-          An examination of prime district growth trends across Downtown Dubai, Dubai Marina, and Palm Jumeirah in relation to secondary market liquidity and corporate tax implementations.
-        </p>
-        <span style="color: #6b7280; font-size: 0.85rem;">Published by Univue Research Desk</span>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Policy & Taxation • Europe / GCC</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">
-          European Cross-Border Wealth Relocation and Golden Visa Frameworks
-        </h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-          Navigating Danish and European exit taxation regimes when acquiring UAE real estate assets or establishing holding vehicles in DIFC and ADGM.
-        </p>
-        <span style="color: #6b7280; font-size: 0.85rem;">Published by Univue Research Desk</span>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Market Expansion • India</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">
-          Grade-A Commercial Absorption in Bangalore: Why Tech GCCs Drive Rents
-        </h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-          Why multinational engineering demand continues to generate sustained commercial occupancy and low vacancy rates in Prestige and DLF technology corridors.
-        </p>
-        <span style="color: #6b7280; font-size: 0.85rem;">Published by Univue Research Desk</span>
-      </article>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderCatalogBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Curated Properties & Assets</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Exclusive Market Catalog
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Advisor's choice off-plan developments, prime luxury villas, penthouses, and Grade-A commercial workspaces across Dubai, Abu Dhabi, RAK, and Bangalore.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 76rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Dubai, UAE • Emaar Properties</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0;">The Oasis by Emaar</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          Waterfront luxury mansions within an exclusive master-planned community.
-        </p>
-        <p style="font-weight: 700; color: #0B1F3A;">Price: From $1,200,000 USD</p>
-        <a href="/book" style="display: inline-block; margin-top: 1rem; color: #C8A96A; font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: 0.8rem;">Inquire with Advisor →</a>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Abu Dhabi, UAE • Aldar</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0;">Saadiyat Lagoons</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          Cultural district luxury villas adjacent to the Louvre Abu Dhabi. Strong institutional backing.
-        </p>
-        <p style="font-weight: 700; color: #0B1F3A;">Price: From $1,800,000 USD</p>
-        <a href="/book" style="display: inline-block; margin-top: 1rem; color: #C8A96A; font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: 0.8rem;">Inquire with Advisor →</a>
-      </article>
-
-      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem;">
-        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Ras Al Khaimah, UAE • Marjan</span>
-        <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0;">Wynn Residences, Al Marjan</h2>
-        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          Integrated resort luxury residences offering 12%+ capital growth. Exclusive casino proximity.
-        </p>
-        <p style="font-weight: 700; color: #0B1F3A;">Price: From $850,000 USD</p>
-        <a href="/book" style="display: inline-block; margin-top: 1rem; color: #C8A96A; font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: 0.8rem;">Inquire with Advisor →</a>
-      </article>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderBookingBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Executive Consultation</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Schedule Your Strategic Briefing
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
-        Book a confidential 30-minute private consultation with an international advisory partner in Copenhagen or via secure video conference.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 50rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center;">
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: #0B1F3A; margin-bottom: 1rem;">
-        Direct Executive Access
-      </h2>
-      <p style="color: #4b5563; font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">
-        Whether evaluating an off-plan property purchase in Dubai, exploring the UAE 10-Year Golden Visa, or structuring an operational subsidiary in Bangalore, our senior advisors are at your service.
-      </p>
-      
-      <div style="background: #FDFCF5; padding: 2rem; border: 1px solid #e5e7eb; margin-bottom: 2rem; text-align: left;">
-        <h3 style="font-size: 1.1rem; color: #0B1F3A; margin-bottom: 0.75rem; font-weight: 700;">Direct Phone & Office:</h3>
-        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
-          <strong>Phone:</strong> <a href="tel:+4526378270" style="color: #0B1F3A; font-weight: 600;">+45 26 37 82 70</a>
-        </p>
-        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
-          <strong>Email:</strong> <a href="mailto:info@univueconsultants.com" style="color: #0B1F3A;">info@univueconsultants.com</a>
-        </p>
-        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0;">
-          <strong>Copenhagen HQ:</strong> Univue Consultants ApS, Copenhagen, Denmark (CVR: 43834665)
-        </p>
-      </div>
-
-      <a href="tel:+4526378270" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-        Call +45 26 37 82 70
-      </a>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-function renderQuestionnaireBody(): string {
-  return `
-${sharedNav}
-<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Strategic Assessment</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        Investor Profile & Expansion Evaluation
-      </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
-        Complete our confidential 2-minute strategic questionnaire to receive customized market models, allocation frameworks, and tailored asset selections.
-      </p>
-    </div>
-  </section>
-
-  <section style="max-width: 50rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin-bottom: 1.5rem; text-align: center;">
-        Assessment Framework
-      </h2>
-      <ol style="color: #4b5563; font-size: 1rem; line-height: 1.8; padding-left: 1.5rem; margin-bottom: 2rem;">
-        <li><strong>Primary Investment Objective:</strong> Capital preservation, prime residential allocation, Golden Visa residency, or corporate commercial expansion.</li>
-        <li><strong>Target Corridor:</strong> United Arab Emirates (Dubai, Abu Dhabi, RAK), India (Bangalore, Gurgaon), or Southeast Asia (Singapore).</li>
-        <li><strong>Investment Scale:</strong> Sourcing range starting from $300,000 USD to institutional portfolios of $10M+.</li>
-        <li><strong>Timeline & Governance:</strong> Immediate off-plan allocation, scheduled site inspection in Dubai, or phased multi-quarter corporate setup.</li>
-      </ol>
-      <div style="text-align: center;">
-        <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-          Initiate Briefing Directly
-        </a>
-      </div>
-    </div>
-  </section>
-</main>
-${sharedFooter}
-`;
-}
-
-export function getRouteMetadata(pathname: string): PageMetadata {
+export function getRouteMetadata(pathname: string): RouteMetadata {
   const cleanPath = pathname.split('?')[0].replace(/\/+$/, '') || '/';
 
+  // Dynamic City Microsite Route (/markets/:cityId)
   if (cleanPath.startsWith('/markets/')) {
-    const cityId = cleanPath.split('/markets/')[1]?.toLowerCase();
-    const cityNames: Record<string, string> = {
-      dubai: 'Dubai',
-      'abu-dhabi': 'Abu Dhabi',
-      'ras-al-khaimah': 'Ras Al Khaimah',
-      bangalore: 'Bangalore',
-      gurgaon: 'Gurgaon',
-      mumbai: 'Mumbai',
-      singapore: 'Singapore',
-      bangkok: 'Bangkok'
-    };
-    const cityName = cityNames[cityId] || (cityId ? cityId.charAt(0).toUpperCase() + cityId.slice(1) : 'Market');
-    return {
-      title: `${cityName} Real Estate & Market Analysis | Univue Consultants ApS`,
-      description: `Institutional analysis, regulatory framework, and investment advisory for ${cityName} by Univue Consultants.`,
-      keywords: `${cityName} real estate, ${cityName} property market, ${cityName} corporate expansion, Univue ${cityName}`,
-      canonical: `${BASE_URL}${cleanPath}`,
-      ogTitle: `${cityName} Real Estate & Market Analysis | Univue Consultants`,
-      ogDescription: `Institutional analysis, regulatory framework, and investment advisory for ${cityName}.`,
-      ogType: "website",
-      schema: {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": `${cityName} Market Insights | Univue Consultants`,
-        "description": `Market analysis and advisory for ${cityName}.`
-      }
-    };
+    const rawId = cleanPath.replace('/markets/', '').toLowerCase();
+    const cityId = rawId === 'ras-al-khaimah' ? 'rak' : (rawId === 'rak' ? 'rak' : rawId);
+    const city = cities.find(c => c.id === cityId || (cityId === 'rak' && c.id === 'rak')) 
+      || cities.find(c => c.id === rawId);
+    
+    const translationKey = rawId === 'rak' ? 'ras-al-khaimah' : rawId;
+    const localized = marketTranslations.en[translationKey] || (city ? marketTranslations.en[city.id] : null);
+
+    if (city) {
+      const cityName = city.name;
+      const thesis = localized?.desc || city.thesis;
+      return {
+        title: `${cityName} Real Estate & Market Analysis | Univue Consultants`,
+        description: thesis.slice(0, 155),
+        keywords: `${cityName} property investment, ${cityName} commercial real estate, ${city.country} market entry, ${city.targetBuyer}`,
+        canonical: `${BASE_URL}/markets/${city.id}`,
+        ogTitle: `${cityName} Real Estate & Market Analysis | Univue Consultants`,
+        ogDescription: thesis.slice(0, 155),
+        ogType: "article",
+        ogImage: city.image || `${BASE_URL}/assets/images/logo.png`,
+        schema: {
+          "@context": "https://schema.org",
+          "@type": "Place",
+          "name": cityName,
+          "description": thesis,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": cityName,
+            "addressCountry": city.country
+          }
+        }
+      };
+    }
   }
 
+  // Core Static Routes
   switch (cleanPath) {
     case '/about':
       return {
-        title: "About Us | Leadership & Cross-Border Advisory | Univue Consultants ApS",
-        description: "Learn about Univue Consultants ApS, our founder Nimmi Schou, mission, and turnkey cross-border advisory connecting European capital with UAE and India.",
-        keywords: "Univue Consultants, Nimmi Schou, Copenhagen cross border advisory, Dubai real estate advisory, India business expansion, Danish CVR 43834665",
+        title: "About Us | Leadership & Mission | Univue Consultants ApS",
+        description: "Univue Consultants simplifies international property investment. Discover our leadership, mission, Hornslet headquarters, and European cross-border advisory.",
+        keywords: "Nimmi Schou, Univue Consultants leadership, international property advisory, Denmark cross border consulting",
         canonical: `${BASE_URL}/about`,
-        ogTitle: "About Univue Consultants | Leadership & Cross-Border Advisory",
-        ogDescription: "Turnkey international advisory firm specializing in Dubai investment and India operational expansion for European clients.",
-        ogType: "article",
+        ogTitle: "About Us | Leadership & Mission | Univue Consultants ApS",
+        ogDescription: "Discover how Univue simplifies international property acquisitions through strategic partners across UAE, India, and Southeast Asia.",
+        ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "AboutPage",
           "name": "About Univue Consultants ApS",
-          "description": "Leadership, mission, and cross-border advisory thesis of Univue Consultants ApS.",
+          "description": t('about.mission.quote'),
           "mainEntity": {
             "@type": "Organization",
             "name": "Univue Consultants ApS",
-            "url": BASE_URL,
-            "logo": `${BASE_URL}/logo.png`,
             "founder": {
               "@type": "Person",
               "name": "Nimmi Schou",
-              "jobTitle": "Managing Partner & Founder"
+              "jobTitle": "Founder & Director"
             }
           }
         }
@@ -909,89 +105,80 @@ export function getRouteMetadata(pathname: string): PageMetadata {
 
     case '/services':
       return {
-        title: "Advisory Services | Dubai Real Estate & India Expansion | Univue Consultants",
-        description: "Explore Univue Consultants advisory services: off-plan property sourcing, cross-border portfolio positioning, escrow legal coordination, and India corporate entry.",
-        keywords: "Dubai off-plan sourcing, UAE Golden Visa advisory, India market entry, corporate expansion Bangalore, escrow coordination, cross-border wealth",
+        title: "Specialist Advisory Services | Univue Consultants ApS",
+        description: "Turnkey property sourcing, portfolio positioning, Tier-1 developer access, financing coordination, legal framework, and transaction management.",
+        keywords: "off-plan sourcing, legal framework advisory, cross-border financing, property acquisition coordination",
         canonical: `${BASE_URL}/services`,
-        ogTitle: "Advisory Services | Univue Consultants ApS",
-        ogDescription: "Turnkey advisory services: off-plan property sourcing, transaction legal coordination, and Indian operational expansion.",
+        ogTitle: "Specialist Advisory Services | Univue Consultants ApS",
+        ogDescription: "From off-plan property sourcing to legal and financing coordination for cross-border investments.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "Service",
-          "name": "International Real Estate & Corporate Expansion Advisory",
+          "name": "Cross-Border Property & Investment Advisory",
           "provider": {
             "@type": "Organization",
-            "name": "Univue Consultants ApS",
-            "url": BASE_URL
+            "name": "Univue Consultants ApS"
           },
-          "serviceType": "Investment & Corporate Advisory"
+          "serviceType": [
+            "Off-plan Property Sourcing",
+            "Investment Strategy & Portfolio Positioning",
+            "Access to Vetted Projects",
+            "Financing Coordination",
+            "Legal Framework Advisory",
+            "Transaction Coordination"
+          ]
         }
       };
 
     case '/uae':
       return {
-        title: "UAE Investment Markets | Dubai, Abu Dhabi & RAK Properties | Univue Consultants",
-        description: "Turnkey real estate advisory in Dubai, Abu Dhabi, and Ras Al Khaimah (RAK). 0% tax, prime freehold opportunities, and Golden Visa pathways.",
-        keywords: "Dubai investment, Emaar properties, Palm Jumeirah villas, Ras Al Khaimah Wynn, Abu Dhabi Saadiyat, UAE Golden Visa, freehold real estate",
+        title: "UAE Markets & Property Opportunities | Univue Consultants",
+        description: "Navigate Dubai, Abu Dhabi, and Ras Al Khaimah (Al Marjan Island). Strategic off-plan luxury residences, 0% personal tax, and Tier-1 developer pipelines.",
+        keywords: "Dubai property investment, Abu Dhabi real estate, Ras Al Khaimah Al Marjan Island, UAE Golden Visa, Emaar off-plan",
         canonical: `${BASE_URL}/uae`,
-        ogTitle: "UAE Investment Markets | Dubai, Abu Dhabi & RAK Real Estate",
-        ogDescription: "Explore premier real estate investments and strategic advisory in Dubai, Abu Dhabi, and Ras Al Khaimah with Univue Consultants.",
+        ogTitle: "UAE Markets & Property Opportunities | Univue Consultants",
+        ogDescription: "Advisory layer for international investors navigating Dubai, Abu Dhabi, and Ras Al Khaimah.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "name": "UAE Investment Markets | Univue Consultants",
-          "description": "Strategic advisory for Dubai, Abu Dhabi, and Ras Al Khaimah property investments."
+          "name": "UAE Real Estate & Strategic Markets",
+          "description": t('uae.hero.desc')
         }
       };
 
     case '/india':
       return {
-        title: "India Operational Expansion | Bangalore, Gurgaon & Mumbai | Univue Consultants",
-        description: "Scale your business operations in India. Turnkey coordination for Grade-A tech offices, subsidiary incorporation, labor compliance, and FDI regulations.",
-        keywords: "India market entry, Bangalore office, FDI compliance, subsidiary incorporation, Grade-A tech offices, corporate expansion",
+        title: "India Markets & Corporate Expansion | Univue Consultants",
+        description: "Commercial real estate sourcing, Tech GCC setups, Bangalore IT corridor, Mumbai BKC, and FDI structuring for European enterprises.",
+        keywords: "India corporate expansion, Bangalore Grade-A office, Mumbai BKC office space, India FDI real estate, RERA standard",
         canonical: `${BASE_URL}/india`,
-        ogTitle: "India Operational Expansion | Bangalore, Gurgaon & Mumbai",
-        ogDescription: "Turnkey advisory for European enterprises scaling into Bangalore, Gurgaon, and Mumbai tech corridors.",
+        ogTitle: "India Markets & Corporate Expansion | Univue Consultants",
+        ogDescription: "Scale your business operationally in the world's fastest-growing major economy with Univue Consultants.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "name": "India Operational Expansion Advisory",
-          "description": "Comprehensive corporate expansion advisory in high-growth Indian commercial hubs."
+          "name": "India Corporate Expansion & Commercial Markets",
+          "description": t('india.hero.desc')
         }
       };
 
     case '/southeast-asia':
       return {
-        title: "Southeast Asia Markets | Singapore & Regional Gateways | Univue Consultants",
-        description: "Strategic advisory connecting European capital with ASEAN economic centers: Singapore family office structuring, Bangkok prime real estate, and regional corridors.",
-        keywords: "Singapore family office, Bangkok real estate, Southeast Asia cross border investment, ASEAN wealth management",
+        title: "Southeast Asia Markets | Singapore, Thailand, Bali | Univue",
+        description: "Wealth preservation in Singapore Grade-A commercial, luxury hospitality villas in Indonesia, and premium urban residential in Thailand.",
+        keywords: "Singapore real estate safe haven, Bali resort villas, Thailand luxury property, Southeast Asia commercial assets",
         canonical: `${BASE_URL}/southeast-asia`,
-        ogTitle: "Southeast Asia Markets | Singapore & Regional Gateways",
-        ogDescription: "Connecting European capital with high-growth ASEAN economic centers with Univue Consultants.",
+        ogTitle: "Southeast Asia Markets | Singapore, Thailand, Bali | Univue",
+        ogDescription: "Dual-track regional strategy: institutional safety in Singapore and high-growth hospitality in Thailand & Indonesia.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "name": "Southeast Asia Investment Markets"
-        }
-      };
-
-    case '/insights':
-      return {
-        title: "Market Insights & Macroeconomic Research | Univue Consultants",
-        description: "Quarterly intelligence, cross-border commercial real estate analysis, India market trends, and policy developments by Univue Consultants.",
-        keywords: "Dubai market analysis, India real estate research, UAE tax update, cross-border macroeconomic intelligence, Univue Insights",
-        canonical: `${BASE_URL}/insights`,
-        ogTitle: "Market Insights & Macroeconomic Research | Univue Consultants",
-        ogDescription: "Authoritative analysis and commercial real estate research across Dubai, India, and Southeast Asia.",
-        ogType: "website",
-        schema: {
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Univue Market Insights & Research Desk"
+          "name": "Southeast Asia Investment Markets",
+          "description": t('sea.hero.desc')
         }
       };
 
@@ -999,50 +186,62 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     case '/properties':
     case '/catalog':
       return {
-        title: "Market Catalog & Curated Properties | Univue Consultants ApS",
-        description: "Browse curated advisor-choice off-plan properties and commercial assets in Dubai, Abu Dhabi, RAK, and Bangalore with verified project credentials.",
+        title: "Exclusive Property Catalog & Assets | Univue Consultants",
+        description: "Curated portfolio of institutional-grade properties across Dubai, Abu Dhabi, RAK, and Bangalore with verified developer credentials.",
         keywords: "Dubai property catalog, Emaar off-plan, Wynn Al Marjan residences, Bangalore commercial offices, luxury villas Dubai",
         canonical: `${BASE_URL}/market-catalog`,
-        ogTitle: "Exclusive Market Catalog & Properties | Univue Consultants",
-        ogDescription: "Curated advisor-choice off-plan developments and commercial assets in Dubai and Bangalore.",
+        ogTitle: "Exclusive Property Catalog & Assets | Univue Consultants",
+        ogDescription: "Advisor-choice off-plan developments, prime luxury villas, penthouses, and Grade-A commercial workspaces.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          "name": "Univue Consultants Real Estate Catalog"
+          "name": "Univue Curated Real Estate Catalog",
+          "hasPart": properties.map(p => ({
+            "@type": "RealEstateListing",
+            "name": p.name,
+            "description": p.description || p.highlights?.join(', '),
+            "price": p.startingPrice,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": p.location,
+              "addressCountry": p.country
+            }
+          }))
         }
       };
 
     case '/book':
       return {
-        title: "Schedule Executive Briefing | Univue Consultants ApS",
-        description: "Schedule a confidential 30-minute private consultation with Univue Consultants in Copenhagen or via secure video conference. Direct line: +45 26 37 82 70.",
-        keywords: "book briefing Univue, real estate advisory consultation Copenhagen, Dubai investment advisory meeting",
+        title: "Schedule Strategic Briefing | Univue Consultants ApS",
+        description: "Book a confidential 30-minute private consultation with an international advisory partner at our Hornslet headquarters or via secure video conference.",
+        keywords: "schedule property briefing, Univue consultation, cross border real estate meeting Hornslet Denmark",
         canonical: `${BASE_URL}/book`,
-        ogTitle: "Schedule Executive Briefing | Univue Consultants",
-        ogDescription: "Book a confidential 30-minute private consultation with an international advisory partner.",
+        ogTitle: "Schedule Strategic Briefing | Univue Consultants ApS",
+        ogDescription: "Private briefing with international real estate and cross-border expansion advisors.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "ContactPage",
-          "name": "Schedule Executive Briefing with Univue Consultants",
-          "telephone": "+4526378270"
+          "name": "Schedule Private Briefing",
+          "telephone": "+45 26 37 82 70",
+          "email": "Univueconsultants@gmail.com"
         }
       };
 
     case '/questionnaire':
       return {
-        title: "Investor Assessment Questionnaire | Univue Consultants ApS",
-        description: "Complete our confidential 2-minute strategic questionnaire to receive customized market models, allocation frameworks, and tailored asset selections.",
-        keywords: "investor assessment, cross-border expansion questionnaire, Univue client profile",
+        title: "Strategy Session Questionnaire | Univue Consultants ApS",
+        description: "Complete our strategic assessment to prepare your custom cross-border expansion or property investment briefing.",
+        keywords: "property assessment questionnaire, investor profile, international expansion briefing preparation",
         canonical: `${BASE_URL}/questionnaire`,
-        ogTitle: "Investor Assessment Questionnaire | Univue Consultants",
-        ogDescription: "Tailored strategic assessment for real estate allocation and corporate expansion.",
+        ogTitle: "Strategy Session Questionnaire | Univue Consultants ApS",
+        ogDescription: "Answer 5 brief questions to help us tailor your international property briefing.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "name": "Univue Investor Assessment"
+          "name": "Strategy Session Questionnaire"
         }
       };
 
@@ -1050,11 +249,11 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     default:
       return {
         title: "Univue Consultants | International Property Investment Advisory",
-        description: "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
-        keywords: "international property investment, cross-border real estate, turnkey property advisory, international acquisitions, Dubai real estate, overseas property investment, Univue Consultants",
+        description: "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating financial, legal, and regulatory support.",
+        keywords: "international property investment, cross-border real estate, turnkey property advisory, international acquisitions, Dubai real estate, Univue Consultants",
         canonical: `${BASE_URL}/`,
         ogTitle: "Univue Consultants | International Property Investment Advisory",
-        ogDescription: "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
+        ogDescription: "Opening doors across borders. Turnkey international property investment and corporate expansion advisory.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
@@ -1075,79 +274,22 @@ export function getRouteMetadata(pathname: string): PageMetadata {
               "@id": `${BASE_URL}/#organization`,
               "name": "Univue Consultants ApS",
               "url": BASE_URL,
-              "logo": `${BASE_URL}/logo.png`,
-              "description": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.",
+              "logo": `${BASE_URL}/assets/images/logo.png`,
+              "description": t('hero.desc'),
               "telephone": "+45 26 37 82 70",
-              "email": "info@univueconsultants.com",
+              "email": "Univueconsultants@gmail.com",
               "address": {
                 "@type": "PostalAddress",
-                "addressLocality": "Copenhagen",
+                "streetAddress": "Amaliegårdvej 1",
+                "postalCode": "8543",
+                "addressLocality": "Hornslet",
                 "addressCountry": "DK"
               },
+              "areaServed": ["DK", "AE", "IN", "SG"],
               "founder": {
                 "@type": "Person",
                 "name": "Nimmi Schou"
-              },
-              "areaServed": ["DK", "AE", "IN", "SG"]
-            },
-            {
-              "@type": "ProfessionalService",
-              "@id": `${BASE_URL}/#service`,
-              "name": "Univue Consultants ApS - International Real Estate & Advisory",
-              "url": BASE_URL,
-              "priceRange": "$$$$",
-              "telephone": "+45 26 37 82 70",
-              "email": "info@univueconsultants.com",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Copenhagen",
-                "addressCountry": "DK"
-              },
-              "serviceType": [
-                "International Property Investment Advisory",
-                "Off-Plan Real Estate Sourcing",
-                "Transaction & Escrow Legal Coordination",
-                "Cross-Border Portfolio Positioning",
-                "India Operational Corporate Expansion"
-              ]
-            },
-            {
-              "@type": "FAQPage",
-              "@id": `${BASE_URL}/#faq`,
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "What services does Univue Consultants ApS provide?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Which geographic markets does Univue Consultants specialize in?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Univue specializes in the United Arab Emirates (Dubai, Abu Dhabi, Ras Al Khaimah), India (Bangalore, Gurgaon, Mumbai), and Southeast Asian growth corridors (Singapore, Bangkok)."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How does Univue assist with the UAE Golden Visa?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Purchasing real estate valued at 2,000,000 AED or greater qualifies investors and their families for the renewable 10-year UAE Golden Visa. Univue coordinates developer allocations, DLD registration, escrow verification, and full visa processing."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How can I schedule a strategic briefing with Univue?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You can schedule a confidential consultation directly through our website at /book or by telephone at +45 26 37 82 70."
-                  }
-                }
-              ]
+              }
             }
           ]
         }
@@ -1155,113 +297,1002 @@ export function getRouteMetadata(pathname: string): PageMetadata {
   }
 }
 
-function renderCityMicrositeBody(cityId: string): string {
-  const cityTitles: Record<string, { name: string; country: string; segment: string; desc: string }> = {
-    dubai: {
-      name: "Dubai",
-      country: "United Arab Emirates",
-      segment: "Prime Freehold & Off-Plan Liquidity",
-      desc: "Global capital of real estate liquidity, branded urban development, and institutional-grade off-plan pipelines."
-    },
-    'abu-dhabi': {
-      name: "Abu Dhabi",
-      country: "United Arab Emirates",
-      segment: "Institutional Core & Sovereign Backed",
-      desc: "The most institutionally stable real estate market in the UAE, driven by sovereign capital, controlled supply, and end-user demand."
-    },
-    'ras-al-khaimah': {
-      name: "Ras Al Khaimah",
-      country: "United Arab Emirates",
-      segment: "Hospitality & Coastal Expansion",
-      desc: "The UAE’s premier emerging lifestyle and tourism-driven real estate market, led by hospitality expansion and beachfront resort development at Al Marjan Island."
-    },
-    bangalore: {
-      name: "Bangalore",
-      country: "India",
-      segment: "Enterprise Tech Metropolis",
-      desc: "India’s premier urban technology metropolis, driven by IT enterprise expansion, infrastructure pipelines, and structural institutional demand."
-    },
-    gurgaon: {
-      name: "Gurgaon (Delhi NCR)",
-      country: "India",
-      segment: "Fortune 500 Corporate Hub",
-      desc: "Northern India's primary institutional commercial corridor hosting regional headquarters for top multinationals."
-    },
-    mumbai: {
-      name: "Mumbai",
-      country: "India",
-      segment: "Financial Capital & Institutional Real Estate",
-      desc: "India's financial nerve center featuring premium commercial assets in BKC and high-net-worth residential development."
-    },
-    singapore: {
-      name: "Singapore",
-      country: "Singapore",
-      segment: "Sovereign Wealth & Family Office Hub",
-      desc: "Global regulatory benchmark, AAA credit rating, Section 13O / 13U family office tax incentive structures, and regional treasury headquarters."
-    },
-    bangkok: {
-      name: "Bangkok",
-      country: "Thailand",
-      segment: "Lifestyle & Regional Commercial Gateway",
-      desc: "Prime luxury residential in Sukhumvit and Sathorn, dynamic regional tourism, and competitive corporate operational headquarters for ASEAN distribution."
-    }
-  };
+// ============================================================================
+// 2. LIVE SHARED UI COMPONENTS (Nav, Footer)
+// ============================================================================
 
-  const city = cityTitles[cityId] || {
-    name: cityId ? cityId.charAt(0).toUpperCase() + cityId.slice(1) : "Market",
-    country: "International",
-    segment: "Strategic Corridor",
-    desc: "Market analysis and strategic real estate/business expansion insights."
-  };
+const sharedNav = `
+<header role="banner" class="univue-header" style="background-color: #0B1F3A; color: #FDFCF5; border-bottom: 1px solid rgba(200, 169, 106, 0.2); position: sticky; top: 0; z-index: 50; backdrop-blur: 8px;">
+  <!-- Top Utility Bar -->
+  <div style="background-color: #061224; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0.4rem 1.5rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">
+    <div style="max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; gap: 1rem; color: rgba(253, 252, 245, 0.6);">
+        <span style="color: #C8A96A;">ENGLISH</span>
+        <span>DANSK</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <a href="tel:+4526378270" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">+45 26 37 82 70</a>
+        <a href="/login" style="color: #C8A96A; text-decoration: none;">MY ACCOUNT</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: #FDFCF5;" aria-label="Univue Consultants ApS">
+      <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; letter-spacing: 0.08em; font-weight: 500;">UNIVUE</span>
+      <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; border-left: 1px solid rgba(200, 169, 106, 0.4); padding-left: 0.75rem;">Consultants ApS</span>
+    </a>
+    <nav role="navigation" aria-label="Main Navigation" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+      <a href="/properties" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Properties</a>
+      <a href="/uae" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">UAE</a>
+      <a href="/india" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">India</a>
+      <a href="/southeast-asia" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Southeast Asia</a>
+      <a href="/services" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Services</a>
+      <a href="/about" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">About Us</a>
+      <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 0.5rem 1.25rem; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border: 1px solid #C8A96A;">Schedule Briefing</a>
+    </nav>
+  </div>
+</header>
+`;
+
+const sharedFooter = `
+<footer class="univue-footer" role="contentinfo" style="background-color: #0B1F3A; color: #FDFCF5; border-top: 1px solid rgba(200, 169, 106, 0.2); padding: 4rem 1.5rem 2rem 1.5rem; margin-top: auto;">
+  <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;">
+    <!-- Company Identity -->
+    <div>
+      <div style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; color: #FDFCF5; margin-bottom: 0.5rem;">UNIVUE CONSULTANTS</div>
+      <p style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">International Advisory</p>
+      <p style="color: rgba(253, 252, 245, 0.7); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
+        ${t('footer.desc')}
+      </p>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="https://www.linkedin.com/in/nimmi-schou-36839a40b/" target="_blank" rel="noopener noreferrer" style="color: #C8A96A; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(200,169,106,0.3); padding: 0.35rem 0.65rem;">LinkedIn</a>
+        <a href="https://x.com/Univue_Official" target="_blank" rel="noopener noreferrer" style="color: #C8A96A; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(200,169,106,0.3); padding: 0.35rem 0.65rem;">X</a>
+        <a href="https://www.instagram.com/univueconsultants/" target="_blank" rel="noopener noreferrer" style="color: #C8A96A; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(200,169,106,0.3); padding: 0.35rem 0.65rem;">Instagram</a>
+        <a href="https://wa.me/4526378270" target="_blank" rel="noopener noreferrer" style="color: #C8A96A; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(200,169,106,0.3); padding: 0.35rem 0.65rem;">WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- Strategic Corridors -->
+    <div>
+      <h3 style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem; font-family: 'Bodoni Moda', Georgia, serif;">Strategic Corridors</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+        <li><a href="/uae" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">United Arab Emirates (Dubai, Abu Dhabi, RAK)</a></li>
+        <li><a href="/india" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">India (Bangalore, Gurgaon, Mumbai, Chennai)</a></li>
+        <li><a href="/southeast-asia" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Southeast Asia (Singapore, Thailand, Bali)</a></li>
+        <li><a href="/properties" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Exclusive Property Catalog</a></li>
+      </ul>
+    </div>
+
+    <!-- Advisory Services -->
+    <div>
+      <h3 style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem; font-family: 'Bodoni Moda', Georgia, serif;">Advisory Services</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Off-plan Property Sourcing</a></li>
+        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Investment Strategy & Positioning</a></li>
+        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Access to Vetted Tier-1 Projects</a></li>
+        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Financing Coordination & Banking</a></li>
+        <li><a href="/services" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">Legal Framework & Ownership Advisory</a></li>
+      </ul>
+    </div>
+
+    <!-- Direct Contact & Legal CVR -->
+    <div>
+      <h3 style="color: #C8A96A; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem; font-family: 'Bodoni Moda', Georgia, serif;">Executive Contact</h3>
+      <p style="color: rgba(253, 252, 245, 0.8); font-size: 0.9rem; margin-bottom: 0.5rem;">
+        <strong>CVR-nr.</strong> 45 84 53 62
+      </p>
+      <p style="color: rgba(253, 252, 245, 0.8); font-size: 0.9rem; margin-bottom: 0.5rem;">
+        <strong>Email:</strong> <a href="mailto:Univueconsultants@gmail.com" style="color: #C8A96A; text-decoration: none;">Univueconsultants@gmail.com</a>
+      </p>
+      <p style="color: rgba(253, 252, 245, 0.8); font-size: 0.9rem; margin-bottom: 0.5rem;">
+        <strong>Telephone:</strong> <a href="tel:+4526378270" style="color: #C8A96A; text-decoration: none;">+45 26 37 82 70</a>
+      </p>
+      <p style="color: rgba(253, 252, 245, 0.8); font-size: 0.9rem; margin-bottom: 1.25rem;">
+        <strong>Address:</strong> Amaliegårdvej 1, 8543 Hornslet, Denmark
+      </p>
+      <a href="/book" style="display: inline-block; background-color: transparent; border: 1px solid #C8A96A; color: #C8A96A; padding: 0.5rem 1rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;">Schedule Consultation</a>
+    </div>
+  </div>
+
+  <div style="max-width: 80rem; margin: 0 auto; border-top: 1px solid rgba(253, 252, 245, 0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.75rem; color: rgba(253, 252, 245, 0.5);">
+    <p>© 2026 Univue Consultants ApS. All rights reserved. CVR-nr. 45 84 53 62.</p>
+    <div style="display: flex; gap: 1.5rem;">
+      <a href="/about" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">About</a>
+      <a href="/services" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">Services</a>
+      <a href="/questionnaire" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">Assessment</a>
+      <a href="/book" style="color: rgba(253, 252, 245, 0.5); text-decoration: none;">Briefing</a>
+    </div>
+  </div>
+</footer>
+`;
+
+// ============================================================================
+// 3. LIVE PAGE BODY GENERATORS (Mirroring React SPA Components)
+// ============================================================================
+
+function renderHomeBody(): string {
+  const partners = [
+    { name: t('home.partner.emaar'), desc: t('home.partner.emaar.desc') },
+    { name: t('home.partner.sobha'), desc: t('home.partner.sobha.desc') },
+    { name: t('home.partner.damac'), desc: t('home.partner.damac.desc') },
+    { name: t('home.partner.binghatti'), desc: t('home.partner.binghatti.desc') },
+    { name: t('home.partner.azizi'), desc: t('home.partner.azizi.desc') },
+    { name: t('home.partner.wasel'), desc: t('home.partner.wasel.desc') },
+    { name: t('home.partner.bnw'), desc: t('home.partner.bnw.desc') }
+  ];
+
+  const clientTypes = [
+    { title: t('home.workwith.investors.title'), desc: t('home.workwith.investors.desc') },
+    { title: t('home.workwith.expansion.title'), desc: t('home.workwith.expansion.desc') },
+    { title: t('home.workwith.entrepreneurship.title'), desc: t('home.workwith.entrepreneurship.desc') },
+    { title: t('home.workwith.corporate.title'), desc: t('home.workwith.corporate.desc') },
+    { title: t('home.workwith.investmentgroups.title'), desc: t('home.workwith.investmentgroups.desc') },
+    { title: t('home.workwith.collaboration.title'), desc: t('home.workwith.collaboration.desc') },
+  ];
 
   return `
 ${sharedNav}
 <main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
-  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${city.country} • ${city.segment}</span>
-      <h1 style="font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
-        ${city.name} Market Analysis & Intelligence
+  <!-- Hero Section -->
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem 6rem 1.5rem; position: relative; overflow: hidden; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; position: relative; z-index: 10;">
+      <span style="display: inline-block; color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.25rem; font-weight: 600;">
+        ${t('hero.subtitle')}
+      </span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin: 0 0 1.5rem 0; font-weight: 400; letter-spacing: -0.02em;">
+        ${t('hero.title')} <span style="color: #C8A96A; font-style: italic;">${t('hero.title.accent')} ${t('hero.title.bottom')}</span>
       </h1>
-      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        ${city.desc}
+      <p style="font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.6; max-width: 48rem; color: rgba(253, 252, 245, 0.9); margin-bottom: 2.5rem; font-weight: 300;">
+        ${t('hero.desc')}
       </p>
-      <div style="margin-top: 2rem;">
-        <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
-          Schedule ${city.name} Briefing
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/questionnaire" style="background-color: #C8A96A; color: #0B1F3A; padding: 1rem 2.25rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+          ${t('hero.cta.primary')}
+        </a>
+        <a href="/properties" style="border: 1px solid rgba(200, 169, 106, 0.5); color: #C8A96A; padding: 1rem 2.25rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+          ${t('nav.catalog')}
         </a>
       </div>
     </div>
   </section>
 
-  <section style="max-width: 72rem; margin: 4rem auto; padding: 0 1.5rem;">
-    <article style="background: #ffffff; padding: 3rem; border: 1px solid #e5e7eb; border-top: 3px solid #C8A96A;">
-      <h2 style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: #0B1F3A; margin-bottom: 1.5rem;">
-        Strategic Market Position: ${city.name}
-      </h2>
-      <p style="color: #4b5563; font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem;">
-        Univue Consultants coordinates developer access, transactional legal compliance, and corporate structuring for clients acquiring assets or establishing operations in ${city.name}.
-      </p>
-      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <a href="/market-catalog" style="background-color: #0B1F3A; color: #FDFCF5; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
-          View Properties
-        </a>
-        <a href="/services" style="border: 1px solid #0B1F3A; color: #0B1F3A; padding: 0.85rem 2rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
-          Advisory Scope
-        </a>
+  <!-- Access to Market Leaders -->
+  <section style="background-color: #F8F6F0; border-top: 1px solid #EBE7DD; border-bottom: 1px solid #EBE7DD; padding: 3rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto; text-align: center;">
+      <span style="font-size: 0.75rem; font-weight: 800; color: #C8A96A; letter-spacing: 0.35em; text-transform: uppercase; display: block; margin-bottom: 1.5rem;">
+        ${t('home.partners.title')}
+      </span>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap;">
+        ${partners.map(p => `
+          <div style="text-align: center;">
+            <div style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.6rem; font-weight: 700; color: #0B1F3A; letter-spacing: 0.05em;">${p.name}</div>
+            <div style="font-size: 0.7rem; color: #8C7B5D; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 0.25rem;">${p.desc}</div>
+          </div>
+        `).join('')}
       </div>
-    </article>
+    </div>
+  </section>
+
+  <!-- Who We Work With -->
+  <section style="padding: 5rem 1.5rem; max-width: 80rem; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">
+        ${t('home.workwith.tag')}
+      </span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+      ${clientTypes.map(c => `
+        <div style="background: #ffffff; border: 1px solid rgba(11, 31, 58, 0.08); padding: 2rem;">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.25rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${c.title}</h3>
+          <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">${c.desc}</p>
+        </div>
+      `).join('')}
+    </div>
+  </section>
+
+  <!-- Core Strategic Corridors -->
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Core Corridors</span>
+        <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2rem, 3.5vw, 3rem); margin: 0.5rem 0;">
+          International Strategic Gateways
+        </h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+        <!-- UAE Corridor -->
+        <article style="background: rgba(255,255,255,0.04); border: 1px solid rgba(200, 169, 106, 0.3); padding: 2.5rem;">
+          <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 01</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #FDFCF5; margin: 0.5rem 0 1rem 0;">${t('home.markets.uae.title')}</h3>
+          <p style="color: rgba(253, 252, 245, 0.8); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
+            ${t('home.markets.uae.desc').replace(/\n/g, '<br />')}
+          </p>
+          <a href="/uae" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
+            Explore UAE Markets →
+          </a>
+        </article>
+
+        <!-- India Corridor -->
+        <article style="background: rgba(255,255,255,0.04); border: 1px solid rgba(200, 169, 106, 0.3); padding: 2.5rem;">
+          <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 02</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #FDFCF5; margin: 0.5rem 0 1rem 0;">${t('home.markets.india.title')}</h3>
+          <p style="color: rgba(253, 252, 245, 0.8); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
+            ${t('home.markets.india.desc').replace(/\n/g, '<br />')}
+          </p>
+          <a href="/india" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
+            Explore India Expansion →
+          </a>
+        </article>
+
+        <!-- Southeast Asia Corridor -->
+        <article style="background: rgba(255,255,255,0.04); border: 1px solid rgba(200, 169, 106, 0.3); padding: 2.5rem;">
+          <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 03</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #FDFCF5; margin: 0.5rem 0 1rem 0;">${t('home.markets.seasia.title')}</h3>
+          <p style="color: rgba(253, 252, 245, 0.8); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
+            ${t('home.markets.seasia.desc').replace(/\n/g, '<br />')}
+          </p>
+          <a href="/southeast-asia" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
+            Explore Southeast Asia →
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Advisor Properties from Live Catalog -->
+  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('home.choice.tag')}</span>
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2rem, 3.5vw, 3rem); color: #0B1F3A; margin: 0.5rem 0;">
+        ${t('home.choice.title')}
+      </h2>
+      <p style="color: #6b7280; font-size: 1.1rem; max-width: 36rem; margin: 0 auto; font-weight: 300;">
+        ${t('home.choice.desc')}
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      ${properties.map(p => `
+        <article style="background: #ffffff; border: 1px solid #e5e7eb; overflow: hidden; display: flex; flex-direction: column;">
+          <div style="height: 220px; overflow: hidden; position: relative;">
+            <img src="${p.image}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+            <div style="position: absolute; top: 1rem; left: 1rem; background: #0B1F3A; color: #C8A96A; font-size: 0.7rem; font-weight: 700; padding: 0.35rem 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;">
+              ${p.type || 'Property'} • ${p.country}
+            </div>
+          </div>
+          <div style="padding: 2rem; display: flex; flex-direction: column; flex-grow: 1;">
+            <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">${p.location}</span>
+            <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; margin: 0.5rem 0; color: #0B1F3A;">${p.name}</h3>
+            <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1;">
+              ${p.description || p.highlights?.join('. ') || ''}
+            </p>
+            <div style="border-top: 1px solid #f3f4f6; padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.7rem; color: #9ca3af; text-transform: uppercase; display: block;">Starting Price</span>
+                <span style="font-size: 1.1rem; font-weight: 700; color: #0B1F3A;">${p.startingPrice}</span>
+              </div>
+              <a href="/market-catalog?id=${p.id}" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;">
+                View Asset →
+              </a>
+            </div>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+      <a href="/properties" style="display: inline-block; background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;">
+        ${t('home.choice.catalog')}
+      </a>
+    </div>
+  </section>
+
+  <!-- Client Journey (4-step approach) -->
+  <section style="background-color: #F8F6F0; border-top: 1px solid #EBE7DD; padding: 5rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('home.journey.tag')}</span>
+        <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2rem, 3.5vw, 3rem); color: #0B1F3A; margin: 0.5rem 0;">
+          The Client Experience
+        </h2>
+        <p style="color: #6b7280; font-size: 1.1rem; max-width: 36rem; margin: 0 auto; font-weight: 300;">
+          ${t('home.journey.desc')}
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
+        <div style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08);">
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; color: #C8A96A; display: block; margin-bottom: 0.5rem;">01</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('home.journey.step1.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('home.journey.step1.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08);">
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; color: #C8A96A; display: block; margin-bottom: 0.5rem;">02</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('home.journey.step2.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('home.journey.step2.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08);">
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; color: #C8A96A; display: block; margin-bottom: 0.5rem;">03</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('home.journey.step3.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('home.journey.step3.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2.5rem; border: 1px solid rgba(11, 31, 58, 0.08);">
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; color: #C8A96A; display: block; margin-bottom: 0.5rem;">04</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('home.journey.step4.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('home.journey.step4.desc')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ready to invest or expand CTA -->
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; text-align: center;">
+    <div style="max-width: 48rem; margin: 0 auto;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); margin: 0 0 1rem 0;">
+        ${t('home.cta.title')}
+      </h2>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.15rem; line-height: 1.6; margin-bottom: 2.5rem;">
+        ${t('home.cta.desc')}
+      </p>
+      <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+        ${t('hero.cta.primary')}
+      </a>
+    </div>
   </section>
 </main>
 ${sharedFooter}
 `;
 }
 
+function renderAboutBody(): string {
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0 0 1rem 0;">
+        ${t('about.title')} <span style="color: #C8A96A; font-style: italic;">${t('about.title.accent')}</span>
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        International Cross-Border Real Estate & Corporate Advisory
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission Statement -->
+  <section style="padding: 5rem 1.5rem; max-width: 68rem; margin: 0 auto; text-align: center;">
+    <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('about.mission.tag')}</span>
+    <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: #0B1F3A; margin: 0.75rem 0 2rem 0;">
+      ${t('about.mission.title')}
+    </h2>
+    <blockquote style="font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; font-size: 1.5rem; color: #666; line-height: 1.6; margin: 0 0 3rem 0; border: none; padding: 0;">
+      ${t('about.mission.quote')}
+    </blockquote>
+  </section>
+
+  <!-- Why & Approach -->
+  <section style="background-color: #F8F6F0; border-top: 1px solid #EBE7DD; border-bottom: 1px solid #EBE7DD; padding: 5rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem;">
+      <div style="background: #ffffff; padding: 3rem; border: 1px solid rgba(11,31,58,0.08);">
+        <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #0B1F3A; margin: 0 0 1.25rem 0;">${t('about.why.title')}</h3>
+        <p style="color: #4b5563; font-size: 1rem; line-height: 1.7; margin: 0;">${t('about.why.desc')}</p>
+      </div>
+      <div style="background: #ffffff; padding: 3rem; border: 1px solid rgba(11,31,58,0.08);">
+        <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #0B1F3A; margin: 0 0 1.25rem 0;">${t('about.approach.title')}</h3>
+        <p style="color: #4b5563; font-size: 1rem; line-height: 1.7; margin: 0;">${t('about.approach.desc')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section style="padding: 5rem 1.5rem; max-width: 80rem; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2rem, 3.5vw, 3rem); color: #0B1F3A;">${t('about.values.title')}</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+      <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
+        <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('about.values.v1.title')}</h3>
+        <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('about.values.v1.desc')}</p>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
+        <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('about.values.v2.title')}</h3>
+        <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('about.values.v2.desc')}</p>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
+        <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.75rem 0;">${t('about.values.v3.title')}</h3>
+        <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('about.values.v3.desc')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership -->
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem;">
+    <div style="max-width: 60rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('about.team.tag')}</span>
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; margin: 0.5rem 0 2rem 0;">${t('about.team.title')}</h2>
+      
+      <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(200, 169, 106, 0.3); padding: 3rem; max-width: 44rem; margin: 0 auto;">
+        <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #C8A96A; margin: 0 0 0.25rem 0;">Nimmi Schou</h3>
+        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(253, 252, 245, 0.6); display: block; margin-bottom: 1.25rem;">
+          ${t('about.team.role')}
+        </span>
+        <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.05rem; line-height: 1.7; margin: 0;">
+          ${t('about.team.bio')}
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderServicesBody(): string {
+  const coreServices = [
+    {
+      title: t('services.s1.title'),
+      description: t('services.s1.desc'),
+      features: [t('services.s1.f1'), t('services.s1.f2'), t('services.s1.f3'), t('services.s1.f4')]
+    },
+    {
+      title: t('services.s2.title'),
+      description: t('services.s2.desc'),
+      features: [t('services.s2.f1'), t('services.s2.f2'), t('services.s2.f3'), t('services.s2.f4')]
+    },
+    {
+      title: t('services.s3.title'),
+      description: t('services.s3.desc'),
+      features: [t('services.s3.f1'), t('services.s3.f2'), t('services.s3.f3'), t('services.s3.f4'), t('services.s3.f5'), t('services.s3.f6'), t('services.s3.f7')]
+    },
+    {
+      title: t('services.s4.title'),
+      description: t('services.s4.desc'),
+      features: [t('services.s4.f1'), t('services.s4.f2'), t('services.s4.f3'), t('services.s4.f4')]
+    },
+    {
+      title: t('services.s5.title'),
+      description: t('services.s5.desc'),
+      features: [t('services.s5.f1'), t('services.s5.f2'), t('services.s5.f3'), t('services.s5.f4')]
+    },
+    {
+      title: t('services.s6.title'),
+      description: t('services.s6.desc'),
+      features: [t('services.s6.f1'), t('services.s6.f2'), t('services.s6.f3'), t('services.s6.f4')]
+    }
+  ];
+
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0 0 1rem 0;">
+        ${t('services.title')}
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        ${t('services.subtitle')}
+      </p>
+    </div>
+  </section>
+
+  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem;">
+      ${coreServices.map((s, index) => `
+        <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A; display: flex; flex-direction: column;">
+          <span style="font-size: 0.75rem; color: #C8A96A; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;">Service 0${index + 1}</span>
+          <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">${s.title}</h2>
+          <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            ${s.description}
+          </p>
+          <div style="margin-top: auto; border-top: 1px solid #f3f4f6; padding-top: 1rem;">
+            <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #9ca3af; font-weight: 700; display: block; margin-bottom: 0.5rem;">Key Scope:</span>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: #1e293b;">
+              ${s.features.map(f => `<li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #C8A96A;">•</span> ${f}</li>`).join('')}
+            </ul>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 4.5rem 1.5rem; text-align: center;">
+    <div style="max-width: 48rem; margin: 0 auto;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.2rem; margin: 0 0 1rem 0;">
+        ${t('services.cta_title')}
+      </h2>
+      <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 1rem 2.25rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+        Schedule Briefing
+      </a>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderUAEBody(): string {
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('uae.hero.tag')}</span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${t('uae.hero.title')}
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        ${t('uae.hero.desc')}
+      </p>
+    </div>
+  </section>
+
+  <!-- Emirates Districts -->
+  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
+      <!-- Dubai -->
+      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
+        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Emirate 01</span>
+        <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 0.5rem 0;">Dubai</h2>
+        <span style="font-size: 0.8rem; text-transform: uppercase; color: #9ca3af; font-weight: 600; display: block; margin-bottom: 1rem;">${t('uae.dist.dubai.type')}</span>
+        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          ${t('uae.dist.dubai.desc')}
+        </p>
+        <a href="/markets/dubai" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+          View Dubai Microsite →
+        </a>
+      </article>
+
+      <!-- Abu Dhabi -->
+      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
+        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Emirate 02</span>
+        <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 0.5rem 0;">Abu Dhabi</h2>
+        <span style="font-size: 0.8rem; text-transform: uppercase; color: #9ca3af; font-weight: 600; display: block; margin-bottom: 1rem;">${t('uae.dist.abu-dhabi.type')}</span>
+        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          ${t('uae.dist.abu-dhabi.desc')}
+        </p>
+        <a href="/markets/abu-dhabi" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+          View Abu Dhabi Microsite →
+        </a>
+      </article>
+
+      <!-- Ras Al Khaimah -->
+      <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
+        <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Emirate 03</span>
+        <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 0.5rem 0;">Ras Al Khaimah (RAK)</h2>
+        <span style="font-size: 0.8rem; text-transform: uppercase; color: #9ca3af; font-weight: 600; display: block; margin-bottom: 1rem;">${t('uae.dist.rak.type')}</span>
+        <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          ${t('uae.dist.rak.desc')}
+        </p>
+        <a href="/markets/rak" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+          View RAK Microsite →
+        </a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Advantages -->
+  <section style="background-color: #F8F6F0; border-top: 1px solid #EBE7DD; padding: 5rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; text-align: center; color: #0B1F3A; margin-bottom: 3rem;">
+        ${t('uae.adv.title')}
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('uae.adv1.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('uae.adv1.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('uae.adv2.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('uae.adv2.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('uae.adv3.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('uae.adv3.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('uae.adv4.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('uae.adv4.desc')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderIndiaBody(): string {
+  const indiaCities = cities.filter(c => c.country === 'India');
+
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('india.hero.tag')}</span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${t('india.hero.title')}
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        ${t('india.hero.desc')}
+      </p>
+    </div>
+  </section>
+
+  <!-- Key Operational Hubs -->
+  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; color: #0B1F3A;">${t('india.hubs.title')}</h2>
+      <p style="color: #666; font-size: 1.05rem; max-width: 40rem; margin: 0.5rem auto 0 auto;">${t('india.hubs.desc')}</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      ${indiaCities.map(c => `
+        <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; border-top: 3px solid #C8A96A;">
+          <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">${c.positioning}</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0;">${c.name}</h3>
+          <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            ${c.thesis}
+          </p>
+          <a href="/markets/${c.id}" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+            Explore ${c.name} Hub →
+          </a>
+        </article>
+      `).join('')}
+    </div>
+  </section>
+
+  <!-- India Strategic Advantages -->
+  <section style="background-color: #F8F6F0; border-top: 1px solid #EBE7DD; padding: 5rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; text-align: center; color: #0B1F3A; margin-bottom: 3rem;">
+        ${t('india.adv.title')}
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('india.adv1.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('india.adv1.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('india.adv2.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('india.adv2.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('india.adv3.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('india.adv3.desc')}</p>
+        </div>
+        <div style="background: #ffffff; padding: 2rem; border: 1px solid rgba(11,31,58,0.08);">
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.3rem; color: #0B1F3A; margin: 0 0 0.5rem 0;">${t('india.adv4.title')}</h3>
+          <p style="color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0;">${t('india.adv4.desc')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderSoutheastAsiaBody(): string {
+  const seaCities = cities.filter(c => c.country === 'Southeast Asia');
+
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">${t('sea.hero.tag')}</span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${t('sea.hero.title')}
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        ${t('sea.hero.desc')}
+      </p>
+    </div>
+  </section>
+
+  <!-- Regional Nodes -->
+  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.5rem; color: #0B1F3A;">${t('sea.hubs.title')}</h2>
+      <p style="color: #666; font-size: 1.05rem; max-width: 40rem; margin: 0.5rem auto 0 auto;">${t('sea.hubs.desc')}</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      ${seaCities.map(c => `
+        <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; border-top: 3px solid #C8A96A;">
+          <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">${c.positioning}</span>
+          <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0;">${c.name}</h3>
+          <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            ${c.thesis}
+          </p>
+          <a href="/markets/${c.id}" style="color: #C8A96A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+            Explore ${c.name} Node →
+          </a>
+        </article>
+      `).join('')}
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderCatalogBody(): string {
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Curated Properties & Assets</span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${t('catalog.hero.title1')} ${t('catalog.hero.title2')}
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        ${t('catalog.hero.desc')}
+      </p>
+    </div>
+  </section>
+
+  <section style="max-width: 80rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem;">
+      ${properties.map(p => `
+        <article style="background: #ffffff; border: 1px solid #e5e7eb; overflow: hidden; display: flex; flex-direction: column;">
+          <div style="height: 240px; overflow: hidden; position: relative;">
+            <img src="${p.image}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+            <div style="position: absolute; top: 1rem; left: 1rem; background: #0B1F3A; color: #C8A96A; font-size: 0.7rem; font-weight: 700; padding: 0.35rem 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;">
+              ${p.type || 'Property'} • ${p.country}
+            </div>
+            <div style="position: absolute; bottom: 1rem; right: 1rem; background: #C8A96A; color: #0B1F3A; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.65rem;">
+              ${p.status}
+            </div>
+          </div>
+          <div style="padding: 2.5rem; display: flex; flex-direction: column; flex-grow: 1;">
+            <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">${p.location}</span>
+            <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.6rem; margin: 0.5rem 0; color: #0B1F3A;">${p.name}</h2>
+            <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem; flex-grow: 1;">
+              ${p.description || p.highlights?.join('. ') || ''}
+            </p>
+            
+            <div style="background: #FDFCF5; border: 1px solid #f1ece1; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="color: #64748b;">Developer:</span>
+                <strong style="color: #0B1F3A;">${p.developer?.name || 'Verified Partner'}</strong>
+              </div>
+              ${p.handoverTime ? `
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="color: #64748b;">Handover:</span>
+                <strong style="color: #0B1F3A;">${p.handoverTime}</strong>
+              </div>
+              ` : ''}
+              ${p.paymentPlan ? `
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748b;">Plan:</span>
+                <strong style="color: #0B1F3A;">${p.paymentPlan}</strong>
+              </div>
+              ` : ''}
+            </div>
+
+            <div style="border-top: 1px solid #f3f4f6; padding-top: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.7rem; color: #9ca3af; text-transform: uppercase; display: block;">Starting Price</span>
+                <span style="font-size: 1.25rem; font-weight: 700; color: #0B1F3A;">${p.startingPrice}</span>
+              </div>
+              <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 0.65rem 1.25rem; font-weight: 700; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;">
+                Inquire →
+              </a>
+            </div>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderCityMicrositeBody(cityId: string): string {
+  const rawId = cityId.toLowerCase();
+  const lookupId = rawId === 'ras-al-khaimah' ? 'rak' : rawId;
+  const city = cities.find(c => c.id === lookupId) || cities.find(c => c.id === rawId) || cities[0];
+  const translationKey = rawId === 'rak' ? 'ras-al-khaimah' : rawId;
+  const localized = marketTranslations.en[translationKey] || marketTranslations.en[city.id] || {
+    type: city.positioning,
+    desc: city.thesis,
+    stats: [
+      { label: "PRICING", value: city.avgPricing },
+      { label: "YIELD", value: city.rentalYield },
+      { label: "RELEVANCE", value: city.relevance }
+    ],
+    highlights: [city.thesis, city.infraGrowth, city.relevance]
+  };
+
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A; position: relative;">
+    <div style="max-width: 72rem; margin: 0 auto; position: relative; z-index: 10;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">
+        ${city.country} Market Profile
+      </span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${city.name} Market Analysis
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 48rem; line-height: 1.6;">
+        ${localized.desc}
+      </p>
+    </div>
+  </section>
+
+  <!-- Key Metrics Bar -->
+  <section style="background: #F8F6F0; border-bottom: 1px solid #EBE7DD; padding: 2.5rem 1.5rem;">
+    <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+      <div style="background: #ffffff; padding: 1.5rem; border: 1px solid rgba(11,31,58,0.08);">
+        <span style="font-size: 0.7rem; color: #C8A96A; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Pricing Benchmark</span>
+        <strong style="font-size: 1.1rem; color: #0B1F3A;">${city.avgPricing}</strong>
+      </div>
+      <div style="background: #ffffff; padding: 1.5rem; border: 1px solid rgba(11,31,58,0.08);">
+        <span style="font-size: 0.7rem; color: #C8A96A; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Market Segment</span>
+        <strong style="font-size: 1.1rem; color: #0B1F3A;">${city.rentalYield}</strong>
+      </div>
+      <div style="background: #ffffff; padding: 1.5rem; border: 1px solid rgba(11,31,58,0.08);">
+        <span style="font-size: 0.7rem; color: #C8A96A; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Target Profile</span>
+        <strong style="font-size: 1.1rem; color: #0B1F3A;">${city.targetBuyer}</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- Market Rationale & Highlights -->
+  <section style="max-width: 72rem; margin: 5rem auto; padding: 0 1.5rem;">
+    <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2.2rem; color: #0B1F3A; margin-bottom: 2rem;">
+      Strategic Highlights in ${city.name}
+    </h2>
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      ${(localized.highlights || []).map((h: string) => `
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 1.75rem; border-left: 4px solid #C8A96A;">
+          <p style="color: #334155; font-size: 1rem; line-height: 1.6; margin: 0;">${h}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="margin-top: 4rem; text-align: center;">
+      <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+        Inquire for ${city.name} Opportunities
+      </a>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderBookingBody(): string {
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Executive Consultation</span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        Schedule Your Strategic Briefing
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        Book a confidential 30-minute private consultation with an international advisory partner at our Hornslet headquarters or via secure video conference.
+      </p>
+    </div>
+  </section>
+
+  <section style="max-width: 50rem; margin: 4rem auto; padding: 0 1.5rem;">
+    <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center;">
+      <h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 2rem; color: #0B1F3A; margin-bottom: 1rem;">
+        Direct Executive Access
+      </h2>
+      <p style="color: #4b5563; font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">
+        Whether evaluating an off-plan property purchase in Dubai, exploring the UAE 10-Year Golden Visa, or structuring an operational subsidiary in Bangalore, our senior advisors are at your service.
+      </p>
+      
+      <div style="background: #FDFCF5; padding: 2rem; border: 1px solid #e5e7eb; margin-bottom: 2rem; text-align: left;">
+        <h3 style="font-size: 1.1rem; color: #0B1F3A; margin-bottom: 0.75rem; font-weight: 700;">Executive Office Contact:</h3>
+        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+          <strong>Phone:</strong> <a href="tel:+4526378270" style="color: #0B1F3A; font-weight: 600;">+45 26 37 82 70</a>
+        </p>
+        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+          <strong>Email:</strong> <a href="mailto:Univueconsultants@gmail.com" style="color: #0B1F3A;">Univueconsultants@gmail.com</a>
+        </p>
+        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+          <strong>Registration:</strong> CVR-nr. 45 84 53 62 (Danish Business Authority)
+        </p>
+        <p style="color: #4b5563; font-size: 1rem; line-height: 1.6; margin: 0;">
+          <strong>Headquarters:</strong> Univue Consultants ApS, Amaliegårdvej 1, 8543 Hornslet, Denmark
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="tel:+4526378270" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+          Call +45 26 37 82 70
+        </a>
+        <a href="/questionnaire" style="border: 1px solid #0B1F3A; color: #0B1F3A; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+          Prepare Questionnaire
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+function renderQuestionnaireBody(): string {
+  return `
+${sharedNav}
+<main role="main" class="univue-main" style="background-color: #FDFCF5; color: #0B1F3A; font-family: 'Inter', system-ui, sans-serif;">
+  <section style="background-color: #0B1F3A; color: #FDFCF5; padding: 5rem 1.5rem; border-bottom: 2px solid #C8A96A;">
+    <div style="max-width: 72rem; margin: 0 auto; text-align: center;">
+      <span style="color: #C8A96A; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; font-weight: 700;">Strategic Assessment</span>
+      <h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4rem); margin: 0.5rem 0 1.5rem 0;">
+        ${t('q.title')}
+      </h1>
+      <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
+        ${t('q.desc')}
+      </p>
+    </div>
+  </section>
+
+  <section style="max-width: 50rem; margin: 4rem auto; padding: 0 1.5rem;">
+    <div style="background: #ffffff; border: 1px solid #e5e7eb; padding: 3rem;">
+      <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2.5rem;">
+        ${t('q.note')}
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div>
+          <h3 style="font-size: 1.15rem; color: #0B1F3A; margin-bottom: 0.75rem;">${t('q.q1')}</h3>
+          <p style="color: #64748b; font-size: 0.9rem;">Residential • Commercial • Industrial • Other</p>
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; color: #0B1F3A; margin-bottom: 0.75rem;">${t('q.q2')}</h3>
+          <p style="color: #64748b; font-size: 0.9rem;">United Arab Emirates (Dubai / Abu Dhabi / RAK) • India • Southeast Asia</p>
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; color: #0B1F3A; margin-bottom: 0.75rem;">${t('q.q3')}</h3>
+          <p style="color: #64748b; font-size: 0.9rem;">Custom investment tiers from $300k to institutional allocations.</p>
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; color: #0B1F3A; margin-bottom: 0.75rem;">${t('q.q4')}</h3>
+          <p style="color: #64748b; font-size: 0.9rem;">Private investor • Expanding company • Entrepreneur • Family office</p>
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; color: #0B1F3A; margin-bottom: 0.75rem;">${t('q.q5')}</h3>
+          <p style="color: #64748b; font-size: 0.9rem;">Trusted execution • Strategic advisory • Long-term value • Compliance</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 3rem; text-align: center;">
+        <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 1rem 2.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-block;">
+          Proceed to Calendar
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+${sharedFooter}
+`;
+}
+
+// ============================================================================
+// 4. MAIN ROUTER AND HTML INJECTION
+// ============================================================================
+
 export function getPrerenderedBody(pathname: string): string {
   const cleanPath = pathname.split('?')[0].replace(/\/+$/, '') || '/';
 
   if (cleanPath.startsWith('/markets/')) {
-    const cityId = cleanPath.split('/markets/')[1]?.toLowerCase();
+    const cityId = cleanPath.replace('/markets/', '');
     return renderCityMicrositeBody(cityId);
   }
 
@@ -1276,8 +1307,6 @@ export function getPrerenderedBody(pathname: string): string {
       return renderIndiaBody();
     case '/southeast-asia':
       return renderSoutheastAsiaBody();
-    case '/insights':
-      return renderInsightsBody();
     case '/market-catalog':
     case '/properties':
     case '/catalog':
@@ -1304,15 +1333,21 @@ export function getPrerenderedPage(pathname: string, htmlTemplate: string): stri
   // 1. Update <title>
   output = output.replace(/<title>.*?<\/title>/i, `<title>${meta.title}</title>`);
 
-  // 2. Update <meta name="description">
-  output = output.replace(
-    /<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i,
-    `<meta name="description" content="${meta.description}" />`
-  );
+  // 2. Update or inject meta description & keywords
+  if (/<meta\s+name=["']description["']/i.test(output)) {
+    output = output.replace(
+      /<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i,
+      `<meta name="description" content="${meta.description}" />`
+    );
+  } else {
+    output = output.replace(
+      '<head>',
+      `<head>\n    <meta name="description" content="${meta.description}" />`
+    );
+  }
 
-  // 2b. Update <meta name="keywords"> with route-specific keywords
   if (meta.keywords) {
-    if (/<meta\s+name=["']keywords["']\s+content=["'].*?["']\s*\/?>/i.test(output)) {
+    if (/<meta\s+name=["']keywords["']/i.test(output)) {
       output = output.replace(
         /<meta\s+name=["']keywords["']\s+content=["'].*?["']\s*\/?>/i,
         `<meta name="keywords" content="${meta.keywords}" />`
@@ -1362,7 +1397,7 @@ export function getPrerenderedPage(pathname: string, htmlTemplate: string): stri
     `<link rel="canonical" href="${meta.canonical}" />`
   );
 
-  // 5. Inject Schema.org JSON-LD structured data: replace existing schema block or insert before </head>
+  // 5. Inject Schema.org JSON-LD structured data
   const schemaScript = `<script type="application/ld+json">\n${JSON.stringify(meta.schema, null, 2)}\n    </script>`;
   if (/<script\s+type=["']application\/ld\+json["'][\s\S]*?<\/script>/i.test(output)) {
     output = output.replace(/<script\s+type=["']application\/ld\+json["'][\s\S]*?<\/script>/i, schemaScript);
@@ -1370,7 +1405,7 @@ export function getPrerenderedPage(pathname: string, htmlTemplate: string): stri
     output = output.replace('</head>', `\n    ${schemaScript}\n  </head>`);
   }
 
-  // 6. Clean, exact root container injection that works 100% reliably in development and production
+  // 6. Clean, exact root container replacement
   const rootStart = '<div id="root">';
   const rootStartIndex = output.indexOf(rootStart);
   if (rootStartIndex !== -1) {
