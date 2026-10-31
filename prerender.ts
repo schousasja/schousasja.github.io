@@ -130,7 +130,7 @@ ${sharedNav}
         <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">Corridor 01</span>
         <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; margin: 0.5rem 0 1rem 0; color: #0B1F3A;">United Arab Emirates</h2>
         <p style="color: #4b5563; line-height: 1.6; font-size: 0.95rem; margin-bottom: 1.5rem;">
-          Dubai, Abu Dhabi, and Ras Al Khaimah (Al Marjan Island). Strategic off-plan luxury residences, 0% personal tax environment, and 6–10% projected rental yields backed by Tier-1 developers.
+          Dubai, Abu Dhabi, and Ras Al Khaimah (Al Marjan Island). Strategic off-plan luxury residences, 0% personal tax environment, and sustained rental demand backed by Tier-1 developers.
         </p>
         <a href="/uae" style="color: #0B1F3A; font-weight: 700; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 2px solid #C8A96A; padding-bottom: 0.25rem;">
           Explore UAE Markets →
@@ -181,7 +181,7 @@ ${sharedNav}
           Strategic luxury expansion with limited waterfront villas. Ideal for capital preservation, strong secondary liquidity, and high rental demand from international high-net-worth families.
         </p>
         <div style="display: flex; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 1rem; font-size: 0.9rem; font-weight: 600;">
-          <span style="color: #0B1F3A;">Expected Yield: 7.2%</span>
+          <span style="color: #0B1F3A;">Asset Class: Luxury Waterfront</span>
           <span style="color: #C8A96A;">From $1.2M</span>
         </div>
       </div>
@@ -193,7 +193,7 @@ ${sharedNav}
           First-mover advantage in the GCC's only integrated gaming and luxury resort destination. Exceptional upside potential driven by multi-billion infrastructure completion.
         </p>
         <div style="display: flex; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 1rem; font-size: 0.9rem; font-weight: 600;">
-          <span style="color: #0B1F3A;">Capital Growth: 12%+</span>
+          <span style="color: #0B1F3A;">Asset Class: Branded Hospitality</span>
           <span style="color: #C8A96A;">From $850k</span>
         </div>
       </div>
@@ -205,7 +205,7 @@ ${sharedNav}
           Grade-A commercial workspace in India's leading technology corridor. High pre-leasing velocity by multinational technology leaders securing institutional cash flows.
         </p>
         <div style="display: flex; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 1rem; font-size: 0.9rem; font-weight: 600;">
-          <span style="color: #0B1F3A;">Commercial Yield: 8.5%</span>
+          <span style="color: #0B1F3A;">Asset Class: Grade-A Commercial</span>
           <span style="color: #C8A96A;">From $500k</span>
         </div>
       </div>
@@ -248,7 +248,7 @@ ${sharedNav}
       <div style="background: #ffffff; padding: 2rem; border-left: 3px solid #0B1F3A; border: 1px solid #e5e7eb;">
         <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.3rem; color: #0B1F3A; margin-bottom: 0.75rem;">Private Wealth & Investors</h3>
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6;">
-          European high-net-worth individuals and family offices seeking capital diversification, tax-optimized yields, and UAE residency through real estate acquisitions.
+          European high-net-worth individuals and family offices seeking capital diversification, tax efficiency, and UAE residency through real estate acquisitions.
         </p>
       </div>
 
@@ -337,7 +337,7 @@ ${sharedNav}
         <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.5rem;">
           <li>
             <strong style="color: #0B1F3A; font-size: 1.05rem; display: block; margin-bottom: 0.25rem;">1. Absolute Independence</strong>
-            <span style="color: #6b7280; font-size: 0.95rem; line-height: 1.5;">We operate on behalf of our clients, not single property developers, providing objective due diligence and transparent yield analyses.</span>
+            <span style="color: #6b7280; font-size: 0.95rem; line-height: 1.5;">We operate on behalf of our clients, not single property developers, providing objective due diligence and transparent asset valuations.</span>
           </li>
           <li>
             <strong style="color: #0B1F3A; font-size: 1.05rem; display: block; margin-bottom: 0.25rem;">2. Turnkey Accountability</strong>
@@ -400,7 +400,7 @@ ${sharedNav}
         </p>
         <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
           <li>Tier-1 developers: Emaar, Sobha, Damac, Binghatti, Aldar</li>
-          <li>Independent rental yield and capital appreciation modeling</li>
+          <li>Independent valuation and cash flow modeling</li>
           <li>Escrow account verification and milestone oversight</li>
         </ul>
       </article>
@@ -412,7 +412,7 @@ ${sharedNav}
         </p>
         <ul style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; padding-left: 1.25rem;">
           <li>Currency risk mitigation and inflation hedging</li>
-          <li>Long-term vs. short-term rental optimization strategies</li>
+          <li>Long-term vs. short-term leasing framework strategies</li>
           <li>Exit liquidity planning and secondary market resale management</li>
         </ul>
       </article>
@@ -488,7 +488,7 @@ ${sharedNav}
         United Arab Emirates Investment Markets
       </h1>
       <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Dubai, Abu Dhabi, and Ras Al Khaimah. High rental yields (6–10%), 0% personal income tax, USD-pegged stability, and 10-year Golden Visa residency for European capital.
+        Dubai, Abu Dhabi, and Ras Al Khaimah. Prime freehold districts, 0% personal income tax, USD-pegged stability, and 10-year Golden Visa residency for European capital.
       </p>
     </div>
   </section>
@@ -501,7 +501,7 @@ ${sharedNav}
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
           Downtown Dubai, Palm Jumeirah, Dubai Hills Estate, Business Bay, and Dubai Creek Harbour. Unmatched liquidity, world-class infrastructure, and resilient short- and long-term rental demand from international professionals and HNWI relocations.
         </p>
-        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Typical Rental Yields: 7.0% – 9.5% Net</p>
+        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Segment Focus: Prime Freehold & Urban Waterfront</p>
       </article>
 
       <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
@@ -510,16 +510,16 @@ ${sharedNav}
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
           Saadiyat Cultural District (Louvre Abu Dhabi, Guggenheim, Zayed National Museum) and Al Maryah Island Financial Free Zone. Strict supply caps and high sovereign institutional backing ensure long-term capital preservation.
         </p>
-        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Typical Rental Yields: 6.5% – 7.8% Net</p>
+        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Segment Focus: Cultural & Sovereign Core Assets</p>
       </article>
 
       <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem;">
         <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Gaming & Tourism Frontier</span>
         <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">Ras Al Khaimah (RAK)</h2>
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Al Marjan Island, home to the multi-billion-dollar Wynn Integrated Resort and gaming center. Projected to create dramatic tourism inflows and land value appreciation, representing the highest capital growth potential in the UAE.
+          Al Marjan Island, home to the multi-billion-dollar Wynn Integrated Resort and gaming center. Projected to create dramatic tourism inflows and land value appreciation, representing significant long-term leisure positioning in the UAE.
         </p>
-        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Expected Capital Growth: 12% – 18% p.a.</p>
+        <p style="font-size: 0.9rem; font-weight: 600; color: #0B1F3A;">Segment Focus: Integrated Hospitality & Coastal Development</p>
       </article>
     </div>
 
@@ -658,7 +658,7 @@ ${sharedNav}
         Market Insights & Policy Briefs
       </h1>
       <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; line-height: 1.6;">
-        Quantitative analysis, real estate yield benchmarking, tax treaty developments, and macroeconomic commentary for international asset allocators.
+        Quantitative analysis, real estate valuation benchmarking, tax treaty developments, and macroeconomic commentary for international asset allocators.
       </p>
     </div>
   </section>
@@ -668,10 +668,10 @@ ${sharedNav}
       <article style="background: #ffffff; border: 1px solid #e5e7eb; padding: 2.5rem; border-top: 3px solid #C8A96A;">
         <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Macro Analysis • UAE</span>
         <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: #0B1F3A; margin: 0.5rem 0 1rem 0;">
-          Dubai Yield Dynamics: Prime Residential vs. Commercial Growth
+          Dubai Market Dynamics: Prime Residential vs. Commercial Growth
         </h2>
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-          An examination of gross rental yields across Downtown Dubai, Dubai Marina, and Palm Jumeirah in relation to secondary market liquidity and corporate tax implementations.
+          An examination of prime district growth trends across Downtown Dubai, Dubai Marina, and Palm Jumeirah in relation to secondary market liquidity and corporate tax implementations.
         </p>
         <span style="color: #6b7280; font-size: 0.85rem;">Published by Univue Research Desk</span>
       </article>
@@ -693,7 +693,7 @@ ${sharedNav}
           Grade-A Commercial Absorption in Bangalore: Why Tech GCCs Drive Rents
         </h2>
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
-          Why multinational engineering demand continues to generate 8-9% commercial rental yields and low vacancy rates in Prestige and DLF technology corridors.
+          Why multinational engineering demand continues to generate sustained commercial occupancy and low vacancy rates in Prestige and DLF technology corridors.
         </p>
         <span style="color: #6b7280; font-size: 0.85rem;">Published by Univue Research Desk</span>
       </article>
@@ -726,7 +726,7 @@ ${sharedNav}
         <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;">Dubai, UAE • Emaar Properties</span>
         <h2 style="font-family: 'Bodoni Moda', serif; font-size: 1.5rem; color: #0B1F3A; margin: 0.5rem 0;">The Oasis by Emaar</h2>
         <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">
-          Waterfront luxury mansions with 7.2% expected rental yield. Strategic master community.
+          Waterfront luxury mansions within an exclusive master-planned community.
         </p>
         <p style="font-weight: 700; color: #0B1F3A;">Price: From $1,200,000 USD</p>
         <a href="/book" style="display: inline-block; margin-top: 1rem; color: #C8A96A; font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: 0.8rem;">Inquire with Advisor →</a>
@@ -817,7 +817,7 @@ ${sharedNav}
         Investor Profile & Expansion Evaluation
       </h1>
       <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
-        Complete our confidential 2-minute strategic questionnaire to receive customized market models, yield simulations, and tailored asset selections.
+        Complete our confidential 2-minute strategic questionnaire to receive customized market models, allocation frameworks, and tailored asset selections.
       </p>
     </div>
   </section>
@@ -828,7 +828,7 @@ ${sharedNav}
         Assessment Framework
       </h2>
       <ol style="color: #4b5563; font-size: 1rem; line-height: 1.8; padding-left: 1.5rem; margin-bottom: 2rem;">
-        <li><strong>Primary Investment Objective:</strong> Capital preservation, high net rental yields (6-10%), Golden Visa residency, or corporate commercial expansion.</li>
+        <li><strong>Primary Investment Objective:</strong> Capital preservation, prime residential allocation, Golden Visa residency, or corporate commercial expansion.</li>
         <li><strong>Target Corridor:</strong> United Arab Emirates (Dubai, Abu Dhabi, RAK), India (Bangalore, Gurgaon), or Southeast Asia (Singapore).</li>
         <li><strong>Investment Scale:</strong> Sourcing range starting from $300,000 USD to institutional portfolios of $10M+.</li>
         <li><strong>Timeline & Governance:</strong> Immediate off-plan allocation, scheduled site inspection in Dubai, or phased multi-quarter corporate setup.</li>
@@ -863,11 +863,11 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     const cityName = cityNames[cityId] || (cityId ? cityId.charAt(0).toUpperCase() + cityId.slice(1) : 'Market');
     return {
       title: `${cityName} Real Estate & Market Analysis | Univue Consultants ApS`,
-      description: `Institutional analysis, yield data, and investment advisory for ${cityName} by Univue Consultants.`,
-      keywords: `${cityName} real estate, ${cityName} property market, ${cityName} investment, Univue ${cityName}`,
+      description: `Institutional analysis, regulatory framework, and investment advisory for ${cityName} by Univue Consultants.`,
+      keywords: `${cityName} real estate, ${cityName} property market, ${cityName} corporate expansion, Univue ${cityName}`,
       canonical: `${BASE_URL}${cleanPath}`,
       ogTitle: `${cityName} Real Estate & Market Analysis | Univue Consultants`,
-      ogDescription: `Institutional analysis, yield data, and investment advisory for ${cityName}.`,
+      ogDescription: `Institutional analysis, regulatory framework, and investment advisory for ${cityName}.`,
       ogType: "website",
       schema: {
         "@context": "https://schema.org",
@@ -932,11 +932,11 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     case '/uae':
       return {
         title: "UAE Investment Markets | Dubai, Abu Dhabi & RAK Properties | Univue Consultants",
-        description: "High-yield real estate investments and strategic advisory in Dubai, Abu Dhabi, and Ras Al Khaimah (RAK). 0% tax, 6-10% rental yields, and Golden Visa pathways.",
-        keywords: "Dubai investment, Emaar properties, Palm Jumeirah villas, Ras Al Khaimah Wynn, Abu Dhabi Saadiyat, UAE Golden Visa, tax free real estate",
+        description: "Turnkey real estate advisory in Dubai, Abu Dhabi, and Ras Al Khaimah (RAK). 0% tax, prime freehold opportunities, and Golden Visa pathways.",
+        keywords: "Dubai investment, Emaar properties, Palm Jumeirah villas, Ras Al Khaimah Wynn, Abu Dhabi Saadiyat, UAE Golden Visa, freehold real estate",
         canonical: `${BASE_URL}/uae`,
         ogTitle: "UAE Investment Markets | Dubai, Abu Dhabi & RAK Real Estate",
-        ogDescription: "Explore high-yield real estate investments and strategic advisory in Dubai, Abu Dhabi, and Ras Al Khaimah with Univue Consultants.",
+        ogDescription: "Explore premier real estate investments and strategic advisory in Dubai, Abu Dhabi, and Ras Al Khaimah with Univue Consultants.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
@@ -950,7 +950,7 @@ export function getRouteMetadata(pathname: string): PageMetadata {
       return {
         title: "India Operational Expansion | Bangalore, Gurgaon & Mumbai | Univue Consultants",
         description: "Scale your business operations in India. Turnkey coordination for Grade-A tech offices, subsidiary incorporation, labor compliance, and FDI regulations.",
-        keywords: "India business expansion, Bangalore tech hub, Gurgaon Cyber City, Grade A office India, corporate setup India, FDI compliance",
+        keywords: "India market entry, Bangalore office, FDI compliance, subsidiary incorporation, Grade-A tech offices, corporate expansion",
         canonical: `${BASE_URL}/india`,
         ogTitle: "India Operational Expansion | Bangalore, Gurgaon & Mumbai",
         ogDescription: "Turnkey advisory for European enterprises scaling into Bangalore, Gurgaon, and Mumbai tech corridors.",
@@ -982,11 +982,11 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     case '/insights':
       return {
         title: "Market Insights & Macroeconomic Research | Univue Consultants",
-        description: "Quarterly intelligence, Dubai real estate yield benchmarks, India commercial trends, and cross-border policy analysis by Univue Consultants.",
-        keywords: "Dubai yield benchmark, India real estate research, UAE tax update, cross-border macroeconomic intelligence, Univue Insights",
+        description: "Quarterly intelligence, cross-border commercial real estate analysis, India market trends, and policy developments by Univue Consultants.",
+        keywords: "Dubai market analysis, India real estate research, UAE tax update, cross-border macroeconomic intelligence, Univue Insights",
         canonical: `${BASE_URL}/insights`,
         ogTitle: "Market Insights & Macroeconomic Research | Univue Consultants",
-        ogDescription: "Authoritative analysis and yield benchmarking across Dubai, India, and Southeast Asia.",
+        ogDescription: "Authoritative analysis and commercial real estate research across Dubai, India, and Southeast Asia.",
         ogType: "website",
         schema: {
           "@context": "https://schema.org",
@@ -1000,7 +1000,7 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     case '/catalog':
       return {
         title: "Market Catalog & Curated Properties | Univue Consultants ApS",
-        description: "Browse curated advisor-choice off-plan properties and commercial assets in Dubai, Abu Dhabi, RAK, and Bangalore with verified yield models.",
+        description: "Browse curated advisor-choice off-plan properties and commercial assets in Dubai, Abu Dhabi, RAK, and Bangalore with verified project credentials.",
         keywords: "Dubai property catalog, Emaar off-plan, Wynn Al Marjan residences, Bangalore commercial offices, luxury villas Dubai",
         canonical: `${BASE_URL}/market-catalog`,
         ogTitle: "Exclusive Market Catalog & Properties | Univue Consultants",
@@ -1033,7 +1033,7 @@ export function getRouteMetadata(pathname: string): PageMetadata {
     case '/questionnaire':
       return {
         title: "Investor Assessment Questionnaire | Univue Consultants ApS",
-        description: "Complete our confidential 2-minute strategic questionnaire to receive customized market models, yield simulations, and tailored asset selections.",
+        description: "Complete our confidential 2-minute strategic questionnaire to receive customized market models, allocation frameworks, and tailored asset selections.",
         keywords: "investor assessment, cross-border expansion questionnaire, Univue client profile",
         canonical: `${BASE_URL}/questionnaire`,
         ogTitle: "Investor Assessment Questionnaire | Univue Consultants",
@@ -1309,6 +1309,21 @@ export function getPrerenderedPage(pathname: string, htmlTemplate: string): stri
     /<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i,
     `<meta name="description" content="${meta.description}" />`
   );
+
+  // 2b. Update <meta name="keywords"> with route-specific keywords
+  if (meta.keywords) {
+    if (/<meta\s+name=["']keywords["']\s+content=["'].*?["']\s*\/?>/i.test(output)) {
+      output = output.replace(
+        /<meta\s+name=["']keywords["']\s+content=["'].*?["']\s*\/?>/i,
+        `<meta name="keywords" content="${meta.keywords}" />`
+      );
+    } else {
+      output = output.replace(
+        /<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i,
+        `$&\n    <meta name="keywords" content="${meta.keywords}" />`
+      );
+    }
+  }
 
   // 3. Update or inject OpenGraph & Twitter tags
   output = output.replace(

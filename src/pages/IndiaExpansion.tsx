@@ -17,7 +17,7 @@ export const IndiaExpansion = () => {
   useDocumentMetadata({
     title: `${t('india.hero.title') || 'India Operations & Expansion'}`,
     description: t('india.hero.desc') || 'Scale your business operations in India. Expert coordination for Grade-A office setups, compliance, logistics, and partnerships.',
-    keywords: 'India business expansion, Bangalore tech hub, Mumbai corporate HQ, Grade-A offices Gurgaon'
+    keywords: 'India market entry, Bangalore office, FDI compliance, subsidiary incorporation, Grade-A tech offices, corporate expansion'
   });
 
   const indiaCities = allCities.filter(c => c.marketId === 'india');
@@ -60,7 +60,7 @@ export const IndiaExpansion = () => {
         desc: city.thesis,
         stats: [
           { label: "Talent", value: "1.5M+" },
-          { label: "Pricing Index", value: city.avgPricing || "Tier-1" },
+          { label: "Framework", value: "SEZ & Grade-A" },
           { label: "Status", value: city.positioning }
         ],
         highlights: [

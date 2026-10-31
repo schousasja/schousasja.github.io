@@ -163,7 +163,7 @@ const CityMicrosite: React.FC = () => {
                 {localizedData?.type || `${city.positioning} Focus`}
               </span>
               <span className="px-4 py-2 border border-brand-gold/20 bg-brand-gold/5 backdrop-blur-md rounded-full text-brand-gold text-xs uppercase tracking-widest">
-                {city.avgPricing}
+                {language === 'da' ? 'Uafhængig rådgivning' : 'Independent Advisory'}
               </span>
             </div>
           </motion.div>
@@ -209,39 +209,43 @@ const CityMicrosite: React.FC = () => {
               
               <h4 className="text-brand-gold uppercase tracking-widest text-xs mb-10">{t('city.stats.tag')}</h4>
               
-              <div className="space-y-10">
-                <div className="flex items-start gap-5">
+              <div className="space-y-8">
+                <div className="flex items-start gap-4">
                   <div>
-                    <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">{t('city.stats.price')}</span>
-                    <span className="text-2xl font-serif">{city.avgPricing}</span>
+                    <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
+                      {language === 'da' ? 'Rådgivningsomfang' : 'Advisory Scope'}
+                    </span>
+                    <span className="text-base text-brand-ivory font-light leading-snug">
+                      {language === 'da'
+                        ? 'Uafhængig due diligence, prioritetsallokering og juridisk transaktionskoordinering.'
+                        : 'Turnkey fiduciary representation, developer allocation access, and legal transaction coordination.'}
+                    </span>
                   </div>
                 </div>
 
-                {localizedData ? (
-                  localizedData.stats.map((stat, i) => (
-                    <div key={i} className="flex items-start gap-5">
-                      <div>
-                        <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
-                          {stat.label}
-                        </span>
-                        <span className="text-2xl font-serif">
-                          {stat.value}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex items-start gap-5">
-                    <div>
-                      <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
-                        {t('city.stats.infra')}
-                      </span>
-                      <span className="text-lg leading-snug">
-                        {city.infraGrowth}
-                      </span>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div>
+                    <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
+                      {t('city.stats.infra')}
+                    </span>
+                    <span className="text-base text-brand-ivory font-light leading-snug">
+                      {city.infraGrowth}
+                    </span>
                   </div>
-                )}
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div>
+                    <span className="block text-[9px] uppercase tracking-[0.3em] text-brand-gold/60 mb-1">
+                      {language === 'da' ? 'Regulatorisk Ramme' : 'Regulatory Governance'}
+                    </span>
+                    <span className="text-base text-brand-ivory font-light leading-snug">
+                      {language === 'da'
+                        ? 'Offentligt regulerede deponeringskonti, digital tinglysning og investorbeskyttelse.'
+                        : 'Government-mandated escrow protections, digital land registry, and statutory compliance.'}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <button 

@@ -60,7 +60,7 @@ export const SoutheastAsiaMarkets = () => {
         desc: city.thesis,
         stats: [
           { label: "SEGMENT", value: city.positioning || "Prime" },
-          { label: "PRICING", value: city.avgPricing || "Core" },
+          { label: "GOVERNANCE", value: "Institutional" },
           { label: "STATUS", value: "Established" }
         ],
         highlights: [
@@ -83,7 +83,7 @@ export const SoutheastAsiaMarkets = () => {
       : "Southeast Asian markets represent dynamic economies characterized by consumer demand, infrastructure expansions, and international corporate presence.",
     stats: [
       { label: language === 'da' ? "Segment" : "Segment", value: "Prime Core" },
-      { label: language === 'da' ? "Prisindeks" : "Pricing", value: "Institutional" },
+      { label: language === 'da' ? "Struktur" : "Structure", value: "Institutional" },
       { label: language === 'da' ? "Klasse" : "Class", value: "Regional Hub" }
     ],
     highlights: [

@@ -56,7 +56,7 @@ export const UAEOpportunities = () => {
         desc: city.thesis,
         stats: [
           { label: "Segment", value: city.positioning || "Prime Core" },
-          { label: "Pricing Index", value: city.avgPricing || "Tier-1" },
+          { label: "Framework", value: "RERA Regulated" },
           { label: "Status", value: "Active Freehold" }
         ],
         highlights: [
@@ -79,7 +79,7 @@ export const UAEOpportunities = () => {
       : "The UAE offers an established international real estate market characterized by high liquidity, master-planned urban communities, and transparent regulatory frameworks.",
     stats: [
       { label: language === 'da' ? "Segment" : "Segment", value: "Prime Freehold" },
-      { label: language === 'da' ? "Prisindeks" : "Pricing", value: "$400–$1,200/sq.ft" },
+      { label: language === 'da' ? "Lovramme" : "Framework", value: "RERA Regulated" },
       { label: "Status", value: language === 'da' ? "Aktiv" : "Active" }
     ],
     highlights: [

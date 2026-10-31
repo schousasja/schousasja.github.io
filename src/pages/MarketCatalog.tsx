@@ -84,12 +84,24 @@ export const MarketCatalog = () => {
 
   const parseNumericPrice = (priceStr: string) => {
     if (!priceStr) return 0;
-    const clean = priceStr.toLowerCase().replace(/[^0-9.]/g, '');
+    const lower = priceStr.toLowerCase();
+    let clean = lower;
+    // Remove multiple dots if thousands separators (e.g. 2.450.000)
+    if ((clean.match(/\./g) || []).length > 1) {
+      clean = clean.replace(/\./g, '');
+    }
+    clean = clean.replace(/[^0-9.]/g, '');
     let val = parseFloat(clean) || 0;
-    if (priceStr.toLowerCase().includes('m')) val *= 1000000;
-    if (priceStr.toLowerCase().includes('k')) val *= 1000;
-    // Basic exchange rate normalization if multiple currencies are used, 
-    // but here we just treat them as numbers for relative sorting.
+    if (lower.includes('cr')) val *= 10000000;
+    else if (lower.includes('m')) val *= 1000000;
+    else if (lower.includes('k')) val *= 1000;
+
+    // Currency normalisation to USD baseline for accurate price sorting
+    if (lower.includes('aed')) val = val / 3.6725;
+    else if (lower.includes('inr') || lower.includes('₹')) val = val / 83.5;
+    else if (lower.includes('eur') || lower.includes('€')) val = val * 1.08;
+    else if (lower.includes('dkk') || lower.includes('kr')) val = val / 6.9;
+
     return val;
   };
 
