@@ -109,9 +109,9 @@ export const MarketCatalog = () => {
 
   const filteredProperties = properties
     .filter(prop => {
-      const matchesSearch = prop.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             prop.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                             prop.developer?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = (prop.name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                             (prop.location || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             (prop.developer?.name || '').toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesMarket = activeMarket === 'all' || prop.country === activeMarket;
       const matchesCity = activeCity === 'all' || prop.cityId === activeCity;

@@ -63,7 +63,10 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const marketList = snap.docs.map(doc => ({ ...doc.data() } as Market));
         setMarkets(marketList);
       },
-      (error) => handleFirestoreError(error, OperationType.LIST, 'markets')
+      (error) => {
+        setLoading(false);
+        handleFirestoreError(error, OperationType.LIST, 'markets');
+      }
     );
 
     const unsubscribeCities = onSnapshot(
@@ -73,7 +76,10 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setCities(cityList);
         setLoading(false);
       },
-      (error) => handleFirestoreError(error, OperationType.LIST, 'cities')
+      (error) => {
+        setLoading(false);
+        handleFirestoreError(error, OperationType.LIST, 'cities');
+      }
     );
 
     return () => {

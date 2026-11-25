@@ -214,8 +214,8 @@ export function getRouteMetadata(pathname: string): RouteMetadata {
     case '/book':
       return {
         title: "Schedule Strategic Briefing | Univue Consultants ApS",
-        description: "Book a confidential 30-minute private consultation with an international advisory partner at our Hornslet headquarters or via secure video conference.",
-        keywords: "schedule property briefing, Univue consultation, cross border real estate meeting Hornslet Denmark",
+        description: "Book a confidential 10-minute executive briefing with an international advisory partner at our Hornslet headquarters or via secure video conference.",
+        keywords: "schedule property briefing, 10 minute briefing, Univue consultation, cross border real estate meeting Hornslet Denmark",
         canonical: `${BASE_URL}/book`,
         ogTitle: "Schedule Strategic Briefing | Univue Consultants ApS",
         ogDescription: "Private briefing with international real estate and cross-border expansion advisors.",
@@ -302,35 +302,33 @@ export function getRouteMetadata(pathname: string): RouteMetadata {
 // ============================================================================
 
 const sharedNav = `
-<header role="banner" class="univue-header" style="background-color: #0B1F3A; color: #FDFCF5; border-bottom: 1px solid rgba(200, 169, 106, 0.2); position: sticky; top: 0; z-index: 50; backdrop-blur: 8px;">
+<header role="banner" class="univue-header" style="background-color: #FDFCF5; color: #0B1F3A; border-bottom: 1px solid rgba(11, 31, 58, 0.1); position: sticky; top: 0; z-index: 50;">
   <!-- Top Utility Bar -->
-  <div style="background-color: #061224; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0.4rem 1.5rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">
-    <div style="max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-      <div style="display: flex; gap: 1rem; color: rgba(253, 252, 245, 0.6);">
+  <div style="background-color: #FDFCF5; border-bottom: 1px solid rgba(11, 31, 58, 0.08); padding: 0.4rem 1.5rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;">
+    <div style="max-width: 80rem; margin: 0 auto; display: flex; justify-content: flex-end; align-items: center; gap: 1.5rem;">
+      <div style="display: flex; gap: 1rem; color: rgba(11, 31, 58, 0.7);">
         <span style="color: #C8A96A;">ENGLISH</span>
         <span>DANSK</span>
       </div>
       <div style="display: flex; align-items: center; gap: 1.5rem;">
-        <a href="tel:+4526378270" style="color: rgba(253, 252, 245, 0.8); text-decoration: none;">+45 26 37 82 70</a>
-        <a href="/login" style="color: #C8A96A; text-decoration: none;">MY ACCOUNT</a>
+        <a href="/login" style="color: #0B1F3A; text-decoration: none;">LOG IN</a>
       </div>
     </div>
   </div>
 
   <!-- Main Navigation Bar -->
   <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.5rem; flex-wrap: wrap; gap: 1rem;">
-    <a href="/" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: #FDFCF5;" aria-label="Univue Consultants ApS">
-      <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.5rem; letter-spacing: 0.08em; font-weight: 500;">UNIVUE</span>
-      <span style="color: #C8A96A; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; border-left: 1px solid rgba(200, 169, 106, 0.4); padding-left: 0.75rem;">Consultants ApS</span>
+    <a href="/" style="display: flex; align-items: center; text-decoration: none;" aria-label="Univue Consultants ApS">
+      <img src="/assets/images/logo.png" alt="Univue Consultants ApS" style="height: 2.75rem; width: auto; object-fit: contain;" />
     </a>
     <nav role="navigation" aria-label="Main Navigation" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-      <a href="/properties" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Properties</a>
-      <a href="/uae" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">UAE</a>
-      <a href="/india" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">India</a>
-      <a href="/southeast-asia" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Southeast Asia</a>
-      <a href="/services" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Services</a>
-      <a href="/about" style="color: #FDFCF5; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">About Us</a>
-      <a href="/book" style="background-color: #C8A96A; color: #0B1F3A; padding: 0.5rem 1.25rem; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border: 1px solid #C8A96A;">Schedule Briefing</a>
+      <a href="/properties" style="color: #0B1F3A; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Properties</a>
+      <a href="/uae" style="color: #0B1F3A; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">UAE</a>
+      <a href="/india" style="color: #0B1F3A; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">India</a>
+      <a href="/southeast-asia" style="color: #0B1F3A; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Southeast Asia</a>
+      <a href="/services" style="color: #0B1F3A; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">Services</a>
+      <a href="/about" style="color: #0B1F3A; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;">About Us</a>
+      <a href="/book" style="background-color: #0B1F3A; color: #FDFCF5; padding: 0.5rem 1.25rem; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border: 1px solid #0B1F3A;">Schedule Briefing</a>
     </nav>
   </div>
 </header>
@@ -338,6 +336,27 @@ const sharedNav = `
 
 const sharedFooter = `
 <footer class="univue-footer" role="contentinfo" style="background-color: #0B1F3A; color: #FDFCF5; border-top: 1px solid rgba(200, 169, 106, 0.2); padding: 4rem 1.5rem 2rem 1.5rem; margin-top: auto;">
+  <!-- Monthly Market Briefing / Newsletter Email Capture -->
+  <div style="max-width: 80rem; margin: 0 auto 3rem auto; padding-bottom: 3rem; border-bottom: 1px solid rgba(253, 252, 245, 0.1);">
+    <div style="background-color: rgba(22, 44, 78, 0.6); border: 1px solid rgba(200, 169, 106, 0.3); padding: 2.5rem;">
+      <span style="font-size: 0.7rem; font-weight: 700; color: #C8A96A; letter-spacing: 0.25em; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Intelligence Network</span>
+      <h3 style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 1.8rem; color: #FDFCF5; margin: 0 0 0.75rem 0;">Monthly Market Briefing for Nordic Investors</h3>
+      <p style="color: rgba(253, 252, 245, 0.75); font-size: 0.95rem; line-height: 1.6; max-width: 44rem; margin-bottom: 1.5rem;">
+        Curated macroeconomic insights, off-plan allocations, and regulatory updates directly from our Hornslet advisory desk.
+      </p>
+      <form action="/api/newsletter/subscribe" method="POST" style="max-width: 38rem;">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+          <input type="email" name="email" placeholder="Enter your email address" required style="flex-grow: 1; padding: 0.8rem 1rem; background-color: #0B1F3A; border: 1px solid rgba(253, 252, 245, 0.2); color: #FDFCF5; font-size: 0.9rem;" />
+          <button type="submit" style="background-color: #C8A96A; color: #0B1F3A; padding: 0.8rem 1.75rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; border: none; cursor: pointer;">Subscribe</button>
+        </div>
+        <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.75rem; color: rgba(253, 252, 245, 0.6); cursor: pointer;">
+          <input type="checkbox" name="consent" required style="margin-top: 0.15rem;" />
+          <span>I agree to receive the monthly market briefing and accept the privacy policy (Double opt-in verification required).</span>
+        </label>
+      </form>
+    </div>
+  </div>
+
   <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;">
     <!-- Company Identity -->
     <div>
@@ -1182,7 +1201,7 @@ ${sharedNav}
         Schedule Your Strategic Briefing
       </h1>
       <p style="color: rgba(253, 252, 245, 0.85); font-size: 1.25rem; max-width: 44rem; margin: 0 auto; line-height: 1.6;">
-        Book a confidential 30-minute private consultation with an international advisory partner at our Hornslet headquarters or via secure video conference.
+        Book a confidential 10-minute executive briefing with an international advisory partner at our Hornslet headquarters or via secure video conference.
       </p>
     </div>
   </section>

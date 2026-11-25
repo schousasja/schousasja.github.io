@@ -34,11 +34,8 @@ export const ServiceCard = ({ id, title, description, items, images, ctaText, li
   }, [nextImage]);
 
   return (
-    <motion.div 
+    <div 
       id={id}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
       className={`group bg-white border border-gray-100 shadow-sm overflow-hidden flex flex-col ${imageRight ? 'md:flex-row-reverse' : 'md:flex-row'} rounded-sm`}
     >
       <div className="md:w-1/2 relative h-80 md:h-auto overflow-hidden bg-gray-100">
@@ -122,6 +119,6 @@ export const ServiceCard = ({ id, title, description, items, images, ctaText, li
           <span>{ctaText}</span>
         </Link>
       </div>
-    </motion.div>
+    </div>
   );
 };

@@ -3,12 +3,36 @@ import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { InlineWidget } from 'react-calendly';
+import { useDocumentMetadata } from '../hooks/useDocumentMetadata';
+import { StructuredData } from '../components/StructuredData';
 
 export const Booking = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const questionnaireData = location.state?.questionnaireData;
+
+  useDocumentMetadata({
+    title: '10-Minute Executive Briefing',
+    description: 'Book a confidential 10-minute executive briefing with an international advisory partner at our Hornslet headquarters or via secure video conference.',
+    keywords: 'schedule property briefing, 10 minute briefing, Univue consultation, cross border real estate meeting Hornslet Denmark'
+  });
+
+  const bookingSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "10-Minute Executive Briefing",
+    "description": "Book a confidential 10-minute executive briefing with an international advisory partner at our Hornslet headquarters or via secure video conference.",
+    "telephone": "+45 26 37 82 70",
+    "email": "Univueconsultants@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Amaliegårdvej 1",
+      "postalCode": "8543",
+      "addressLocality": "Hornslet",
+      "addressCountry": "DK"
+    }
+  };
 
   // Map questionnaire answers to strings for prefilling
   const getAnswersSummary = () => {
@@ -66,7 +90,8 @@ export const Booking = () => {
   };
 
   return (
-    <div className="pt-24 pb-10 min-h-screen bg-white">
+    <div className="pt-28 md:pt-36 pb-10 min-h-screen bg-white">
+      <StructuredData data={bookingSchema} />
       <div className="max-w-6xl mx-auto px-6">
         <div className="mb-8">
           <button 
@@ -82,9 +107,7 @@ export const Booking = () => {
               <p className="text-gray-500 max-w-lg">{t('book.desc')}</p>
               
               {questionnaireData && (
-                <motion.div 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
+                <div 
                   className="mt-6 p-4 bg-brand-gold/5 border border-brand-gold/10"
                 >
                   <div>
@@ -93,7 +116,7 @@ export const Booking = () => {
                       {getAnswersSummary()}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               )}
             </div>
             <div className="hidden md:block">
@@ -104,10 +127,7 @@ export const Booking = () => {
           </div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <div 
           className="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden min-h-[700px]"
         >
           <InlineWidget 
@@ -134,7 +154,7 @@ export const Booking = () => {
               textColor: '002D3F', // Brand Blue
             }}
           />
-        </motion.div>
+        </div>
       </div>
     </div>
   );

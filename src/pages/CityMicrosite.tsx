@@ -12,7 +12,8 @@ const CityMicrosite: React.FC = () => {
   const navigate = useNavigate();
   const { t, language, translateCity } = useLanguage();
   const { cities: allCities, loading } = useMarkets();
-  const city = allCities.find(c => c.id === cityId);
+  const normalizedCityId = cityId === 'rak' ? 'ras-al-khaimah' : cityId;
+  const city = allCities.find(c => c.id === normalizedCityId);
 
   const langKey = language === 'da' ? 'da' : 'en';
   const localizedData = city ? marketTranslations[langKey][city.id] : null;

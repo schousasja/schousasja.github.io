@@ -203,8 +203,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'q.title': 'Strategy Session Questionnaire',
     'q.desc': 'Tell us about your goals so we can prepare for our briefing.',
     'q.name': 'Full Name',
-    'q.email': 'Work Email',
-    'q.company': 'Company Name',
+    'q.email': 'Email',
+    'q.company': 'Company name (optional)',
     'q.submit': 'Continue to Calendar',
     'q.note': 'These questions help us understand your objectives and coordinate the most suitable opportunities, structure, and execution pathway across our strategic international market corridors.',
     'q.uae_invest': 'UAE / Real Estate & Stability',
@@ -846,8 +846,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'city.srilanka.relevance': 'Deep value play, strategic Indian Ocean location, tourism recovery.',
 
     // Booking
-    'book.title': 'Schedule Your Briefing',
-    'book.desc': 'Select a time that works for you. All briefings are held via Microsoft Teams or Zoom.',
+    'book.title': '10-Minute Executive Briefing',
+    'book.desc': 'Select a time that works for you. Private 10-minute briefing with an international advisory partner at our Hornslet headquarters or via secure video conference.',
     'book.select_date': 'Select Date',
     'book.select_time': 'Select Time',
     'book.confirm': 'Confirm Briefing',
@@ -856,7 +856,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'book.back': 'Back to Questionnaire',
     'book.sync': 'Information Syncing to Appointment',
 
-    // Footer
+    // Catalog Disclaimer
+    'catalog.disclaimer.title': 'Investment & Performance Disclaimer',
+    'catalog.disclaimer.desc': 'All financial figures, developer-projected rental yields (including 14–15% gross estimates), and capital appreciation forecasts are developer estimates provided solely for informational purposes. Figures are estimates, not guarantees, and do not constitute legal commitments, financial, or investment advice. Cross-border investments carry market risks.',
+
+    // Footer & Newsletter
+    'footer.newsletter.tag': 'Intelligence Network',
+    'footer.newsletter.title': 'Monthly Market Briefing for Nordic Investors',
+    'footer.newsletter.desc': 'Curated macroeconomic insights, off-plan allocations, and regulatory updates directly from our Hornslet advisory desk.',
+    'footer.newsletter.placeholder': 'Enter your email address',
+    'footer.newsletter.consent': 'I agree to receive the monthly market briefing and accept the privacy policy (Double opt-in verification required).',
+    'footer.newsletter.button': 'Subscribe',
+    'footer.newsletter.success': 'Thank you. A verification link has been sent to your email to confirm your subscription.',
     'footer.desc': 'Univue Consultants simplifies international property investment by connecting clients with the right properties and coordinating the financial, legal and regulatory support needed to navigate cross-border acquisitions with confidence.',
     'footer.markets': 'Global Markets',
     'footer.consultancy': 'Consultancy',
@@ -1059,8 +1070,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'q.title': 'Spørgeskema til strategisession',
     'q.desc': 'Fortæl os om dine mål, så vi kan forberede os til vores briefing.',
     'q.name': 'Fulde navn',
-    'q.email': 'Arbejds-email',
-    'q.company': 'Firmanavn',
+    'q.email': 'Email',
+    'q.company': 'Virksomhedsnavn (valgfrit)',
     'q.submit': 'Fortsæt til kalender',
     'q.note': 'Disse spørgsmål hjælper os med at forstå dine mål og koordinere de mest egnede muligheder, struktur og eksekveringsvej på tværs af vores strategiske internationale markedskorridorer.',
     'q.uae_invest': 'UAE / Ejendomme & Stabilitet',
@@ -1702,8 +1713,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'city.srilanka.relevance': 'Dybt værdispil, strategisk placering i Det Indiske Ocean, genopretning af turismen.',
 
     // Booking
-    'book.title': 'Planlæg din briefing',
-    'book.desc': 'Vælg et tidspunkt, der passer dig. Alle briefings holdes via Microsoft Teams eller Zoom.',
+    'book.title': '10-minutters Executive Briefing',
+    'book.desc': 'Vælg et tidspunkt, der passer dig. Privat 10-minutters briefing med en international rådgivningspartner på vores hovedkontor i Hornslet eller via sikker videokonference.',
     'book.select_date': 'Vælg dato',
     'book.select_time': 'Vælg tidspunkt',
     'book.confirm': 'Bekræft briefing',
@@ -1712,7 +1723,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'book.back': 'Tilbage til spørgeskema',
     'book.sync': 'Information synkroniseres til aftale',
 
-    // Footer
+    // Catalog Disclaimer
+    'catalog.disclaimer.title': 'Investerings- og afkastansvarsfraskrivelse',
+    'catalog.disclaimer.desc': 'Alle økonomiske nøgletal, udvikler-projekterede lejeafkast (herunder 14–15% bruttoestimater) og prognoser for værdistigning er udviklerestimater til orientering. Nøgletal er estimater, ikke garantier, og udgør hverken juridiske forpligtelser eller finansiel eller investeringsmæssig rådgivning. Grænseoverskridende investeringer indebærer markeds- og valutarisici.',
+
+    // Footer & Newsletter
+    'footer.newsletter.tag': 'Efterretningsnetværk',
+    'footer.newsletter.title': 'Månedlig markedsbriefing for nordiske investorer',
+    'footer.newsletter.desc': 'Udvælgelse af makroøkonomiske analyser, off-plan tildelinger og regulatoriske opdateringer direkte fra vores rådgivningskontor i Hornslet.',
+    'footer.newsletter.placeholder': 'Indtast din e-mailadresse',
+    'footer.newsletter.consent': 'Jeg accepterer at modtage den månedlige markedsbriefing og accepterer privatlivspolitikken (Dobbelt opt-in bekræftelse påkrævet).',
+    'footer.newsletter.button': 'Tilmeld',
+    'footer.newsletter.success': 'Mange tak. Et bekræftelseslink er sendt til din e-mail for at bekræfte dit abonnement.',
     'footer.desc': 'Univue Consultants forenkler international ejendomsinvestering ved at forbinde kunder med de rette ejendomme og koordinere den finansielle, juridiske og lovgivningsmæssige støtte, der er nødvendig for trygt at gennemføre grænseoverskridende opkøb.',
     'footer.markets': 'Globale Markeder',
     'footer.consultancy': 'Rådgivning',

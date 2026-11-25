@@ -21,7 +21,9 @@ export const PropertyImageSlider = ({ images, defaultImage, alt }: PropertyImage
         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
         referrerPolicy="no-referrer"
         onError={(e) => {
-          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800';
+          const img = e.currentTarget;
+          img.onerror = null;
+          img.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800';
         }}
       />
     );
@@ -35,7 +37,9 @@ export const PropertyImageSlider = ({ images, defaultImage, alt }: PropertyImage
         className="w-full h-full object-cover transition-all duration-500"
         referrerPolicy="no-referrer"
         onError={(e) => {
-          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800';
+          const img = e.currentTarget;
+          img.onerror = null;
+          img.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800';
         }}
       />
       {/* Navigation Arrows */}
