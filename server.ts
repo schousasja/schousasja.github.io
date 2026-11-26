@@ -27,7 +27,7 @@ async function startServer() {
 
       // Lazy check for Gemini Key
       const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
+      if (!apiKey) {
         return res.status(503).json({
           error: "Editorial Desk AI is deactivated. To proceed, append GEMINI_API_KEY under Settings > Secrets."
         });
@@ -142,10 +142,11 @@ ${text}
 
       console.log(`Sending editorial task "${task}" for preset "${preset}" to Gemini...`);
       const response = await ai.models.generateContent({
-        model: "gemini-4-hydrogen",
+        model: "gemini-3.5-flash",
         contents: modelPrompt,
         config: {
           systemInstruction: systemInstruction,
+          temperature: 0.7,
         }
       });
 
@@ -170,7 +171,7 @@ ${text}
       }
 
       const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
+      if (!apiKey) {
         return res.status(503).json({
           error: "Translation AI is deactivated. To proceed, append GEMINI_API_KEY under Settings > Secrets."
         });
@@ -187,7 +188,7 @@ ${text}
 
       console.log(`Translating text to Danish: "${text.substring(0, 50)}..."`);
       const response = await ai.models.generateContent({
-        model: "gemini-4-hydrogen",
+        model: "gemini-3.5-flash",
         contents: `Translate the following real estate or business consulting advisory text into professional, natural-sounding Danish. Keep any numbers, dates, proper names (like Emaar, Omniyat, Burj Khalifa, Zaha Hadid, Dubai, etc.) intact but translated in context. Do NOT add any extra commentary, notes, or backticks. Just return the translated Danish text.
 
 Text to translate:
@@ -270,7 +271,7 @@ ${text}
   // Server-Side Pre-rendering & Vite Integration
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: false, allowedHosts: true },
+      server: { middlewareMode: true, hmr: false },
       appType: "custom",
     });
 
@@ -298,8 +299,8 @@ ${text}
     });
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    // Serve static assets without trailing-slash directory redirects so clean routes are served directly
-    app.use(express.static(distPath, { index: 'index.html', redirect: false }));
+    // Serve static assets with automatic index.html resolution for pre-rendered route folders
+    app.use(express.static(distPath, { index: 'index.html' }));
 
     // SSR / Pre-rendering handler for production
     app.get('*', (req, res, next) => {

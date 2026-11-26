@@ -153,10 +153,7 @@ service cloud.firestore {
                       isValidUser(incoming()) && 
                       (
                         (incoming().role == 'client') ||
-                        (incoming().role == 'admin' && (
-                          request.auth.token.email == 'univueconsultants@gmail.com' ||
-                          request.auth.token.email == 'schousasja@gmail.com'
-                        ))
+                        (incoming().role == 'admin' && request.auth.token.email == 'univueconsultants@gmail.com')
                       ) &&
                       incoming().uid == request.auth.uid &&
                       incoming().createdAt == request.time;

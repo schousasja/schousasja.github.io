@@ -43,7 +43,7 @@ export const AboutUs = () => {
   };
 
   return (
-    <div className="pt-20 md:pt-28">
+    <div className="pt-20">
       <StructuredData data={aboutSchema} />
       {/* Hero Section */}
       <section className="h-[40vh] flex items-center relative overflow-hidden">
@@ -73,13 +73,18 @@ export const AboutUs = () => {
       {/* Mission Section */}
       <section className="section-padding bg-brand-ivory">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
             <h2 className="text-sm font-normal text-brand-gold uppercase tracking-[0.3em] mb-6">{t('about.mission.tag')}</h2>
             <h3 className="text-4xl md:text-6xl font-serif text-brand-blue mb-8 tracking-tight">{t('about.mission.title')}</h3>
             <p className="text-gray-600 text-2xl md:text-3xl font-light italic max-w-4xl mx-auto leading-relaxed">
               {t('about.mission.quote')}
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 items-start">
             {[
@@ -88,12 +93,16 @@ export const AboutUs = () => {
               { img: photos.about_vision3, alt: "Expert Consultation", className: "aspect-square lg:-mt-4" },
               { img: photos.about_vision4, alt: "Global Connection", className: "aspect-[3/4] lg:mt-4" }
             ].map((pic, i) => (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
                 className={`${pic.className} overflow-hidden transition-all duration-700 shadow-2xl`}
               >
                 <img src={pic.img} alt={pic.alt} className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700" />
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -104,7 +113,12 @@ export const AboutUs = () => {
         <div className="max-w-7xl mx-auto bg-white shadow-2xl border border-gray-100 overflow-hidden">
           {/* Our Why */}
           <div className="grid lg:grid-cols-2 gap-0 items-stretch">
-            <div className="relative h-full min-h-[400px]">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative h-full min-h-[400px]"
+            >
               <img 
                 src={photos.about_why} 
                 alt="Global Vision" 
@@ -112,24 +126,39 @@ export const AboutUs = () => {
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 border border-brand-gold/20 m-4" />
-            </div>
-            <div className="flex flex-col justify-center px-12 lg:px-24 py-12">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex flex-col justify-center px-12 lg:px-24 py-12"
+            >
               <h4 className="text-brand-gold uppercase tracking-widest text-xs font-bold mb-6">{t('about.why.title')}</h4>
               <p className="text-gray-600 font-light leading-relaxed text-xl">
                 {t('about.why.desc')}
               </p>
-            </div>
+            </motion.div>
           </div>
 
           {/* Our Approach */}
           <div className="grid lg:grid-cols-2 gap-0 items-stretch">
-            <div className="order-2 lg:order-1 flex flex-col justify-center px-12 lg:px-24 py-12">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="order-2 lg:order-1 flex flex-col justify-center px-12 lg:px-24 py-12"
+            >
               <h4 className="text-brand-gold uppercase tracking-widest text-xs font-bold mb-6">{t('about.approach.title')}</h4>
               <p className="text-gray-600 font-light leading-relaxed text-xl">
                 {t('about.approach.desc')}
               </p>
-            </div>
-            <div className="relative h-full min-h-[400px] order-1 lg:order-2">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative h-full min-h-[400px] order-1 lg:order-2"
+            >
               <img 
                 src={photos.about_approach} 
                 alt="Strategic Approach" 
@@ -137,7 +166,7 @@ export const AboutUs = () => {
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 border border-brand-gold/20 m-4" />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

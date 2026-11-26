@@ -20,7 +20,7 @@ export const Home = () => {
   const location = useLocation();
 
   useDocumentMetadata({
-    title: 'International Property Investment Advisory',
+    title: t('hero.subtitle') || 'International Advisory',
     description: t('hero.desc') || 'Cross-border coordination supported through strategic real estate partner networks across UAE, India, and Southeast Asian markets.',
     keywords: 'Univue Consultants, Dubai Investment, India business expansion, Denmark to Dubai, European business relocation, advisor choice properties'
   });
@@ -173,7 +173,7 @@ export const Home = () => {
       <motion.div className="scroll-progress" style={{ scaleX }} />
       
       {/* Hero Section */}
-      <section className="relative h-[68vh] min-h-[540px] flex items-center overflow-hidden bg-brand-blue pt-20 md:pt-24">
+      <section className="relative h-[65vh] min-h-[500px] flex items-center overflow-hidden bg-brand-blue">
         {/* Simplified Premium Background for Mobile Screen Layout */}
         <div className="absolute inset-0 block md:hidden z-0 bg-brand-blue">
           <img 
@@ -248,35 +248,39 @@ export const Home = () => {
           ))}
         </div>
 
-        {/* Central Hero Text Overlay - Crisp letters with text shadow / outline */}
+        {/* Central Hero Text Overlay */}
         <div className="max-w-7xl mx-auto px-6 w-full relative z-10 pointer-events-none">
-          <div className="max-w-3xl pointer-events-auto py-8">
-            <div>
-              <span className="inline-block text-brand-gold font-normal tracking-[0.4em] uppercase text-xs mb-3 hero-subtitle-shadow">
+          <div className="max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <span className="inline-block text-brand-gold font-normal tracking-[0.4em] uppercase text-xs mb-4 drop-shadow-sm">
                 {t('hero.subtitle')}
               </span>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-normal text-brand-ivory leading-tight mb-4 tracking-tight hero-title-shadow">
-                {t('hero.title')} <span className="text-brand-gold italic">{t('hero.title.accent')} {t('hero.title.bottom')}</span>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-normal text-brand-ivory leading-tight mb-5 drop-shadow-2xl tracking-tight">
+                {t('hero.title')} <span className="text-gold-gradient">{t('hero.title.accent')} {t('hero.title.bottom')}</span>
               </h1>
-              <p className="text-sm md:text-base text-brand-ivory/90 max-w-xl mb-7 leading-relaxed font-normal antialiased hero-desc-shadow">
+              <p className="text-base md:text-lg text-brand-ivory/95 max-w-xl mb-8 leading-relaxed drop-shadow-lg font-normal antialiased">
                 {t('hero.desc')}
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-5 pointer-events-auto">
                 <button 
                   onClick={() => navigate('/questionnaire')}
-                  className="btn-primary flex items-center justify-center gap-2 group uppercase text-[11px] tracking-widest shadow-2xl"
+                  className="btn-primary flex items-center justify-center gap-2 group uppercase text-[11px] tracking-widest"
                 >
                   {t('hero.cta.primary')} 
                 </button>
                 <button 
                   onClick={() => navigate('/properties')}
-                  className="btn-outline flex items-center justify-center gap-2 group uppercase text-[11px] tracking-widest bg-brand-blue/60 backdrop-blur-sm border-white/40 text-brand-ivory hover:bg-brand-gold hover:border-brand-gold hover:text-brand-blue shadow-2xl"
+                  className="btn-outline flex items-center justify-center gap-2 group uppercase text-[11px] tracking-widest"
                 >
                   {t('nav.catalog')}
                 </button>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
         
@@ -357,13 +361,17 @@ export const Home = () => {
                 desc: t('home.workwith.collaboration.desc')
               }
             ].map((item, i) => (
-              <div 
+              <motion.div 
                 key={i}
-                className={`flex-col items-center text-center p-6 bg-white border border-gray-100/80 hover:border-brand-gold/30 transition-all duration-300 shadow-sm group h-full ${i >= 3 ? 'hidden md:flex' : 'flex'}`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className={`flex-col items-center text-center p-6 bg-white border border-gray-100/80 hover:border-brand-gold/30 transition-all duration-500 shadow-sm group h-full ${i >= 3 ? 'hidden md:flex' : 'flex'}`}
               >
                 <h4 className="font-normal text-brand-blue uppercase tracking-widest text-sm mb-2 min-h-[1.5rem] flex items-center">{item.title}</h4>
                 <p className="text-gray-500 text-sm leading-normal antialiased">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -384,10 +392,14 @@ export const Home = () => {
               </div>
             ) : featuredProperties.length > 0 ? (
               featuredProperties.map((op, i) => (
-                <div
+                <motion.div
                   key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.8 }}
+                  viewport={{ once: true }}
                   onClick={() => setSelectedProperty(op)}
-                  className="group flex flex-col h-full bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-brand-gold/20 cursor-pointer"
+                  className="group flex flex-col h-full bg-white border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:border-brand-gold/20 cursor-pointer"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <PropertyImageSlider images={op.images} defaultImage={op.image} alt={op.title} />
@@ -480,7 +492,7 @@ export const Home = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))
             ) : (
               <div className="col-span-full py-32 flex flex-col items-center justify-center text-center">
@@ -624,8 +636,12 @@ export const Home = () => {
                   desc: t('home.journey.step4.desc') 
                 }
               ].map((step, i) => (
-                <div 
+                <motion.div 
                   key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.2, duration: 0.8 }}
+                  viewport={{ once: true }}
                   className="relative group lg:pt-16"
                 >
                   {/* Timeline Point */}
@@ -645,7 +661,7 @@ export const Home = () => {
                       {step.desc}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

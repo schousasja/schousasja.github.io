@@ -24,8 +24,8 @@ export const useDocumentMetadata = ({
 
     // 1. Update Document Title
     const baseTitle = 'Univue Consultants';
-    const fullTitle = title
-      ? (title.toLowerCase().includes('univue') ? title : `${title} | ${baseTitle}`)
+    const fullTitle = title 
+      ? `${title} | ${baseTitle}` 
       : `${baseTitle} | Dubai Investment & India Expansion Advisory`;
     document.title = fullTitle;
 

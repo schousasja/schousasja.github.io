@@ -78,7 +78,7 @@ export const Services = () => {
   };
 
   return (
-    <div className="pt-20 md:pt-28">
+    <div className="pt-20">
       <StructuredData data={servicesSchema} />
       {/* Hero Section */}
       <section className="relative h-[40vh] flex items-center overflow-hidden bg-brand-blue">
@@ -112,10 +112,14 @@ export const Services = () => {
       <section className="section-padding bg-brand-ivory">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {coreServices.map((service) => (
-              <div
+            {coreServices.map((service, index) => (
+              <motion.div
                 key={service.title}
-                className="group p-8 border border-gray-100 hover:border-brand-gold/30 transition-all duration-300 hover:shadow-2xl bg-white"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group p-8 border border-gray-100 hover:border-brand-gold/30 transition-all duration-500 hover:shadow-2xl bg-white"
               >
                 <h3 className="text-2xl mb-4 text-brand-blue">{service.title}</h3>
                 <p className="text-gray-600 mb-8 font-light leading-relaxed">
@@ -129,7 +133,7 @@ export const Services = () => {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

@@ -45,37 +45,29 @@ export const Navbar = () => {
   return (
     <>
       <div className="fixed w-full z-50 transition-all duration-300 translate-y-0 pointer-events-none">
-        <div className="hidden md:block transition-all duration-300 pointer-events-auto border-b py-2.5 bg-brand-ivory border-gray-200/70">
+        <div className="hidden md:block bg-brand-blue border-b border-white/10 py-2.5 transition-all duration-300 pointer-events-auto">
           <div className="max-w-7xl mx-auto px-6 flex justify-between md:justify-end items-center gap-4 md:gap-8 text-[9px] font-bold tracking-[0.2em] uppercase">
             <div className="flex items-center gap-4">
               {/* Language Switcher */}
               <button 
                 onClick={() => setLanguage('en')}
-                className={`transition-colors duration-300 cursor-pointer ${
-                  language === 'en' 
-                    ? 'text-brand-gold' 
-                    : 'text-brand-blue/70'
-                } hover:text-brand-gold`}
+                className={`transition-colors duration-300 cursor-pointer ${language === 'en' ? 'text-brand-gold' : 'text-brand-ivory/60'} hover:text-brand-gold`}
               >
                 ENGLISH
               </button>
               <button 
                 onClick={() => setLanguage('da')}
-                className={`transition-colors duration-300 cursor-pointer ${
-                  language === 'da' 
-                    ? 'text-brand-gold' 
-                    : 'text-brand-blue/70'
-                } hover:text-brand-gold`}
+                className={`transition-colors duration-300 cursor-pointer ${language === 'da' ? 'text-brand-gold' : 'text-brand-ivory/60'} hover:text-brand-gold`}
               >
                 DANSK
               </button>
             </div>
 
-            <div className="hidden md:block w-px h-3 bg-brand-blue/15" />
+            <div className="hidden md:block w-px h-3 bg-white/10" />
 
             <Link 
               to={user ? "/account" : "/login"} 
-              className="flex items-center gap-2 transition-colors duration-300 text-brand-blue/80 hover:text-brand-gold"
+              className="flex items-center gap-2 text-brand-ivory/60 hover:text-brand-gold transition-colors duration-300"
             >
               <User className="w-3 h-3 text-brand-gold" />
               {user ? t('nav.account') : t('nav.login')}
@@ -83,27 +75,33 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Main Navbar */}
-        <nav className={`w-full transition-all duration-300 pointer-events-auto ${
-          isScrolled
-            ? 'bg-brand-ivory/95 backdrop-blur-md border-b border-gray-200/80 py-3 md:py-4 shadow-md'
-            : 'bg-brand-ivory border-b border-gray-200/60 py-4 md:py-5 shadow-sm'
-        }`}>
+        <nav className={`w-full transition-all duration-300 pointer-events-auto ${isScrolled ? 'bg-brand-ivory shadow-md py-3 md:py-4' : 'bg-transparent py-4 md:py-6'}`}>
           <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <Link to="/" className="flex items-center group z-50" aria-label="Univue Consultants ApS" onClick={() => setIsMenuOpen(false)}>
+            <Link to="/" className="relative flex items-center group z-50" aria-label="Univue Consultants ApS">
+              {/* Dark / Original brand logo (visible when navbar has background or menu is open) */}
               <img 
                 src="/assets/images/logo.png" 
                 alt="Univue Consultants ApS" 
-                className="h-9 sm:h-10 md:h-11 w-auto object-contain transition-opacity duration-300 group-hover:opacity-80" 
+                className={`h-9 sm:h-10 md:h-11 w-auto object-contain transition-opacity duration-300 group-hover:opacity-80 ${
+                  isScrolled || isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`} 
+              />
+              {/* White logo (visible when navbar is transparent without background, matching other navbar elements like Bareen) */}
+              <img 
+                src="/assets/images/logo-white.png" 
+                alt="Univue Consultants ApS" 
+                className={`absolute inset-0 h-full w-auto object-contain transition-opacity duration-300 group-hover:opacity-80 ${
+                  isScrolled || isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                }`} 
               />
             </Link>
             
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-10 text-[11px] font-medium tracking-[0.2em] uppercase text-brand-blue">
+            <div className="hidden md:flex items-center gap-10 text-[11px] font-normal tracking-[0.2em] uppercase">
               {/* Properties Link */}
               <Link 
                 to="/properties" 
-                className="hover:text-brand-gold transition-colors duration-300"
+                className={`transition-colors duration-300 ${isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory'}`}
               >
                 {t('nav.properties')}
               </Link>
@@ -114,7 +112,7 @@ export const Navbar = () => {
                 onMouseEnter={() => setIsInvestOpen(true)}
                 onMouseLeave={() => setIsInvestOpen(false)}
               >
-                <button className="flex items-center gap-1 hover:text-brand-gold transition-colors duration-300">
+                <button className={`flex items-center gap-1 transition-colors duration-300 ${isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory'}`}>
                   {t('nav.invest')}
                 </button>
                 
@@ -160,13 +158,13 @@ export const Navbar = () => {
                 </AnimatePresence>
               </div>
 
-              <Link to="/services" className="hover:text-brand-gold transition-colors duration-300">{t('nav.services')}</Link>
-              <Link to="/about" className="hover:text-brand-gold transition-colors duration-300">{t('nav.about')}</Link>
+              <Link to="/services" className={isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory transition-colors duration-300'}>{t('nav.services')}</Link>
+              <Link to="/about" className={isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory transition-colors duration-300'}>{t('nav.about')}</Link>
               
               {isAdmin && (
                 <Link 
                   to="/admin/catalog" 
-                  className="font-bold text-brand-gold hover:text-brand-blue transition-colors duration-300"
+                  className={`font-bold transition-colors duration-300 ${isScrolled ? 'text-brand-gold hover:text-brand-blue' : 'text-brand-gold hover:text-brand-ivory'}`}
                 >
                   {t('nav.admin')}
                 </Link>
@@ -174,7 +172,7 @@ export const Navbar = () => {
 
               <button 
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 hover:text-brand-gold transition-colors duration-300"
+                className={`p-2 transition-colors duration-300 ${isScrolled ? 'text-brand-blue hover:text-brand-gold' : 'text-brand-ivory/80 hover:text-brand-ivory'}`}
                 aria-label="Search"
               >
                 <SearchIcon className="w-4 h-4" />

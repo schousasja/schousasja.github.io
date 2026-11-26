@@ -118,6 +118,7 @@ export const Questionnaire = () => {
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">{t('q.company')}</label>
                 <input 
+                  required
                   type="text" 
                   className="w-full p-3 border-b border-gray-200 focus:border-brand-gold outline-none transition-colors bg-transparent"
                   value={formData.company}
