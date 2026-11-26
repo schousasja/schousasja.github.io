@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [pendingSubscribe, setPendingSubscribe] = useState(false);
+  const pendingSubscribeRef = useRef(false);
   const unsubscribeProfileRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -48,14 +48,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         unsubscribeProfileRef.current = onSnapshot(userDocRef, async (docSnap) => {
           if (!docSnap.exists()) {
             // First time login - profile doesn't exist yet
-            const isAdminEmail = authUser.email === 'univueconsultants@gmail.com' || authUser.email === 'schousasja@gmail.com';
+            const isAdminEmail =
+              authUser.emailVerified &&
+              (authUser.email === 'univueconsultants@gmail.com' ||
+                authUser.email === 'schousasja@gmail.com');
+            const rawName = authUser.displayName || authUser.email?.split('@')[0] || 'Client';
+            const rawEmail = authUser.email || '';
+            const rawPhoto =
+              authUser.photoURL ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(rawName)}&background=0B1F3A&color=C8A96A`;
             const newProfile = {
               uid: authUser.uid,
-              email: authUser.email,
-              displayName: authUser.displayName || authUser.email?.split('@')[0],
-              photoURL: authUser.photoURL || `https://ui-avatars.com/api/?name=${authUser.email?.split('@')[0]}&background=0B1F3A&color=C8A96A`,
+              email: rawEmail.slice(0, 256),
+              displayName: rawName.slice(0, 100),
+              photoURL: rawPhoto.slice(0, 1024),
               role: isAdminEmail ? 'admin' : 'client',
-              isSubscribed: pendingSubscribe,
+              isSubscribed: pendingSubscribeRef.current,
               createdAt: serverTimestamp(),
               updatedAt: serverTimestamp(),
             };
@@ -101,12 +109,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async (subscribe = false) => {
     const provider = new GoogleAuthProvider();
-    setPendingSubscribe(subscribe);
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
+    pendingSubscribeRef.current = subscribe;
+    await signInWithPopup(auth, provider);
   };
 
   const signUpEmail = async (email: string, pass: string, name: string, subscribe = false) => {

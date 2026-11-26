@@ -82,6 +82,10 @@ export const Login: React.FC = () => {
         setError(t('login.error.cancelled'));
       } else if (err.code === 'auth/cancelled-popup-request') {
         setError(t('login.error.in_progress'));
+      } else if (err.code === 'auth/network-request-failed') {
+        setError(t('login.error.network'));
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError('This domain is not authorized for Google Sign-In. Please check Firebase Auth authorized domains.');
       } else {
         setError(t('login.error.google_failed'));
       }
